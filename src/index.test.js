@@ -1,5 +1,6 @@
+/* eslint ava/no-only-test:0, ava/no-skip-test:0 */
 import test from 'ava'
-import matchSorter from './'
+import matchSorter, {rankings} from './'
 
 const tests = {
   'returns an empty array with a string that is too long': {
@@ -114,11 +115,49 @@ const tests = {
       {first: 'not', second: 'not', third: 'not', fourth: 'match'},
     ],
   },
+  'when providing a rank threshold of NO_MATCH, it returns all of the items': {
+    input: [
+      ['orange', 'apple', 'grape', 'banana'],
+      'ap',
+      {threshold: rankings.NO_MATCH},
+    ],
+    output: [
+      'apple', 'grape', 'orange', 'banana',
+    ],
+  },
+  'when providing a rank threshold of EQUAL, it returns only the items that are equal': {
+    input: [
+      ['google', 'airbnb', 'apple', 'apply', 'app'],
+      'app',
+      {threshold: rankings.EQUAL},
+    ],
+    output: [
+      'app',
+    ],
+  },
+  'when providing a rank threshold of WORD_STARTS_WITH, it returns only the items that are equal': {
+    input: [
+      ['fiji apple', 'google', 'app', 'crabapple', 'apple', 'apply'],
+      'app',
+      {threshold: rankings.WORD_STARTS_WITH},
+    ],
+    output: [
+      'app', 'apple', 'apply', 'fiji apple',
+    ],
+  },
 }
 
 Object.keys(tests).forEach(title => {
-  test(title, t => {
-    const {input, output} = tests[title]
+  const {input, output, only, skip} = tests[title]
+  if (only) {
+    test.only(title, testFn)
+  } else if (skip) {
+    test.skip(title, testFn)
+  } else {
+    test(title, testFn)
+  }
+
+  function testFn(t) {
     t.deepEqual(output, matchSorter(...input))
-  })
+  }
 })

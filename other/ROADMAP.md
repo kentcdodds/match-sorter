@@ -3,11 +3,10 @@
 ## Want to do
 
 - Support nested `keys` like `name.first`
-- Support a rank filter (return all items even those with no match, or only those with a certain ranking or higher)
 
 ## Might do
 
-- Any ideas?
+- Perf optimizations. Definitely some optimizations that could be made, but are they worth it? I'd like to get some benchmarks running!
 
 ## Wont do
 

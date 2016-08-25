@@ -1,14 +1,15 @@
-const matchRankMap = {
-  equals: 5,
-  startsWith: 4,
-  wordStartsWith: 3,
-  contains: 2,
-  acronym: 1,
-  matches: 0,
-  noMatch: -1,
+const rankings = {
+  EQUAL: 6,
+  STARTS_WITH: 5,
+  WORD_STARTS_WITH: 4,
+  CONTAINS: 3,
+  ACRONYM: 2,
+  MATCHES: 1,
+  NO_MATCH: 0,
 }
 
-export default matchSorter
+matchSorter.rankings = rankings
+export {matchSorter as default, rankings}
 
 /**
  * Takes an array of items and a value and returns a new array with the items that match the given value
@@ -18,13 +19,13 @@ export default matchSorter
  * @return {Array} - the new sorted array
  */
 function matchSorter(items, value, options = {}) {
-  const {keys} = options
+  const {keys, threshold = rankings.MATCHES} = options
   const matchedItems = items.reduce(reduceItemsToRanked, [])
   return matchedItems.sort(sortRankedItems).map(({item}) => item)
 
   function reduceItemsToRanked(matches, item, index) {
     const {rank, keyIndex} = getHighestRanking(item, keys, value)
-    if (rank > matchRankMap.noMatch) {
+    if (rank >= threshold) {
       matches.push({item, rank, index, keyIndex})
     }
     return matches
@@ -42,11 +43,11 @@ function getHighestRanking(item, keys, value) {
       keyIndex = i
     }
     return {rank, keyIndex}
-  }, {rank: matchRankMap.noMatch, keyIndex: -1})
+  }, {rank: rankings.NO_MATCH, keyIndex: -1})
 }
 
 /**
- * Gives a matchRankMap score based on how well the two strings match.
+ * Gives a rankings score based on how well the two strings match.
  * @param {String} testString - the string to test against
  * @param {String} stringToRank - the string to rank
  * @returns {Number} the ranking for how well stringToRank matches testString
@@ -58,37 +59,37 @@ function getMatchRanking(testString, stringToRank) {
 
   // too long
   if (stringToRank.length > testString.length) {
-    return matchRankMap.noMatch
+    return rankings.NO_MATCH
   }
 
   // equals
   if (testString === stringToRank) {
-    return matchRankMap.equals
+    return rankings.EQUAL
   }
 
   // starts with
   if (testString.indexOf(stringToRank) === 0) {
-    return matchRankMap.startsWith
+    return rankings.STARTS_WITH
   }
 
   // word starts with
   if (testString.indexOf(` ${stringToRank}`) !== -1) {
-    return matchRankMap.wordStartsWith
+    return rankings.WORD_STARTS_WITH
   }
 
   // contains
   if (testString.indexOf(stringToRank) !== -1) {
-    return matchRankMap.contains
+    return rankings.CONTAINS
   } else if (stringToRank.length === 1) {
     // If the only character in the given stringToRank
     //   isn't even contained in the testString, then
     //   it's definitely not a match.
-    return matchRankMap.noMatch
+    return rankings.NO_MATCH
   }
 
   // acronym
   if (getAcronym(testString).indexOf(stringToRank) !== -1) {
-    return matchRankMap.acronym
+    return rankings.ACRONYM
   }
 
   return stringsByCharOrder(testString, stringToRank)
@@ -113,7 +114,7 @@ function getAcronym(string) {
 }
 
 /**
- * Returns a matchRankMap.matches or noMatch score based on whether
+ * Returns a rankings.matches or noMatch score based on whether
  * the characters in the stringToRank are found in order in the
  * testString
  * @param {String} testString - the string to test against
@@ -140,10 +141,10 @@ function stringsByCharOrder(testString, stringToRank) {
     const matchChar = stringToRank[i]
     const found = findMatchingCharacter(matchChar, testString)
     if (!found) {
-      return matchRankMap.noMatch
+      return rankings.NO_MATCH
     }
   }
-  return matchRankMap.matches
+  return rankings.MATCHES
 }
 
 /**

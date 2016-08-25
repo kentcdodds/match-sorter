@@ -61,6 +61,8 @@ matchSorter(list, 'h') // ['hi', 'hey', 'hello']
 matchSorter(list, 'y') // ['yo', 'hey']
 matchSorter(list, 'z') // []
 
+// You can also pass an options object:
+// **keys** (defaults to undefined and just uses the value itself as above)
 const objList = [
   {name: 'Janice', color: 'Green'},
   {name: 'Fred', color: 'Orange'},
@@ -69,7 +71,30 @@ const objList = [
 ]
 matchSorter(objList, 'g', {keys: ['name', 'color']}) // [{name: 'George', color: 'Blue'}, {name: 'Janice', color: 'Green'}]
 matchSorter(objList, 're', {keys: ['color', 'name']}) // [{name: 'Jen', color: 'Red'}, {name: 'Janice', color: 'Green'}, {name: 'Fred', color: 'Orange'}]
+
+// **threshold** (defaults to MATCH)
+const fruit = ['orange', 'apple', 'grape', 'banana']
+matchSorter(fruit, 'ap', {threshold: matchSorter.rankings.NO_MATCH}) // ['apple', 'grape', 'orange', 'banana'] (returns all items, just sorted by best match)
+const things = ['google', 'airbnb', 'apple', 'apply', 'app'],
+matchSorter(things, 'app', {threshold: matchSorter.rankings.EQUAL}) // ['app'] (only items that are equal)
+const otherThings = ['fiji apple', 'google', 'app', 'crabapple', 'apple', 'apply']
+matchSorter(otherThings, 'app', {threshold: matchSorter.rankings.WORD_STARTS_WITH}) // ['app', 'apple', 'apply', 'fiji apple'] (everything that matches with "word starts with" or better)
+
+/*
+ * Available thresholds (from top to bottom) are:
+ * - EQUAL
+ * - STARTS_WITH
+ * - WORD_STARTS_WITH
+ * - CONTAINS
+ * - ACRONYM
+ * - MATCHES
+ * - NO_MATCH
+ */
 ```
+
+> In the examples above, we're using CommonJS. If you're using ES6 modules, then you can do:
+>
+> `import matchSorter, {rankings} from 'match-sorter'`
 
 ## Inspiration
 
