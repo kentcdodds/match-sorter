@@ -1,6 +1,6 @@
 # match-sorter
 
-Simple, expected, and deterministic best-match sorting of an array in JavaScript
+Simple, expected, and deterministic best-match sorting of an array in JavaScript. **[Demo](https://jsbin.com/vewoka/edit?js,output)**
 
 [![Build Status][build-badge]][build]
 [![Code Coverage][coverage-badge]][coverage]
