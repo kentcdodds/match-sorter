@@ -115,6 +115,21 @@ const tests = {
       {first: 'not', second: 'not', third: 'not', fourth: 'match'},
     ],
   },
+  'can handle objected with nested keys': {
+    input: [
+      [
+        {name: {first: 'baz'}},
+        {name: {first: 'bat'}},
+        {name: {first: 'foo'}},
+      ],
+      'ba',
+      {keys: ['name.first']},
+    ],
+    output: [
+      {name: {first: 'baz'}},
+      {name: {first: 'bat'}},
+    ],
+  },
   'when providing a rank threshold of NO_MATCH, it returns all of the items': {
     input: [
       ['orange', 'apple', 'grape', 'banana'],

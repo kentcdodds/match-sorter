@@ -2,7 +2,7 @@
 
 ## Want to do
 
-- Support nested `keys` like `name.first`
+- ideas?
 
 ## Might do
 

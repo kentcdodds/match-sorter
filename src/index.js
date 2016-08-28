@@ -37,7 +37,8 @@ function getHighestRanking(item, keys, value) {
     return {rank: getMatchRanking(item, value), keyIndex: -1}
   }
   return keys.reduce(({rank, keyIndex}, key, i) => {
-    const newRank = getMatchRanking(item[key], value)
+    const itemValue = getItemValue(item, key)
+    const newRank = getMatchRanking(itemValue, value)
     if (newRank > rank) {
       rank = newRank
       keyIndex = i
@@ -169,6 +170,20 @@ function sortRankedItems(a, b) {
   } else {
     return aRank > bRank ? aFirst : bFirst
   }
+}
+
+/**
+ * Gets value for key in item at arbitrarily nested keypath
+ * @param {Object} item - the item
+ * @param {Object} key - the potentially nested keypath
+ * @return {String} - the value at nested keypath
+ */
+function getItemValue(item, key) {
+  const isNested = key.indexOf('.') !== -1
+  if (!isNested) {
+    return item[key]
+  }
+  return key.split('.').reduce((itemObj, nestedKey) => itemObj[nestedKey], item)
 }
 
 module.exports = exports.default // CommonJS compat
