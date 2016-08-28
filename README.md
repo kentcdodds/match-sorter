@@ -72,6 +72,15 @@ const objList = [
 matchSorter(objList, 'g', {keys: ['name', 'color']}) // [{name: 'George', color: 'Blue'}, {name: 'Janice', color: 'Green'}]
 matchSorter(objList, 're', {keys: ['color', 'name']}) // [{name: 'Jen', color: 'Red'}, {name: 'Janice', color: 'Green'}, {name: 'Fred', color: 'Orange'}]
 
+//this also works with **nested keys**
+const nestedObjList = [
+  {name: {first: 'Janice'}},
+  {name: {first: 'Fred'}},
+  {name: {first: 'George'}},
+  {name: {first: 'Jen'}},
+]
+matchSorter(nestedObjList, 'j', {keys: ['name.first']}) // [{name: {first: 'Janice'}}, {name: {first: 'Jen'}}]
+
 // **threshold** (defaults to MATCH)
 const fruit = ['orange', 'apple', 'grape', 'banana']
 matchSorter(fruit, 'ap', {threshold: matchSorter.rankings.NO_MATCH}) // ['apple', 'grape', 'orange', 'banana'] (returns all items, just sorted by best match)
