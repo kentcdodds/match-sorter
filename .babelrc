@@ -1,14 +1,15 @@
 {
-  "presets": [["es2015", {"modules": false}], "stage-2"],
-  "plugins": [
-    "transform-es2015-modules-umd",
-  ],
-  "moduleId": "matchSorter",
+  "presets": ["stage-2"],
   "env": {
+    "development": {
+      "presets": ["es2015"],
+    },
+    "rollup": {
+      "presets": [["es2015", {"modules": false}]],
+    },
     "test": {
-      "plugins": [
-        "istanbul"
-      ]
+      "presets": ["es2015"],
+      "plugins": ["istanbul"]
     }
   }
 }

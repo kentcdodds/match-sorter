@@ -15,8 +15,20 @@ module.exports = {
       },
     },
     build: {
-      description: 'delete the dist directory and run babel to build the files',
-      script: 'rimraf dist && babel --copy-files --out-dir dist --ignore *.test.js src',
+      description: 'delete the dist directory and run all builds',
+      default: 'rimraf dist && p-s -p build.main,build.umd,build.umd.min',
+      main: {
+        description: 'transpile all source with babel',
+        script: 'babel --copy-files --out-dir dist/cjs --ignore *.test.js src',
+      },
+      umd: {
+        description: 'run the build with rollup (uses rollup.config.js)',
+        script: 'cross-env rollup --config',
+        min: {
+          description: 'run the rollup build with sourcemaps',
+          script: 'cross-env MINIFY=true rollup --config --sourcemap',
+        },
+      },
     },
     lint: {
       description: 'lint the entire project',
