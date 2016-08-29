@@ -1,3 +1,11 @@
+/**
+ * @name match-sorter
+ * @license MIT license.
+ * @copyright (c) 2016 Kent C. Dodds
+ * @author Kent C. Dodds <kent@doddsfamily.us>
+ */
+import diacritics from 'diacritic'
+
 const rankings = {
   EQUAL: 6,
   STARTS_WITH: 5,
@@ -24,7 +32,7 @@ function matchSorter(items, value, options = {}) {
   return matchedItems.sort(sortRankedItems).map(({item}) => item)
 
   function reduceItemsToRanked(matches, item, index) {
-    const {rank, keyIndex} = getHighestRanking(item, keys, value)
+    const {rank, keyIndex} = getHighestRanking(item, keys, value, options)
     if (rank >= threshold) {
       matches.push({item, rank, index, keyIndex})
     }
@@ -32,13 +40,21 @@ function matchSorter(items, value, options = {}) {
   }
 }
 
-function getHighestRanking(item, keys, value) {
+/**
+ * Gets the highest ranking for value for the given item based on its values for the given keys
+ * @param {*} item - the item to rank
+ * @param {Array} keys - the keys to get values from the item for the ranking
+ * @param {String} value - the value to rank against
+ * @param {Object} options - options to control the ranking
+ * @return {Number} - the highest ranking
+ */
+function getHighestRanking(item, keys, value, options) {
   if (!keys) {
-    return {rank: getMatchRanking(item, value), keyIndex: -1}
+    return {rank: getMatchRanking(item, value, options), keyIndex: -1}
   }
   const valuesToRank = getAllValuesToRank(item, keys)
   return valuesToRank.reduce(({rank, keyIndex}, itemValue, i) => {
-    const newRank = getMatchRanking(itemValue, value)
+    const newRank = getMatchRanking(itemValue, value, options)
     if (newRank > rank) {
       rank = newRank
       keyIndex = i
@@ -51,12 +67,13 @@ function getHighestRanking(item, keys, value) {
  * Gives a rankings score based on how well the two strings match.
  * @param {String} testString - the string to test against
  * @param {String} stringToRank - the string to rank
+ * @param {Object} options - options for the match (like keepDiacritics for comparison)
  * @returns {Number} the ranking for how well stringToRank matches testString
  */
-function getMatchRanking(testString, stringToRank) {
+function getMatchRanking(testString, stringToRank, options) {
   /* eslint complexity:[2, 8] */
-  testString = (`${testString}`).toLowerCase()
-  stringToRank = (`${stringToRank}`).toLowerCase()
+  testString = prepareValueForComparison(testString, options)
+  stringToRank = prepareValueForComparison(stringToRank, options)
 
   // too long
   if (stringToRank.length > testString.length) {
@@ -173,6 +190,20 @@ function sortRankedItems(a, b) {
 }
 
 /**
+ * Prepares value for comparison by stringifying it, removing diacritics (if specified), and toLowerCase-ing it
+ * @param {String} value - the value to clean
+ * @param {Object} options - {keepDiacritics: whether to remove diacritics}
+ * @return {String} the prepared value
+ */
+function prepareValueForComparison(value, {keepDiacritics}) {
+  value = `${value}` // toString
+  if (!keepDiacritics) {
+    value = diacritics.clean(value)
+  }
+  return value.toLowerCase()
+}
+
+/**
  * Gets value for key in item at arbitrarily nested keypath
  * @param {Object} item - the item
  * @param {Object} key - the potentially nested keypath
@@ -188,8 +219,8 @@ function getItemValue(item, key) {
 
 /**
  * Gets all the values for the given keys in the given item and returns an array of those values
- * @param  {Object} item - the item from which the values will be retrieved
- * @param  {Array} keys - the keys to use to retrieve the values
+ * @param {Object} item - the item from which the values will be retrieved
+ * @param {Array} keys - the keys to use to retrieve the values
  * @return {Array} the values in an array
  */
 function getAllValuesToRank(item, keys) {

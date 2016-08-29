@@ -107,6 +107,15 @@ matchSorter(otherThings, 'app', {threshold: matchSorter.rankings.WORD_STARTS_WIT
  * - MATCHES
  * - NO_MATCH
  */
+
+// **keepDiacritics** (defaults to false)
+// by default, match-sorter will strip diacritics before doing any comparisons.
+// this is the default because it makes the most sense from a UX perspective.
+// You can disable this behavior by specifying keepDiacritics: false
+const thingsWithDiacritics = ['jalapeño', 'à la carte', 'café', 'papier-mâché', 'à la mode']
+matchSorter(thingsWithDiacritics, 'aa') // ['jalapeño', 'à la carte', 'papier-mâché', 'à la mode']
+matchSorter(thingsWithDiacritics, 'aa', {keepDiacritics: true}) // ['jalapeño', 'à la carte']
+matchSorter(thingsWithDiacritics, 'à', {keepDiacritics: true}) // ['à la carte', 'à la mode']
 ```
 
 > In the examples above, we're using CommonJS. If you're using ES6 modules, then you can do:
