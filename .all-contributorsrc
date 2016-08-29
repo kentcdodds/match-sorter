@@ -16,7 +16,8 @@
         "code",
         "doc",
         "infra",
-        "test"
+        "test",
+        "review"
       ]
     },
     {
@@ -25,7 +26,10 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/8263298?v=3",
       "profile": "http://conorhastings.com",
       "contributions": [
-        "code"
+        "code",
+        "doc",
+        "test",
+        "review"
       ]
     }
   ]

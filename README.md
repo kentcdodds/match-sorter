@@ -126,7 +126,7 @@ You might try [Fuse.js](https://github.com/krisk/Fuse). It uses advanced math fa
 Thanks goes to these people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) [📖](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) 🚇 [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) | [<img src="https://avatars.githubusercontent.com/u/8263298?v=3" width="100px;"/><br /><sub>Conor Hastings</sub>](http://conorhastings.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) |
+| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) [📖](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) 🚇 [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) 👀 | [<img src="https://avatars.githubusercontent.com/u/8263298?v=3" width="100px;"/><br /><sub>Conor Hastings</sub>](http://conorhastings.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) [📖](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) 👀 |
 | :---: | :---: |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
