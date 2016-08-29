@@ -72,7 +72,15 @@ const objList = [
 matchSorter(objList, 'g', {keys: ['name', 'color']}) // [{name: 'George', color: 'Blue'}, {name: 'Janice', color: 'Green'}]
 matchSorter(objList, 're', {keys: ['color', 'name']}) // [{name: 'Jen', color: 'Red'}, {name: 'Janice', color: 'Green'}, {name: 'Fred', color: 'Orange'}]
 
-//this also works with **nested keys**
+// You can specify a key that is an array of values and the best match from that value is the one that's used for the ranking
+const iceCreamYum = [
+  {favoriteIceCream: ['mint', 'chocolate']},
+  {favoriteIceCream: ['candy cane', 'brownie']},
+  {favoriteIceCream: ['birthday cake', 'rocky road', 'strawberry']},
+]
+matchSorter(iceCreamYum, 'cc', {keys: 'favoriteIceCream'}) // [{favoriteIceCream: ['candy cane', 'brownie']}, {favoriteIceCream: ['mint', 'chocolate']}]
+
+// this also works with **nested keys**
 const nestedObjList = [
   {name: {first: 'Janice'}},
   {name: {first: 'Fred'}},

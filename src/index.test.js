@@ -130,6 +130,35 @@ const tests = {
       {name: {first: 'bat'}},
     ],
   },
+  'can handle keys that are an array of values': {
+    input: [
+      [
+        {favoriteIceCream: ['mint', 'chocolate']},
+        {favoriteIceCream: ['candy cane', 'brownie']},
+        {favoriteIceCream: ['birthday cake', 'rocky road', 'strawberry']},
+      ],
+      'cc',
+      {keys: ['favoriteIceCream']},
+    ],
+    output: [
+      {favoriteIceCream: ['candy cane', 'brownie']},
+      {favoriteIceCream: ['mint', 'chocolate']},
+    ],
+  },
+  'when using arrays of values, when things are equal, the one with the higher index wins': {
+    input: [
+      [
+        {favoriteIceCream: ['mint', 'chocolate']},
+        {favoriteIceCream: ['chocolate', 'brownie']},
+      ],
+      'chocolate',
+      {keys: ['favoriteIceCream']},
+    ],
+    output: [
+      {favoriteIceCream: ['chocolate', 'brownie']},
+      {favoriteIceCream: ['mint', 'chocolate']},
+    ],
+  },
   'when providing a rank threshold of NO_MATCH, it returns all of the items': {
     input: [
       ['orange', 'apple', 'grape', 'banana'],
