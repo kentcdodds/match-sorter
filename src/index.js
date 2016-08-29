@@ -36,8 +36,8 @@ function getHighestRanking(item, keys, value) {
   if (!keys) {
     return {rank: getMatchRanking(item, value), keyIndex: -1}
   }
-  return keys.reduce(({rank, keyIndex}, key, i) => {
-    const itemValue = getItemValue(item, key)
+  const valuesToRank = getAllValuesToRank(item, keys)
+  return valuesToRank.reduce(({rank, keyIndex}, itemValue, i) => {
     const newRank = getMatchRanking(itemValue, value)
     if (newRank > rank) {
       rank = newRank
@@ -184,6 +184,16 @@ function getItemValue(item, key) {
     return item[key]
   }
   return key.split('.').reduce((itemObj, nestedKey) => itemObj[nestedKey], item)
+}
+
+/**
+ * Gets all the values for the given keys in the given item and returns an array of those values
+ * @param  {Object} item - the item from which the values will be retrieved
+ * @param  {Array} keys - the keys to use to retrieve the values
+ * @return {Array} the values in an array
+ */
+function getAllValuesToRank(item, keys) {
+  return keys.reduce((allVals, key) => allVals.concat(getItemValue(item, key)), [])
 }
 
 module.exports = exports.default // CommonJS compat
