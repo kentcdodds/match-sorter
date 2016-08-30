@@ -13,7 +13,12 @@
   "keywords": [],
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
-  "dependencies": {},
+  "bundledDependencies": [
+    "diacritic"
+  ],
+  "dependencies": {
+    "diacritic": "0.0.2"
+  },
   "devDependencies": {
     "all-contributors-cli": "^3.0.0",
     "ava": "^0.16.0",

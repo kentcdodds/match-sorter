@@ -189,6 +189,25 @@ const tests = {
       'app', 'apple', 'apply', 'fiji apple',
     ],
   },
+  'defaults to ignore diacritics': {
+    input: [
+      ['jalapeño', 'à la carte', 'café', 'papier-mâché', 'à la mode'],
+      'aa',
+    ],
+    output: [
+      'jalapeño', 'à la carte', 'papier-mâché', 'à la mode',
+    ],
+  },
+  'takes diacritics in account when keepDiacritics specified as true': {
+    input: [
+      ['jalapeño', 'à la carte', 'papier-mâché', 'à la mode'],
+      'aa',
+      {keepDiacritics: true},
+    ],
+    output: [
+      'jalapeño', 'à la carte',
+    ],
+  },
 }
 
 Object.keys(tests).forEach(title => {
