@@ -14,10 +14,12 @@
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
   "bundledDependencies": [
-    "diacritic"
+    "diacritic",
+    "global-object"
   ],
   "dependencies": {
-    "diacritic": "0.0.2"
+    "diacritic": "0.0.2",
+    "global-object": "1.0.0"
   },
   "devDependencies": {
     "all-contributors-cli": "^3.0.0",
@@ -34,6 +36,7 @@
     "eslint": "^3.1.1",
     "eslint-config-kentcdodds": "^10.0.1",
     "ghooks": "^1.3.2",
+    "nodemon": "1.10.2",
     "nyc": "8.1.0",
     "opt-cli": "^1.4.2",
     "p-s": "^2.3.0",
