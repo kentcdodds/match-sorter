@@ -9,7 +9,7 @@ Simple, expected, and deterministic best-match sorting of an array in JavaScript
 [![downloads][downloads-badge]][npm-stat]
 [![MIT License][license-badge]][LICENSE]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs]
 [![Donate][donate-badge]][donate]
 [![Code of Conduct][coc-badge]][coc]
@@ -41,7 +41,10 @@ To explain the ranking system, I'll use countries as an example:
 
 This ranking seems to make sense in people's minds. At least it does in mine. Feedback welcome!
 
-## Installation
+
+## Getting Started
+
+### Installation
 
 This module is distributed via [npm][npm] which is bundled with [node][node] and should
 be installed as one of your project's `dependencies`:
@@ -50,7 +53,7 @@ be installed as one of your project's `dependencies`:
 npm install --save match-sorter
 ```
 
-## Usage
+### Usage
 
 ```javascript
 const matchSorter = require('match-sorter')
@@ -60,67 +63,109 @@ const list = ['hi', 'hey', 'hello', 'sup', 'yo']
 matchSorter(list, 'h') // ['hi', 'hey', 'hello']
 matchSorter(list, 'y') // ['yo', 'hey']
 matchSorter(list, 'z') // []
+```
 
-// You can also pass an options object:
-// **keys** (defaults to undefined and just uses the value itself as above)
+## Advanced options
+
+### keys: `[string]`
+
+_Default: `undefined`_
+
+By default it just uses the value itself as above. Passing an array tells match-sorter which keys to use for the ranking.
+
+```javascript
 const objList = [
   {name: 'Janice', color: 'Green'},
   {name: 'Fred', color: 'Orange'},
   {name: 'George', color: 'Blue'},
   {name: 'Jen', color: 'Red'},
 ]
-matchSorter(objList, 'g', {keys: ['name', 'color']}) // [{name: 'George', color: 'Blue'}, {name: 'Janice', color: 'Green'}]
-matchSorter(objList, 're', {keys: ['color', 'name']}) // [{name: 'Jen', color: 'Red'}, {name: 'Janice', color: 'Green'}, {name: 'Fred', color: 'Orange'}]
+matchSorter(objList, 'g', {keys: ['name', 'color']})
+// [{name: 'George', color: 'Blue'}, {name: 'Janice', color: 'Green'}]
 
-// You can specify a key that is an array of values and the best match from that value is the one that's used for the ranking
+matchSorter(objList, 're', {keys: ['color', 'name']})
+// [{name: 'Jen', color: 'Red'}, {name: 'Janice', color: 'Green'}, {name: 'Fred', color: 'Orange'}]
+```
+
+__Array of values__: When the specified key matches an array of values, the best match from the values of in the array is going to be used for the ranking.
+
+```javascript
 const iceCreamYum = [
   {favoriteIceCream: ['mint', 'chocolate']},
   {favoriteIceCream: ['candy cane', 'brownie']},
   {favoriteIceCream: ['birthday cake', 'rocky road', 'strawberry']},
 ]
-matchSorter(iceCreamYum, 'cc', {keys: 'favoriteIceCream'}) // [{favoriteIceCream: ['candy cane', 'brownie']}, {favoriteIceCream: ['mint', 'chocolate']}]
+matchSorter(iceCreamYum, 'cc', {keys: ['favoriteIceCream']})
+// [{favoriteIceCream: ['candy cane', 'brownie']}, {favoriteIceCream: ['mint', 'chocolate']}]
+```
 
-// this also works with **nested keys**
+__Nested Keys__: You can specify nested keys using dot-notation.
+
+```javascript
 const nestedObjList = [
   {name: {first: 'Janice'}},
   {name: {first: 'Fred'}},
   {name: {first: 'George'}},
   {name: {first: 'Jen'}},
 ]
-matchSorter(nestedObjList, 'j', {keys: ['name.first']}) // [{name: {first: 'Janice'}}, {name: {first: 'Jen'}}]
-
-// **threshold** (defaults to MATCH)
-const fruit = ['orange', 'apple', 'grape', 'banana']
-matchSorter(fruit, 'ap', {threshold: matchSorter.rankings.NO_MATCH}) // ['apple', 'grape', 'orange', 'banana'] (returns all items, just sorted by best match)
-const things = ['google', 'airbnb', 'apple', 'apply', 'app'],
-matchSorter(things, 'app', {threshold: matchSorter.rankings.EQUAL}) // ['app'] (only items that are equal)
-const otherThings = ['fiji apple', 'google', 'app', 'crabapple', 'apple', 'apply']
-matchSorter(otherThings, 'app', {threshold: matchSorter.rankings.WORD_STARTS_WITH}) // ['app', 'apple', 'apply', 'fiji apple'] (everything that matches with "word starts with" or better)
-
-/*
- * Available thresholds (from top to bottom) are:
- * - EQUAL
- * - STARTS_WITH
- * - WORD_STARTS_WITH
- * - CONTAINS
- * - ACRONYM
- * - MATCHES
- * - NO_MATCH
- */
-
-// **keepDiacritics** (defaults to false)
-// by default, match-sorter will strip diacritics before doing any comparisons.
-// this is the default because it makes the most sense from a UX perspective.
-// You can disable this behavior by specifying keepDiacritics: false
-const thingsWithDiacritics = ['jalapeño', 'à la carte', 'café', 'papier-mâché', 'à la mode']
-matchSorter(thingsWithDiacritics, 'aa') // ['jalapeño', 'à la carte', 'papier-mâché', 'à la mode']
-matchSorter(thingsWithDiacritics, 'aa', {keepDiacritics: true}) // ['jalapeño', 'à la carte']
-matchSorter(thingsWithDiacritics, 'à', {keepDiacritics: true}) // ['à la carte', 'à la mode']
+matchSorter(nestedObjList, 'j', {keys: ['name.first']})
+// [{name: {first: 'Janice'}}, {name: {first: 'Jen'}}]
 ```
 
-> In the examples above, we're using CommonJS. If you're using ES6 modules, then you can do:
->
-> `import matchSorter, {rankings} from 'match-sorter'`
+### threshold: `number`
+
+_Default: `MATCHES`_
+
+Thresholds can be used to specify the criteria used to rank the results.
+Available thresholds (from top to bottom) are:
+ * EQUAL
+ * STARTS_WITH
+ * WORD_STARTS_WITH
+ * CONTAINS
+ * ACRONYM
+ * MATCHES _(default value)_
+ * NO_MATCH
+
+```javascript
+const fruit = ['orange', 'apple', 'grape', 'banana']
+matchSorter(fruit, 'ap', {threshold: matchSorter.rankings.NO_MATCH})
+// ['apple', 'grape', 'orange', 'banana'] (returns all items, just sorted by best match)
+
+const things = ['google', 'airbnb', 'apple', 'apply', 'app'],
+matchSorter(things, 'app', {threshold: matchSorter.rankings.EQUAL})
+// ['app'] (only items that are equal)
+
+const otherThings = ['fiji apple', 'google', 'app', 'crabapple', 'apple', 'apply']
+matchSorter(otherThings, 'app', {threshold: matchSorter.rankings.WORD_STARTS_WITH})
+// ['app', 'apple', 'apply', 'fiji apple'] (everything that matches with "word starts with" or better)
+```
+
+### keepDiacritics: `boolean`
+
+_Default: `false`_
+
+By default, match-sorter will strip diacritics before doing any comparisons.
+This is the default because it makes the most sense from a UX perspective.
+
+You can disable this behavior by specifying `keepDiacritics: true`
+
+```javascript
+const thingsWithDiacritics = ['jalapeño', 'à la carte', 'café', 'papier-mâché', 'à la mode']
+matchSorter(thingsWithDiacritics, 'aa')
+// ['jalapeño', 'à la carte', 'papier-mâché', 'à la mode']
+
+matchSorter(thingsWithDiacritics, 'aa', {keepDiacritics: true})
+// ['jalapeño', 'à la carte']
+
+matchSorter(thingsWithDiacritics, 'à', {keepDiacritics: true})
+// ['à la carte', 'à la mode']
+```
+
+## Using ES6?
+
+In the examples above, we're using CommonJS. If you're using ES6 modules, then you can do:
+
+`import matchSorter, {rankings} from 'match-sorter'`
 
 ## Inspiration
 
@@ -135,8 +180,8 @@ You might try [Fuse.js](https://github.com/krisk/Fuse). It uses advanced math fa
 Thanks goes to these people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) [📖](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) 🚇 [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) 👀 | [<img src="https://avatars.githubusercontent.com/u/8263298?v=3" width="100px;"/><br /><sub>Conor Hastings</sub>](http://conorhastings.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) [📖](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) 👀 |
-| :---: | :---: |
+| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) [📖](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) 🚇 [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) 👀 | [<img src="https://avatars.githubusercontent.com/u/8263298?v=3" width="100px;"/><br /><sub>Conor Hastings</sub>](http://conorhastings.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) [📖](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) 👀 | [<img src="https://avatars.githubusercontent.com/u/574806?v=3" width="100px;"/><br /><sub>Rogelio Guzman</sub>](https://github.com/rogeliog)<br />[📖](https://github.com/kentcdodds/match-sorter/commits?author=rogeliog) |
+| :---: | :---: | :---: |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification. Contributions of any kind welcome!
