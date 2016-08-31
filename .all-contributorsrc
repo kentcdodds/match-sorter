@@ -31,6 +31,15 @@
         "test",
         "review"
       ]
+    },
+    {
+      "login": "rogeliog",
+      "name": "Rogelio Guzman",
+      "avatar_url": "https://avatars.githubusercontent.com/u/574806?v=3",
+      "profile": "https://github.com/rogeliog",
+      "contributions": [
+        "doc"
+      ]
     }
   ]
 }
