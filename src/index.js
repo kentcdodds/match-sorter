@@ -5,6 +5,7 @@
  * @author Kent C. Dodds <kent@doddsfamily.us>
  */
 import diacritics from 'diacritic'
+import globalObject from 'global-object'
 
 const rankings = {
   EQUAL: 6,
@@ -17,7 +18,6 @@ const rankings = {
 }
 
 matchSorter.rankings = rankings
-export {matchSorter as default, rankings}
 
 /**
  * Takes an array of items and a value and returns a new array with the items that match the given value
@@ -227,4 +227,15 @@ function getAllValuesToRank(item, keys) {
   return keys.reduce((allVals, key) => allVals.concat(getItemValue(item, key)), [])
 }
 
-module.exports = exports.default // CommonJS compat
+// some manual ✨ magic umd ✨ here because Rollup isn't capable of exposing our module the way we want
+// see dist-test/index.js
+/* istanbul ignore next */
+if (typeof exports === 'object' && typeof module !== 'undefined') {
+  matchSorter.default = matchSorter
+  module.exports = matchSorter
+  Object.defineProperty(exports, '__esModule', {value: true})
+} else if (typeof define === 'function' && define.amd) { // eslint-disable-line
+  define(() => matchSorter) // eslint-disable-line
+} else {
+  globalObject.matchSorter = matchSorter // eslint-disable-line
+}

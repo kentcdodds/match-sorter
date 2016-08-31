@@ -10,13 +10,11 @@ const filename = process.env.MINIFY ? 'match-sorter.min.js' : 'match-sorter.js'
 export default {
   entry: 'src/index.js',
   dest: `dist/umd/${filename}`,
-  format: 'umd',
-  moduleName: 'matchSorter',
+  exports: 'none',
   plugins: [
     nodeResolve({jsnext: true, main: true}),
     commonjs({include: 'node_modules/**'}),
     rollupBabel({exclude: 'node_modules/**'}),
     process.env.MINIFY ? uglify() : null,
   ].filter(i => !!i),
-  exports: 'named',
 }

@@ -1,6 +1,7 @@
 /* eslint ava/no-only-test:0, ava/no-skip-test:0 */
 import test from 'ava'
-import matchSorter, {rankings} from './'
+// have to disable eslint for the next line because we have to do weird things to make things work with UMD
+import matchSorter, {rankings} from './' // eslint-disable-line import/default,import/named
 
 const tests = {
   'returns an empty array with a string that is too long': {
