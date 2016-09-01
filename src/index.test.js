@@ -1,5 +1,3 @@
-/* eslint ava/no-only-test:0, ava/no-skip-test:0 */
-import test from 'ava'
 // have to disable eslint for the next line because we have to do weird things to make things work with UMD
 import matchSorter, {rankings} from './' // eslint-disable-line import/default,import/named
 
@@ -214,14 +212,14 @@ const tests = {
 Object.keys(tests).forEach(title => {
   const {input, output, only, skip} = tests[title]
   if (only) {
-    test.only(title, testFn)
+    fit(title, testFn)
   } else if (skip) {
-    test.skip(title, testFn)
+    xit(title, testFn)
   } else {
-    test(title, testFn)
+    it(title, testFn)
   }
 
-  function testFn(t) {
-    t.deepEqual(output, matchSorter(...input))
+  function testFn() {
+    expect(matchSorter(...input)).toEqual(output)
   }
 })
