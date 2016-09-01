@@ -31,10 +31,10 @@ module.exports = {
       },
       umd: {
         description: 'run the build with rollup (uses rollup.config.js)',
-        script: 'cross-env rollup --config',
+        script: 'rollup --config',
         min: {
           description: 'run the rollup build with sourcemaps',
-          script: 'cross-env MINIFY=true rollup --config --sourcemap',
+          script: 'rollup --config --sourcemap --match-sorter-minify',
         },
       },
       watch: {
