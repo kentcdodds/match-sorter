@@ -6,13 +6,10 @@ module.exports = {
     },
     test: {
       default: {
-        description: 'Runs AVA with nyc (which is configured in package.json)',
-        script: 'cross-env NODE_ENV=test nyc ava',
+        description: `This runs jest with coverage. If we're on Travis, then we'll ignore the cache (just in case).`,
+        script: `jest --coverage ${process.env.CI ? '--no-cache' : ''}`,
       },
-      watch: {
-        description: 'Run AVA in watch mode',
-        script: 'ava -w --require babel-register',
-      },
+      watch: 'jest --watch --coverage',
       build: {
         description: 'validates the built files',
         script: 'babel-node dist-test/index.js',
