@@ -1,14 +1,7 @@
 {
-  "presets": ["stage-2"],
+  "presets": ["es2015", "stage-2"],
   "env": {
-    "development": {
-      "presets": ["es2015"],
-    },
-    "rollup": {
-      "presets": [["es2015", {"modules": false}]],
-    },
     "test": {
-      "presets": ["es2015"],
       "plugins": ["istanbul"]
     }
   }
