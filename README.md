@@ -112,6 +112,19 @@ matchSorter(nestedObjList, 'j', {keys: ['name.first']})
 // [{name: {first: 'Janice'}}, {name: {first: 'Jen'}}]
 ```
 
+__Property Callbacks__: Alternatively, you may also pass in a callback function that resolves the value of the key(s) you wish to match on. This is especially useful when interfacing with libraries such as Immutable.js
+
+```javascript
+const list = [
+  {name: 'Janice'},
+  {name: 'Fred'},
+  {name: 'George'},
+  {name: 'Jen'},
+]
+matchSorter(list, 'j', {keys: [(item) => item.name]})
+// [{name: 'Janice'}, {name: 'Jen'}]
+```
+
 ### threshold: `number`
 
 _Default: `MATCHES`_
