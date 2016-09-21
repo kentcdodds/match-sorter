@@ -129,6 +129,21 @@ const tests = {
       {name: {first: 'bat'}},
     ],
   },
+  'can handle property callback': {
+    input: [
+      [
+        {name: {first: 'baz'}},
+        {name: {first: 'bat'}},
+        {name: {first: 'foo'}},
+      ],
+      'ba',
+      {keys: [(item) => item.name.first]},
+    ],
+    output: [
+      {name: {first: 'baz'}},
+      {name: {first: 'bat'}},
+    ],
+  },
   'can handle keys that are an array of values': {
     input: [
       [
