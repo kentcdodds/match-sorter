@@ -40,6 +40,17 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "clauderic",
+      "name": "Claudéric Demers",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1416436?v=3",
+      "profile": "http://ced.io",
+      "contributions": [
+        "code",
+        "doc",
+        "test"
+      ]
     }
   ]
 }
