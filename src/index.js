@@ -206,10 +206,13 @@ function prepareValueForComparison(value, {keepDiacritics}) {
 /**
  * Gets value for key in item at arbitrarily nested keypath
  * @param {Object} item - the item
- * @param {Object} key - the potentially nested keypath
+ * @param {Object|Function} key - the potentially nested keypath or property callback
  * @return {String} - the value at nested keypath
  */
 function getItemValue(item, key) {
+  if (typeof key === 'function') {
+    return key(item)
+  }
   const isNested = key.indexOf('.') !== -1
   if (!isNested) {
     return item[key]
