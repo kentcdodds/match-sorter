@@ -137,7 +137,7 @@ const tests = {
         {name: {first: 'foo'}},
       ],
       'ba',
-      {keys: [(item) => item.name.first]},
+      {keys: [item => item.name.first]},
     ],
     output: [
       {name: {first: 'baz'}},
