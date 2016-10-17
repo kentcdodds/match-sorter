@@ -90,7 +90,7 @@ function getMatchRanking(testString, stringToRank, options) {
   testString = testString.toLowerCase()
   stringToRank = stringToRank.toLowerCase()
 
-  // case sensitive equals
+  // case insensitive equals
   if (testString === stringToRank) {
     return rankings.EQUAL
   }
