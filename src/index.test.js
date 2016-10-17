@@ -28,6 +28,7 @@ const tests = {
       [
         'The Tail of Two Cities 1', // acronym
         'tTOtc', // equal
+        'ttotc', // case-sensitive-equal
         'The 1-ttotc-2 container', // contains
         'The Tail of Forty Cities', // match
         'The Tail of Two Cities', // acronym2
@@ -43,6 +44,7 @@ const tests = {
       'ttotc',
     ],
     output: [
+      'ttotc', // case-sensitive-equal
       'tTOtc', // equal
       'TTotc', // equal2
       'ttotc-starts with', // startsWith
@@ -188,6 +190,16 @@ const tests = {
       ['google', 'airbnb', 'apple', 'apply', 'app'],
       'app',
       {threshold: rankings.EQUAL},
+    ],
+    output: [
+      'app',
+    ],
+  },
+  'when providing a rank threshold of CASE_SENSITIVE_EQUAL, it returns only case-sensitive equal matches': {
+    input: [
+      ['google', 'airbnb', 'apple', 'apply', 'app', 'aPp', 'App'],
+      'app',
+      {threshold: rankings.CASE_SENSITIVE_EQUAL},
     ],
     output: [
       'app',
