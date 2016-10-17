@@ -32,12 +32,13 @@ This follows a simple and sensible (user friendly) algorithm that makes it easy 
 
 To explain the ranking system, I'll use countries as an example:
 
-1. **EQUALS**: Equality trumps all. These will be first. (ex. `France` would match `France`)
-2. **STARTS WITH**: If the item starts with the given value (ex. `Sou` would match `South Korea` or `South Africa`)
-3. **WORD STARTS WITH**: If the item has multiple words, then if one of those words starts with the given value (ex. `Repub` would match `Dominican Republic`)
-4. **CONTAINS**: If the item contains the given value (ex. `ham` would match `Bahamas`)
-5. **ACRONYM**: If the item's acronym is the given value (ex. `us` would match `United States`)
-6. **SIMPLE MATCH**: If the item has letters in the same order as the letters of the given value (ex. `iw` would match `Zimbabwe`, but not `Kuwait` because it must be in the same order).
+1. **CASE SENSITIVE EQUALS**: Case-sensitive equality trumps all. These will be first. (ex. `France` would match `France `, but not `france`)
+2. **EQUALS**: Case-insensitive equality (ex. `France` would match `france`)
+3. **STARTS WITH**: If the item starts with the given value (ex. `Sou` would match `South Korea` or `South Africa`)
+4. **WORD STARTS WITH**: If the item has multiple words, then if one of those words starts with the given value (ex. `Repub` would match `Dominican Republic`)
+5. **CONTAINS**: If the item contains the given value (ex. `ham` would match `Bahamas`)
+6. **ACRONYM**: If the item's acronym is the given value (ex. `us` would match `United States`)
+7. **SIMPLE MATCH**: If the item has letters in the same order as the letters of the given value (ex. `iw` would match `Zimbabwe`, but not `Kuwait` because it must be in the same order).
 
 This ranking seems to make sense in people's minds. At least it does in mine. Feedback welcome!
 
@@ -131,6 +132,7 @@ _Default: `MATCHES`_
 
 Thresholds can be used to specify the criteria used to rank the results.
 Available thresholds (from top to bottom) are:
+ * CASE_SENSITIVE_EQUAL
  * EQUAL
  * STARTS_WITH
  * WORD_STARTS_WITH
