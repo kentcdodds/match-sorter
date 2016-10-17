@@ -8,6 +8,7 @@ import diacritics from 'diacritic'
 import globalObject from 'global-object'
 
 const rankings = {
+  CASE_SENSITIVE_EQUAL: 7,
   EQUAL: 6,
   STARTS_WITH: 5,
   WORD_STARTS_WITH: 4,
@@ -80,7 +81,16 @@ function getMatchRanking(testString, stringToRank, options) {
     return rankings.NO_MATCH
   }
 
-  // equals
+  // case sensitive equals
+  if (testString === stringToRank) {
+    return rankings.CASE_SENSITIVE_EQUAL
+  }
+
+  // Lowercasing before further comparison
+  testString = testString.toLowerCase()
+  stringToRank = stringToRank.toLowerCase()
+
+  // case sensitive equals
   if (testString === stringToRank) {
     return rankings.EQUAL
   }
@@ -190,7 +200,7 @@ function sortRankedItems(a, b) {
 }
 
 /**
- * Prepares value for comparison by stringifying it, removing diacritics (if specified), and toLowerCase-ing it
+ * Prepares value for comparison by stringifying it, removing diacritics (if specified)
  * @param {String} value - the value to clean
  * @param {Object} options - {keepDiacritics: whether to remove diacritics}
  * @return {String} the prepared value
@@ -200,7 +210,7 @@ function prepareValueForComparison(value, {keepDiacritics}) {
   if (!keepDiacritics) {
     value = diacritics.clean(value)
   }
-  return value.toLowerCase()
+  return value
 }
 
 /**
