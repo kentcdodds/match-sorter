@@ -9,7 +9,7 @@ module.exports = {
         description: `This runs jest with coverage. If we're on Travis, then we'll ignore the cache (just in case).`,
         script: `jest --coverage ${process.env.CI ? '--no-cache' : ''}`,
       },
-      watch: 'jest --watch --coverage',
+      watch: 'jest --watch',
       build: {
         description: 'validates the built files',
         script: 'babel-node dist-test/index.js',
