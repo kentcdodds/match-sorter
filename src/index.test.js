@@ -234,16 +234,49 @@ const tests = {
       'jalapeño', 'à la carte',
     ],
   },
+  'sorts items based on how closely they match': {
+    skip: true, // wanna help make this a thing? https://github.com/kentcdodds/match-sorter/issues/21
+    input: [
+      ['Antigua and Barbuda', 'India', 'Bosnia and Herzegovina', 'Indonesia'],
+      'Ina',
+    ],
+    output: [
+      // these are sorted based on how closes their letters are to one another based on the input
+      // 2           6               8                      15
+      'India', 'Indonesia', 'Antigua and Barbuda', 'Bosnia and Herzegovina',
+      // though, technically, `India` comes up first because it matches with STARTS_WITH...
+    ],
+  },
+  'WORD_STARTS_WITH will take camelCase, PascalCase, kebab-case, and snake_case into account': {
+    skip: true, // wanna help make this a thing? File an issue!
+    input: [
+      [
+        'somethingcontainedintheword', // if this is last, then we're good
+        'camelCaseContainedInTheWord',
+        'PascalCaseContainedInTheWord',
+        'kebab-case-contained-in-the-word',
+        'snake_case_contained_in_the_word',
+      ],
+      'cont',
+    ],
+    output: [
+      'camelCaseContainedInTheWord',
+      'PascalCaseContainedInTheWord',
+      'kebab-case-contained-in-the-word',
+      'snake_case_contained_in_the_word',
+      'somethingcontainedintheword',
+    ],
+  },
 }
 
 Object.keys(tests).forEach(title => {
   const {input, output, only, skip} = tests[title]
   if (only) {
-    fit(title, testFn)
+    test.only(title, testFn)
   } else if (skip) {
-    xit(title, testFn)
+    test.skip(title, testFn)
   } else {
-    it(title, testFn)
+    test(title, testFn)
   }
 
   function testFn() {
