@@ -272,9 +272,9 @@ const tests = {
 Object.keys(tests).forEach(title => {
   const {input, output, only, skip} = tests[title]
   if (only) {
-    test.only(title, testFn)
+    test.only(title, testFn) // eslint-disable-line
   } else if (skip) {
-    test.skip(title, testFn)
+    test.skip(title, testFn) // eslint-disable-line
   } else {
     test(title, testFn)
   }

@@ -1,3 +1,5 @@
+const npsUtils = require('nps-utils')
+
 module.exports = {
   scripts: {
     commit: {
@@ -21,7 +23,10 @@ module.exports = {
     },
     build: {
       description: 'delete the dist directory and run all builds',
-      default: 'rimraf dist && p-s -p build.main,build.umd,build.umd.min',
+      default: npsUtils.series(
+        npsUtils.rimraf('dist'),
+        npsUtils.concurrent.nps('build.main', 'build.umd', 'build.umd.min')
+      ),
       main: {
         description: 'transpile all source with babel',
         script: 'babel --copy-files --out-dir dist/cjs --ignore *.test.js src',
@@ -46,7 +51,7 @@ module.exports = {
       },
       coverage: {
         description: 'runs tests as files change in `src`',
-        script: watchSrc('p-s test'),
+        script: watchSrc('npm start -s test'),
       },
     },
     lint: {
@@ -59,11 +64,18 @@ module.exports = {
     },
     release: {
       description: 'We automate releases with semantic-release. This should only be run on travis',
-      script: 'semantic-release pre && npm publish && semantic-release post',
+      script: npsUtils.series(
+        'semantic-release pre',
+        'npm publish',
+        'semantic-release post'
+      ),
     },
     validate: {
       description: 'This runs several scripts to make sure things look good before committing or on clean install',
-      script: 'p-s -p lint,build,test && p-s test.build',
+      script: npsUtils.series(
+        npsUtils.concurrent.nps('lint', 'build', 'test'),
+        'nps test.build'
+      ),
     },
     addContributor: {
       description: 'When new people contribute to the project, run this',
@@ -86,3 +98,17 @@ function watch(paths, command) {
 function watchSrc(command) {
   return watch(['src/**/*.js'], command)
 }
+
+// this is not transpiled
+/*
+  eslint
+  max-len: 0,
+  comma-dangle: [
+    2,
+    {
+      arrays: 'always-multiline',
+      objects: 'always-multiline',
+      functions: 'never'
+    }
+  ]
+ */
