@@ -9,7 +9,7 @@ Simple, expected, and deterministic best-match sorting of an array in JavaScript
 [![downloads][downloads-badge]][npm-stat]
 [![MIT License][license-badge]][LICENSE]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs]
 [![Donate][donate-badge]][donate]
 [![Code of Conduct][coc-badge]][coc]
@@ -126,6 +126,32 @@ matchSorter(list, 'j', {keys: [(item) => item.name]})
 // [{name: 'Janice'}, {name: 'Jen'}]
 ```
 
+__Min and Max Ranking__: You may restrict specific keys to a minimum or maximum ranking by passing in an object. A key with a minimum rank will only get promoted if there is at least a simple match.
+
+```javascript
+const tea = [
+  {tea: 'Earl Grey', alias: 'A'},
+  {tea: 'Assam', alias: 'B'},
+  {tea: 'Black', alias: 'C'},
+]
+matchSorter(tea, 'A', {keys: ['tea', {maxRanking: matchSorter.rankings.STARTS_WITH, key: 'alias'}]})
+// without maxRanking, Earl Grey would come first because the alias "A" would be CASE_SENSITIVE_EQUAL
+// `tea` key comes before `alias` key, so Assam comes first even though both match as STARTS_WITH
+// [{tea: 'Assam', alias: 'B'}, {tea: 'Earl Grey', alias: 'A'},{tea: 'Black', alias: 'C'}]
+```
+
+```javascript
+const tea = [
+  {tea: 'Milk', alias: 'moo'},
+  {tea: 'Oolong', alias: 'B'},
+  {tea: 'Green', alias: 'C'},
+]
+matchSorter(tea, 'oo', {keys: ['tea', {minRanking: matchSorter.rankings.EQUAL, key: 'alias'}]})
+// minRanking bumps Milk up to EQUAL from CONTAINS (alias)
+// Oolong matches as STARTS_WITH
+// Green is missing due to no match
+// [{tea: 'Milk', alias: 'moo'}, {tea: 'Oolong', alias: 'B'}]
+```
 ### threshold: `number`
 
 _Default: `MATCHES`_
@@ -195,8 +221,8 @@ You might try [Fuse.js](https://github.com/krisk/Fuse). It uses advanced math fa
 Thanks goes to these people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) [📖](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) 🚇 [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) 👀 | [<img src="https://avatars.githubusercontent.com/u/8263298?v=3" width="100px;"/><br /><sub>Conor Hastings</sub>](http://conorhastings.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) [📖](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) 👀 | [<img src="https://avatars.githubusercontent.com/u/574806?v=3" width="100px;"/><br /><sub>Rogelio Guzman</sub>](https://github.com/rogeliog)<br />[📖](https://github.com/kentcdodds/match-sorter/commits?author=rogeliog) | [<img src="https://avatars.githubusercontent.com/u/1416436?v=3" width="100px;"/><br /><sub>Claudéric Demers</sub>](http://ced.io)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=clauderic) [📖](https://github.com/kentcdodds/match-sorter/commits?author=clauderic) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=clauderic) |
-| :---: | :---: | :---: | :---: |
+| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) [📖](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) 🚇 [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) 👀 | [<img src="https://avatars.githubusercontent.com/u/8263298?v=3" width="100px;"/><br /><sub>Conor Hastings</sub>](http://conorhastings.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) [📖](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) 👀 | [<img src="https://avatars.githubusercontent.com/u/574806?v=3" width="100px;"/><br /><sub>Rogelio Guzman</sub>](https://github.com/rogeliog)<br />[📖](https://github.com/kentcdodds/match-sorter/commits?author=rogeliog) | [<img src="https://avatars.githubusercontent.com/u/1416436?v=3" width="100px;"/><br /><sub>Claudéric Demers</sub>](http://ced.io)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=clauderic) [📖](https://github.com/kentcdodds/match-sorter/commits?author=clauderic) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=clauderic) | [<img src="https://avatars1.githubusercontent.com/u/19157735?v=3" width="100px;"/><br /><sub>Denver Chen</sub>](https://github.com/nfdjps)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps) [📖](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps) |
+| :---: | :---: | :---: | :---: | :---: |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification. Contributions of any kind welcome!

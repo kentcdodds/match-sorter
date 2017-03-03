@@ -161,6 +161,42 @@ const tests = {
       {favoriteIceCream: ['mint', 'chocolate']},
     ],
   },
+  'can handle keys with a maxRanking': {
+    input: [
+      [
+        {tea: 'Earl Grey', alias: 'A'},
+        {tea: 'Assam', alias: 'B'},
+        {tea: 'Black', alias: 'C'},
+      ],
+      'A',
+      {keys: ['tea', {maxRanking: matchSorter.rankings.STARTS_WITH, key: 'alias'}]},
+    ],
+    // without maxRanking, Earl Grey would come first because the alias "A" would be CASE_SENSITIVE_EQUAL
+    // `tea` key comes before `alias` key, so Assam comes first even though both match as STARTS_WITH
+    output: [
+      {tea: 'Assam', alias: 'B'},
+      {tea: 'Earl Grey', alias: 'A'},
+      {tea: 'Black', alias: 'C'},
+    ],
+  },
+  'can handle keys with a minRanking': {
+    input: [
+      [
+        {tea: 'Milk', alias: 'moo'},
+        {tea: 'Oolong', alias: 'B'},
+        {tea: 'Green', alias: 'C'},
+      ],
+      'oo',
+      {keys: ['tea', {minRanking: matchSorter.rankings.EQUAL, key: 'alias'}]},
+    ],
+    // minRanking bumps Milk up to EQUAL from CONTAINS (alias)
+    // Oolong matches as STARTS_WITH
+    // Green is missing due to no match
+    output: [
+      {tea: 'Milk', alias: 'moo'},
+      {tea: 'Oolong', alias: 'B'},
+    ],
+  },
   'when using arrays of values, when things are equal, the one with the higher index wins': {
     input: [
       [
