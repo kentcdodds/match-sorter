@@ -54,11 +54,17 @@ function getHighestRanking(item, keys, value, options) {
     return {rank: getMatchRanking(item, value, options), keyIndex: -1}
   }
   const valuesToRank = getAllValuesToRank(item, keys)
-  return valuesToRank.reduce(({rank, keyIndex}, itemValue, i) => {
+  return valuesToRank.reduce(({rank, keyIndex}, {itemValue, attributes}, i) => {
     const newRank = getMatchRanking(itemValue, value, options)
     if (newRank > rank) {
       rank = newRank
       keyIndex = i
+    }
+    const {minRanking, maxRanking} = attributes
+    if (rank < minRanking && newRank >= rankings.MATCHES) {
+      rank = minRanking
+    } else if (rank > maxRanking) {
+      rank = maxRanking
     }
     return {rank, keyIndex}
   }, {rank: rankings.NO_MATCH, keyIndex: -1})
@@ -217,27 +223,60 @@ function prepareValueForComparison(value, {keepDiacritics}) {
  * Gets value for key in item at arbitrarily nested keypath
  * @param {Object} item - the item
  * @param {Object|Function} key - the potentially nested keypath or property callback
- * @return {String} - the value at nested keypath
+ * @return {Array} - an array containing the value(s) at the nested keypath
  */
-function getItemValue(item, key) {
+function getItemValues(item, key) {
+  if (typeof key === 'object') {
+    key = key.key
+  }
+  let value
   if (typeof key === 'function') {
-    return key(item)
+    value = key(item)
+  } else if (key.indexOf('.') !== -1) { // eslint-disable-line no-negated-condition
+    // handle nested keys
+    value = key.split('.').reduce((itemObj, nestedKey) => itemObj[nestedKey], item)
+  } else {
+    value = item[key]
   }
-  const isNested = key.indexOf('.') !== -1
-  if (!isNested) {
-    return item[key]
-  }
-  return key.split('.').reduce((itemObj, nestedKey) => itemObj[nestedKey], item)
+  // concat because `value` can be a string or an array
+  return value ? [].concat(value) : null
 }
 
 /**
  * Gets all the values for the given keys in the given item and returns an array of those values
  * @param {Object} item - the item from which the values will be retrieved
  * @param {Array} keys - the keys to use to retrieve the values
- * @return {Array} the values in an array
+ * @return {Array} objects with {itemValue, attributes}
  */
 function getAllValuesToRank(item, keys) {
-  return keys.reduce((allVals, key) => allVals.concat(getItemValue(item, key)), [])
+  return keys.reduce((allVals, key) => {
+    const values = getItemValues(item, key)
+    if (values) {
+      values.forEach(itemValue => {
+        allVals.push({
+          itemValue,
+          attributes: getKeyAttributes(key),
+        })
+      })
+    }
+    return allVals
+  }, [])
+}
+
+/**
+ * Gets all the attributes for the given key
+ * @param {Object|String} key - the key from which the attributes will be retrieved
+ * @return {Object} object containing the key's attributes
+ */
+function getKeyAttributes(key) {
+  if (typeof key === 'string') {
+    key = {key}
+  }
+  return {
+    maxRanking: Infinity,
+    minRanking: -Infinity,
+    ...key,
+  }
 }
 
 // some manual ✨ magic umd ✨ here because Rollup isn't capable of exposing our module the way we want
