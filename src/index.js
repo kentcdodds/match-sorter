@@ -8,13 +8,12 @@ import diacritics from 'diacritic'
 import globalObject from 'global-object'
 
 const rankings = {
-  CASE_SENSITIVE_EQUAL: 8,
-  EQUAL: 7,
-  STARTS_WITH: 6,
-  WORD_STARTS_WITH: 5,
-  CONTAINS: 4,
-  ACRONYM: 3,
-  CLOSE_MATCH: 2,
+  CASE_SENSITIVE_EQUAL: 7,
+  EQUAL: 6,
+  STARTS_WITH: 5,
+  WORD_STARTS_WITH: 4,
+  CONTAINS: 3,
+  ACRONYM: 2,
   MATCHES: 1,
   NO_MATCH: 0,
 }
@@ -121,13 +120,9 @@ function getMatchRanking(testString, stringToRank, options) {
     return rankings.ACRONYM
   }
 
-  // close match
-  const closeMatch = getCloseMatch(testString, stringToRank)
-  if (closeMatch !== rankings.NO_MATCH) {
-    return closeMatch
-  }
-
-  return stringsByCharOrder(testString, stringToRank)
+  // will return a number between 0 and 1 depending
+  //on how close of a match it is.
+  return getRankedMatch(testString, stringToRank)
 }
 
 /**
@@ -149,13 +144,15 @@ function getAcronym(string) {
 }
 
 /**
- * Returns a rankings.close_match score based on how spread apart the
- * characters from the stringToRank are within the testString
+ * Returns a score based on how spread apart the
+ * characters from the stringToRank are within the testString.
+ * A number close to 1 represents a close match. A number close to 0
+ * represents a loose match.
  * @param {String} testString - the string to test against
  * @param {String} stringToRank - the string to rank
- * @returns {Number} the ranking for how well stringToRank matches testString
+ * @returns {Number} the ranking between 0 and 1 for how well stringToRank matches testString
  */
-function getCloseMatch(testString, stringToRank) {
+function getRankedMatch(testString, stringToRank) {
   function getRanking(spread) {
     const matching = spread - stringToRank.length + 1
     const ranking = rankings.CLOSE_MATCH - (1 - (1 / (matching)))
@@ -176,39 +173,6 @@ function getCloseMatch(testString, stringToRank) {
   }
   const spread = index - firstIndex
   return getRanking(spread)
-}
-/**
- * Returns a rankings.matches or noMatch score based on whether
- * the characters in the stringToRank are found in order in the
- * testString
- * @param {String} testString - the string to test against
- * @param {String} stringToRank - the string to rank
- * @returns {Number} the ranking for how well stringToRank matches testString
- */
-function stringsByCharOrder(testString, stringToRank) {
-  let charNumber = 0
-
-  function findMatchingCharacter(matchChar, string) {
-    let found = false
-    for (let j = charNumber; j < string.length; j++) {
-      const stringChar = string[j]
-      if (stringChar === matchChar) {
-        found = true
-        charNumber = j + 1
-        break
-      }
-    }
-    return found
-  }
-
-  for (let i = 0; i < stringToRank.length; i++) {
-    const matchChar = stringToRank[i]
-    const found = findMatchingCharacter(matchChar, testString)
-    if (!found) {
-      return rankings.NO_MATCH
-    }
-  }
-  return rankings.MATCHES
 }
 
 /**
