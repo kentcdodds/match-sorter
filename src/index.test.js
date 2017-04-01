@@ -235,15 +235,15 @@ const tests = {
     ],
   },
   'sorts items based on how closely they match': {
-    skip: true, // wanna help make this a thing? https://github.com/kentcdodds/match-sorter/issues/21
+    skip: false, // wanna help make this a thing? https://github.com/kentcdodds/match-sorter/issues/21
     input: [
       ['Antigua and Barbuda', 'India', 'Bosnia and Herzegovina', 'Indonesia'],
       'Ina',
     ],
     output: [
       // these are sorted based on how closes their letters are to one another based on the input
-      // 2           6               8                      15
-      'India', 'Indonesia', 'Antigua and Barbuda', 'Bosnia and Herzegovina',
+      //    contains              2           6               8
+      'Bosnia and Herzegovina', 'India', 'Indonesia', 'Antigua and Barbuda',
       // though, technically, `India` comes up first because it matches with STARTS_WITH...
     ],
   },

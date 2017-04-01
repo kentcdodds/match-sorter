@@ -8,12 +8,13 @@ import diacritics from 'diacritic'
 import globalObject from 'global-object'
 
 const rankings = {
-  CASE_SENSITIVE_EQUAL: 7,
-  EQUAL: 6,
-  STARTS_WITH: 5,
-  WORD_STARTS_WITH: 4,
-  CONTAINS: 3,
-  ACRONYM: 2,
+  CASE_SENSITIVE_EQUAL: 8,
+  EQUAL: 7,
+  STARTS_WITH: 6,
+  WORD_STARTS_WITH: 5,
+  CONTAINS: 4,
+  ACRONYM: 3,
+  CLOSE_MATCH: 2,
   MATCHES: 1,
   NO_MATCH: 0,
 }
@@ -72,7 +73,7 @@ function getHighestRanking(item, keys, value, options) {
  * @returns {Number} the ranking for how well stringToRank matches testString
  */
 function getMatchRanking(testString, stringToRank, options) {
-  /* eslint complexity:[2, 9] */
+  /* eslint complexity:[2, 10] */
   testString = prepareValueForComparison(testString, options)
   stringToRank = prepareValueForComparison(stringToRank, options)
 
@@ -120,6 +121,12 @@ function getMatchRanking(testString, stringToRank, options) {
     return rankings.ACRONYM
   }
 
+  // close match
+  const closeMatch = getCloseMatch(testString, stringToRank)
+  if (closeMatch !== rankings.NO_MATCH) {
+    return closeMatch
+  }
+
   return stringsByCharOrder(testString, stringToRank)
 }
 
@@ -141,6 +148,35 @@ function getAcronym(string) {
   return acronym
 }
 
+/**
+ * Returns a rankings.close_match score based on how spread apart the
+ * characters from the stringToRank are within the testString
+ * @param {String} testString - the string to test against
+ * @param {String} stringToRank - the string to rank
+ * @returns {Number} the ranking for how well stringToRank matches testString
+ */
+function getCloseMatch(testString, stringToRank) {
+  function getRanking(spread) {
+    const matching = spread - stringToRank.length + 1
+    const ranking = rankings.CLOSE_MATCH - (1 - (1 / (matching)))
+    if (matching > -1) {
+      return ranking
+    }
+    return rankings.NO_MATCH
+  }
+  const firstIndex = testString.indexOf(stringToRank[0])
+  let index = firstIndex
+
+  for (let i = 1; i < stringToRank.length; i++) {
+    if (index > -1) {
+      index = testString.indexOf(stringToRank[i], index)
+    } else {
+      return rankings.NO_MATCH
+    }
+  }
+  const spread = index - firstIndex
+  return getRanking(spread)
+}
 /**
  * Returns a rankings.matches or noMatch score based on whether
  * the characters in the stringToRank are found in order in the
