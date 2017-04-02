@@ -5,7 +5,7 @@ import nodeResolve from 'rollup-plugin-node-resolve'
 import uglify from 'rollup-plugin-uglify'
 
 process.env.BABEL_ENV = 'rollup' // so babel will be configured to not transpile modules
-const minify = process.argv.includes('--match-sorter-minify')
+const minify = process.argv.indexOf('--match-sorter-minify') !== -1
 const filename = minify ? 'match-sorter.min.js' : 'match-sorter.js'
 
 export default {
