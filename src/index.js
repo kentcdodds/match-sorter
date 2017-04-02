@@ -120,7 +120,7 @@ function getMatchRanking(testString, stringToRank, options) {
     return rankings.ACRONYM
   }
 
-  // will return a number between rankings.NO_MATCH and rankings.MATCH depending
+  // will return a number between rankings.NO_MATCH and rankings.MATCHES depending
   // on how close of a match it is.
   return getRankedMatch(testString, stringToRank)
 }
@@ -146,11 +146,11 @@ function getAcronym(string) {
 /**
  * Returns a score based on how spread apart the
  * characters from the stringToRank are within the testString.
- * A number close to rankings.MATCH represents a close match. A number close
+ * A number close to rankings.MATCHES represents a close match. A number close
  * to rankings.NO_MATCH represents a loose match.
  * @param {String} testString - the string to test against
  * @param {String} stringToRank - the string to rank
- * @returns {Number} the number between rankings.NO_MATCH and rankings.MATCH for how well stringToRank matches testString
+ * @returns {Number} the number between rankings.NO_MATCH and rankings.MATCHES for how well stringToRank matches testString
  */
 function getRankedMatch(testString, stringToRank) {
   function getRanking(spread) {
