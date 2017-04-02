@@ -126,6 +126,32 @@ matchSorter(list, 'j', {keys: [(item) => item.name]})
 // [{name: 'Janice'}, {name: 'Jen'}]
 ```
 
+__Min and Max Ranking__: You may restrict specific keys to a minimum or maximum ranking by passing in an object. A key with a minimum rank will only get promoted if there is at least a simple match.
+
+```javascript
+const tea = [
+  {tea: 'Earl Grey', alias: 'A'},
+  {tea: 'Assam', alias: 'B'},
+  {tea: 'Black', alias: 'C'},
+]
+matchSorter(tea, 'A', {keys: ['tea', {maxRanking: matchSorter.rankings.STARTS_WITH, key: 'alias'}]})
+// without maxRanking, Earl Grey would come first because the alias "A" would be CASE_SENSITIVE_EQUAL
+// `tea` key comes before `alias` key, so Assam comes first even though both match as STARTS_WITH
+// [{tea: 'Assam', alias: 'B'}, {tea: 'Earl Grey', alias: 'A'},{tea: 'Black', alias: 'C'}]
+```
+
+```javascript
+const tea = [
+  {tea: 'Milk', alias: 'moo'},
+  {tea: 'Oolong', alias: 'B'},
+  {tea: 'Green', alias: 'C'},
+]
+matchSorter(tea, 'oo', {keys: ['tea', {minRanking: matchSorter.rankings.EQUAL, key: 'alias'}]})
+// minRanking bumps Milk up to EQUAL from CONTAINS (alias)
+// Oolong matches as STARTS_WITH
+// Green is missing due to no match
+// [{tea: 'Milk', alias: 'moo'}, {tea: 'Oolong', alias: 'B'}]
+```
 ### threshold: `number`
 
 _Default: `MATCHES`_

@@ -18,22 +18,22 @@ const umdRequire = require('../dist/umd/match-sorter')
 
 assert(
   isMatchSorterFunction(cjsImport) && isRankingsObject(cjsRankings),
- 'CJS build has a problem with ES6 modules'
+ 'CJS build has a problem with ES6 modules',
 )
 
 assert(
   isMatchSorterFunction(cjsRequire),
-  'CJS build has a problem with CJS'
+  'CJS build has a problem with CJS',
 )
 
 assert(
   isMatchSorterFunction(umdImport) && isRankingsObject(umdRankings),
-  'UMD build has a problem with ES6 modules'
+  'UMD build has a problem with ES6 modules',
 )
 
 assert(
   isMatchSorterFunction(umdRequire),
-  'UMD build has a problem with CJS'
+  'UMD build has a problem with CJS',
 )
 
 // TODO: how could we validate the AMD/global modules?
