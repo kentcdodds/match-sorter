@@ -72,7 +72,7 @@ function getHighestRanking(item, keys, value, options) {
  * @returns {Number} the ranking for how well stringToRank matches testString
  */
 function getMatchRanking(testString, stringToRank, options) {
-  /* eslint complexity:[2, 10] */
+  /* eslint complexity:[2, 9] */
   testString = prepareValueForComparison(testString, options)
   stringToRank = prepareValueForComparison(stringToRank, options)
 
@@ -120,9 +120,9 @@ function getMatchRanking(testString, stringToRank, options) {
     return rankings.ACRONYM
   }
 
-  // will return a number between rankings.NO_MATCH and rankings.MATCHES depending
-  // on how close of a match it is.
-  return getRankedMatch(testString, stringToRank)
+  // will return a number between rankings.NO_MATCH and
+  // rankings.MATCHES depending  on how close of a match it is.
+  return getClosenessRanking(testString, stringToRank)
 }
 
 /**
@@ -152,29 +152,40 @@ function getAcronym(string) {
  * @param {String} stringToRank - the string to rank
  * @returns {Number} the number between rankings.NO_MATCH and rankings.MATCHES for how well stringToRank matches testString
  */
-function getRankedMatch(testString, stringToRank) {
+function getClosenessRanking(testString, stringToRank) {
+  let charNumber = 0
+  function findMatchingCharacter(matchChar, string, index) {
+    for (let j = index; j < string.length; j++) {
+      const stringChar = string[j]
+      if (stringChar === matchChar) {
+        return j + 1
+      }
+    }
+    return -1
+  }
   function getRanking(spread) {
     const matching = spread - stringToRank.length + 1
-    const ranking = rankings.CLOSE_MATCH - (1 - (1 / (matching)))
-    if (matching > -1) {
-      return ranking
-    }
+    const ranking = rankings.MATCHES + (1 / (matching))
+    return ranking
+  }
+  const firstIndex = findMatchingCharacter(stringToRank[0], testString, 0)
+  if (firstIndex < 0) {
     return rankings.NO_MATCH
   }
-  const firstIndex = testString.indexOf(stringToRank[0])
-  let index = firstIndex
-
+  charNumber = firstIndex
   for (let i = 1; i < stringToRank.length; i++) {
-    if (index > -1) {
-      index = testString.indexOf(stringToRank[i], index)
-    } else {
+    const matchChar = stringToRank[i]
+    charNumber = findMatchingCharacter(matchChar, testString, charNumber)
+    const found = charNumber > -1
+    if (!found) {
       return rankings.NO_MATCH
     }
   }
-  const spread = index - firstIndex
+  
+  const spread = charNumber - firstIndex
   return getRanking(spread)
 }
-
+ 
 /**
  * Sorts items that have a rank, index, and keyIndex
  * @param {Object} a - the first item to sort

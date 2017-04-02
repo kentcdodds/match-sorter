@@ -221,7 +221,7 @@ const tests = {
       'aa',
     ],
     output: [
-      'jalapeño', 'à la carte', 'papier-mâché', 'à la mode',
+      'jalapeño', 'à la carte', 'à la mode', 'papier-mâché',
     ],
   },
   'takes diacritics in account when keepDiacritics specified as true': {
@@ -235,7 +235,6 @@ const tests = {
     ],
   },
   'sorts items based on how closely they match': {
-    skip: false, // wanna help make this a thing? https://github.com/kentcdodds/match-sorter/issues/21
     input: [
       ['Antigua and Barbuda', 'India', 'Bosnia and Herzegovina', 'Indonesia'],
       'Ina',
