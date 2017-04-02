@@ -156,7 +156,8 @@ function getAcronym(string) {
  * to rankings.NO_MATCH represents a loose match.
  * @param {String} testString - the string to test against
  * @param {String} stringToRank - the string to rank
- * @returns {Number} the number between rankings.NO_MATCH and rankings.MATCHES for how well stringToRank matches testString
+ * @returns {Number} the number between rankings.NO_MATCH and rankings.MATCHES
+ * for how well stringToRank matches testString
  */
 function getClosenessRanking(testString, stringToRank) {
   let charNumber = 0
