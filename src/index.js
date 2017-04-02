@@ -146,8 +146,8 @@ function getAcronym(string) {
 /**
  * Returns a score based on how spread apart the
  * characters from the stringToRank are within the testString.
- * A number close to 1 represents a close match. A number close to 0
- * represents a loose match.
+ * A number close to rankings.MATCH represents a close match. A number close
+ * to rankings.NO_MATCH represents a loose match.
  * @param {String} testString - the string to test against
  * @param {String} stringToRank - the string to rank
  * @returns {Number} the number between rankings.NO_MATCH and rankings.MATCH for how well stringToRank matches testString
