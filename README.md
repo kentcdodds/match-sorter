@@ -16,6 +16,9 @@ Simple, expected, and deterministic best-match sorting of an array in JavaScript
 [![Roadmap][roadmap-badge]][roadmap]
 [![Examples][examples-badge]][examples]
 
+[![gzip size][gzip-badge]][unpkg-umd]
+[![size][size-badge]][unpkg-umd]
+[![module formats: umd and cjs][module-formats-badge]][module-formats]
 [![Watch on GitHub][github-watch-badge]][github-watch]
 [![Star on GitHub][github-star-badge]][github-star]
 [![Tweet][twitter-badge]][twitter]
@@ -264,3 +267,8 @@ MIT
 [emojis]: https://github.com/kentcdodds/all-contributors#emoji-key
 [all-contributors]: https://github.com/kentcdodds/all-contributors
 [genie]: https://github.com/kentcdodds/genie
+[gzip-badge]: http://img.badgesize.io/https://unpkg.com/match-sorter/dist/umd/match-sorter.min.js?compression=gzip&label=gzip%20size&style=flat-square
+[size-badge]: http://img.badgesize.io/https://unpkg.com/match-sorter/dist/umd/match-sorter.min.js?label=size&style=flat-square
+[unpkg-umd]: https://unpkg.com/match-sorter/dist/umd/
+[module-formats-badge]: https://img.shields.io/badge/module%20formats-umd%2C%20cjs-green.svg?style=flat-square
+[module-formats]: https://unpkg.com/match-sorter@1.8.0/dist/
