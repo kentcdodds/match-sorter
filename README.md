@@ -38,7 +38,7 @@ To explain the ranking system, I'll use countries as an example:
 4. **WORD STARTS WITH**: If the item has multiple words, then if one of those words starts with the given value (ex. `Repub` would match `Dominican Republic`)
 5. **CONTAINS**: If the item contains the given value (ex. `ham` would match `Bahamas`)
 6. **ACRONYM**: If the item's acronym is the given value (ex. `us` would match `United States`)
-7. **SIMPLE MATCH**: If the item has letters in the same order as the letters of the given value (ex. `iw` would match `Zimbabwe`, but not `Kuwait` because it must be in the same order). Furthermore, if the item is a closer match, it will rank higher (ex. `ur` matches `Uruguay` more closely than `United States of America`, therefore `Uruguay` will be ordered before `United States of America`)
+7. **SIMPLE MATCH**: If the item has letters in the same order as the letters of the given value (ex. `iw` would match `Zimbabwe`, but not `Kuwait` because it must be in the same order). Furthermore, if the item is a closer match, it will rank higher (ex. `ua` matches `Uruguay` more closely than `United States of America`, therefore `Uruguay` will be ordered before `United States of America`)
 
 This ranking seems to make sense in people's minds. At least it does in mine. Feedback welcome!
 
