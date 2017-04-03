@@ -9,7 +9,7 @@ Simple, expected, and deterministic best-match sorting of an array in JavaScript
 [![downloads][downloads-badge]][npm-stat]
 [![MIT License][license-badge]][LICENSE]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs]
 [![Donate][donate-badge]][donate]
 [![Code of Conduct][coc-badge]][coc]
@@ -38,7 +38,7 @@ To explain the ranking system, I'll use countries as an example:
 4. **WORD STARTS WITH**: If the item has multiple words, then if one of those words starts with the given value (ex. `Repub` would match `Dominican Republic`)
 5. **CONTAINS**: If the item contains the given value (ex. `ham` would match `Bahamas`)
 6. **ACRONYM**: If the item's acronym is the given value (ex. `us` would match `United States`)
-7. **SIMPLE MATCH**: If the item has letters in the same order as the letters of the given value (ex. `iw` would match `Zimbabwe`, but not `Kuwait` because it must be in the same order).
+7. **SIMPLE MATCH**: If the item has letters in the same order as the letters of the given value (ex. `iw` would match `Zimbabwe`, but not `Kuwait` because it must be in the same order). Furthermore, if the item is a closer match, it will rank higher (ex. `ua` matches `Uruguay` more closely than `United States of America`, therefore `Uruguay` will be ordered before `United States of America`)
 
 This ranking seems to make sense in people's minds. At least it does in mine. Feedback welcome!
 
@@ -82,10 +82,10 @@ const objList = [
   {name: 'Jen', color: 'Red'},
 ]
 matchSorter(objList, 'g', {keys: ['name', 'color']})
-// [{name: 'George', color: 'Blue'}, {name: 'Janice', color: 'Green'}]
+// [{name: 'George', color: 'Blue'}, {name: 'Janice', color: 'Green'}, {name: 'Fred', color: 'Orange'}]
 
 matchSorter(objList, 're', {keys: ['color', 'name']})
-// [{name: 'Jen', color: 'Red'}, {name: 'Janice', color: 'Green'}, {name: 'Fred', color: 'Orange'}]
+// [{name: 'Jen', color: 'Red'}, {name: 'Janice', color: 'Green'}, {name: 'Fred', color: 'Orange'}, {name: 'George', color: 'Blue'}]
 ```
 
 __Array of values__: When the specified key matches an array of values, the best match from the values of in the array is going to be used for the ranking.
@@ -193,7 +193,7 @@ You can disable this behavior by specifying `keepDiacritics: true`
 ```javascript
 const thingsWithDiacritics = ['jalapeño', 'à la carte', 'café', 'papier-mâché', 'à la mode']
 matchSorter(thingsWithDiacritics, 'aa')
-// ['jalapeño', 'à la carte', 'papier-mâché', 'à la mode']
+// ['jalapeño', 'à la carte', 'à la mode', 'papier-mâché']
 
 matchSorter(thingsWithDiacritics, 'aa', {keepDiacritics: true})
 // ['jalapeño', 'à la carte']
@@ -221,8 +221,8 @@ You might try [Fuse.js](https://github.com/krisk/Fuse). It uses advanced math fa
 Thanks goes to these people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) [📖](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) 🚇 [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) 👀 | [<img src="https://avatars.githubusercontent.com/u/8263298?v=3" width="100px;"/><br /><sub>Conor Hastings</sub>](http://conorhastings.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) [📖](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) 👀 | [<img src="https://avatars.githubusercontent.com/u/574806?v=3" width="100px;"/><br /><sub>Rogelio Guzman</sub>](https://github.com/rogeliog)<br />[📖](https://github.com/kentcdodds/match-sorter/commits?author=rogeliog) | [<img src="https://avatars.githubusercontent.com/u/1416436?v=3" width="100px;"/><br /><sub>Claudéric Demers</sub>](http://ced.io)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=clauderic) [📖](https://github.com/kentcdodds/match-sorter/commits?author=clauderic) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=clauderic) | [<img src="https://avatars1.githubusercontent.com/u/19157735?v=3" width="100px;"/><br /><sub>Denver Chen</sub>](https://github.com/nfdjps)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps) [📖](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps) |
-| :---: | :---: | :---: | :---: | :---: |
+| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) [📖](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) 🚇 [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) 👀 | [<img src="https://avatars.githubusercontent.com/u/8263298?v=3" width="100px;"/><br /><sub>Conor Hastings</sub>](http://conorhastings.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) [📖](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) 👀 | [<img src="https://avatars.githubusercontent.com/u/574806?v=3" width="100px;"/><br /><sub>Rogelio Guzman</sub>](https://github.com/rogeliog)<br />[📖](https://github.com/kentcdodds/match-sorter/commits?author=rogeliog) | [<img src="https://avatars.githubusercontent.com/u/1416436?v=3" width="100px;"/><br /><sub>Claudéric Demers</sub>](http://ced.io)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=clauderic) [📖](https://github.com/kentcdodds/match-sorter/commits?author=clauderic) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=clauderic) | [<img src="https://avatars3.githubusercontent.com/u/4150097?v=3" width="100px;"/><br /><sub>Kevin Davis</sub>](kevindav.us)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=osfan501) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=osfan501) | [<img src="https://avatars1.githubusercontent.com/u/19157735?v=3" width="100px;"/><br /><sub>Denver Chen</sub>](https://github.com/nfdjps)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps) [📖](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps) |
+| :---: | :---: | :---: | :---: | :---: | :---: |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification. Contributions of any kind welcome!

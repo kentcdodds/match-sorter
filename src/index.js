@@ -126,7 +126,9 @@ function getMatchRanking(testString, stringToRank, options) {
     return rankings.ACRONYM
   }
 
-  return stringsByCharOrder(testString, stringToRank)
+  // will return a number between rankings.MATCHES and
+  // rankings.MATCHES + 1 depending  on how close of a match it is.
+  return getClosenessRanking(testString, stringToRank)
 }
 
 /**
@@ -148,39 +150,49 @@ function getAcronym(string) {
 }
 
 /**
- * Returns a rankings.matches or noMatch score based on whether
- * the characters in the stringToRank are found in order in the
- * testString
+ * Returns a score based on how spread apart the
+ * characters from the stringToRank are within the testString.
+ * A number close to rankings.MATCHES represents a loose match. A number close
+ * to rankings.MATCHES + 1 represents a loose match.
  * @param {String} testString - the string to test against
  * @param {String} stringToRank - the string to rank
- * @returns {Number} the ranking for how well stringToRank matches testString
+ * @returns {Number} the number between rankings.MATCHES and
+ * rankings.MATCHES + 1 for how well stringToRank matches testString
  */
-function stringsByCharOrder(testString, stringToRank) {
+function getClosenessRanking(testString, stringToRank) {
   let charNumber = 0
-
-  function findMatchingCharacter(matchChar, string) {
-    let found = false
-    for (let j = charNumber; j < string.length; j++) {
+  function findMatchingCharacter(matchChar, string, index) {
+    for (let j = index; j < string.length; j++) {
       const stringChar = string[j]
       if (stringChar === matchChar) {
-        found = true
-        charNumber = j + 1
-        break
+        return j + 1
       }
     }
-    return found
+    return -1
   }
-
-  for (let i = 0; i < stringToRank.length; i++) {
+  function getRanking(spread) {
+    const matching = spread - stringToRank.length + 1
+    const ranking = rankings.MATCHES + (1 / (matching))
+    return ranking
+  }
+  const firstIndex = findMatchingCharacter(stringToRank[0], testString, 0)
+  if (firstIndex < 0) {
+    return rankings.NO_MATCH
+  }
+  charNumber = firstIndex
+  for (let i = 1; i < stringToRank.length; i++) {
     const matchChar = stringToRank[i]
-    const found = findMatchingCharacter(matchChar, testString)
+    charNumber = findMatchingCharacter(matchChar, testString, charNumber)
+    const found = charNumber > -1
     if (!found) {
       return rankings.NO_MATCH
     }
   }
-  return rankings.MATCHES
+  
+  const spread = charNumber - firstIndex
+  return getRanking(spread)
 }
-
+ 
 /**
  * Sorts items that have a rank, index, and keyIndex
  * @param {Object} a - the first item to sort
