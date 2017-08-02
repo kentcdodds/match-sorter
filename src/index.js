@@ -55,16 +55,16 @@ function getHighestRanking(item, keys, value, options) {
   }
   const valuesToRank = getAllValuesToRank(item, keys)
   return valuesToRank.reduce(({rank, keyIndex}, {itemValue, attributes}, i) => {
-    const newRank = getMatchRanking(itemValue, value, options)
+    let newRank = getMatchRanking(itemValue, value, options)
+    const {minRanking, maxRanking} = attributes
+    if (newRank < minRanking && newRank >= rankings.MATCHES) {
+      newRank = minRanking
+    } else if (newRank > maxRanking) {
+      newRank = maxRanking
+    }
     if (newRank > rank) {
       rank = newRank
       keyIndex = i
-    }
-    const {minRanking, maxRanking} = attributes
-    if (rank < minRanking && newRank >= rankings.MATCHES) {
-      rank = minRanking
-    } else if (rank > maxRanking) {
-      rank = maxRanking
     }
     return {rank, keyIndex}
   }, {rank: rankings.NO_MATCH, keyIndex: -1})
@@ -188,11 +188,11 @@ function getClosenessRanking(testString, stringToRank) {
       return rankings.NO_MATCH
     }
   }
-  
+
   const spread = charNumber - firstIndex
   return getRanking(spread)
 }
- 
+
 /**
  * Sorts items that have a rank, index, and keyIndex
  * @param {Object} a - the first item to sort
