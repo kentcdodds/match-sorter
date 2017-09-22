@@ -1,26 +1,19 @@
-// have to disable eslint for the next line because we have to do weird things to make things work with UMD
-import matchSorter, {rankings} from './' // eslint-disable-line import/default,import/named
+// have to disable eslint for the next line because we have to
+// do weird things to make things work with UMD
+// eslint-disable-next-line import/default,import/named
+import matchSorter, {rankings} from '../'
 
 const tests = {
   'returns an empty array with a string that is too long': {
-    input: [
-      ['Chakotay', 'Charzard'],
-      'JonathanJonathan',
-    ],
+    input: [['Chakotay', 'Charzard'], 'JonathanJonathan'],
     output: [],
   },
   'returns an empty array with a string that matches no items': {
-    input: [
-      ['Chakotay', 'Charzard'],
-      'nomatch',
-    ],
+    input: [['Chakotay', 'Charzard'], 'nomatch'],
     output: [],
   },
   'returns the items that match': {
-    input: [
-      ['Chakotay', 'Brunt', 'Charzard'],
-      'Ch',
-    ],
+    input: [['Chakotay', 'Brunt', 'Charzard'], 'Ch'],
     output: ['Chakotay', 'Charzard'],
   },
   'returns items that match in the best order': {
@@ -60,17 +53,11 @@ const tests = {
     ],
   },
   'sorts equally ranking items in the same order in which they appeared in the original array': {
-    input: [
-      ['Foo1', 'Bar', 'Foo2'],
-      'foo',
-    ],
+    input: [['Foo1', 'Bar', 'Foo2'], 'foo'],
     output: ['Foo1', 'Foo2'],
   },
   'no match for single character inputs that are not equal': {
-    input: [
-      ['abc'],
-      'd',
-    ],
+    input: [['abc'], 'd'],
     output: [],
   },
   'can handle objects when specifying a key': {
@@ -118,33 +105,19 @@ const tests = {
   },
   'can handle objected with nested keys': {
     input: [
-      [
-        {name: {first: 'baz'}},
-        {name: {first: 'bat'}},
-        {name: {first: 'foo'}},
-      ],
+      [{name: {first: 'baz'}}, {name: {first: 'bat'}}, {name: {first: 'foo'}}],
       'ba',
       {keys: ['name.first']},
     ],
-    output: [
-      {name: {first: 'baz'}},
-      {name: {first: 'bat'}},
-    ],
+    output: [{name: {first: 'baz'}}, {name: {first: 'bat'}}],
   },
   'can handle property callback': {
     input: [
-      [
-        {name: {first: 'baz'}},
-        {name: {first: 'bat'}},
-        {name: {first: 'foo'}},
-      ],
+      [{name: {first: 'baz'}}, {name: {first: 'bat'}}, {name: {first: 'foo'}}],
       'ba',
       {keys: [item => item.name.first]},
     ],
-    output: [
-      {name: {first: 'baz'}},
-      {name: {first: 'bat'}},
-    ],
+    output: [{name: {first: 'baz'}}, {name: {first: 'bat'}}],
   },
   'can handle keys that are an array of values': {
     input: [
@@ -169,7 +142,9 @@ const tests = {
         {tea: 'Black', alias: 'C'},
       ],
       'A',
-      {keys: ['tea', {maxRanking: matchSorter.rankings.STARTS_WITH, key: 'alias'}]},
+      {
+        keys: ['tea', {maxRanking: rankings.STARTS_WITH, key: 'alias'}],
+      },
     ],
     // without maxRanking, Earl Grey would come first because the alias "A" would be CASE_SENSITIVE_EQUAL
     // `tea` key comes before `alias` key, so Assam comes first even though both match as STARTS_WITH
@@ -187,15 +162,12 @@ const tests = {
         {tea: 'Green', alias: 'C'},
       ],
       'oo',
-      {keys: ['tea', {minRanking: matchSorter.rankings.EQUAL, key: 'alias'}]},
+      {keys: ['tea', {minRanking: rankings.EQUAL, key: 'alias'}]},
     ],
     // minRanking bumps Milk up to EQUAL from CONTAINS (alias)
     // Oolong matches as STARTS_WITH
     // Green is missing due to no match
-    output: [
-      {tea: 'Milk', alias: 'moo'},
-      {tea: 'Oolong', alias: 'B'},
-    ],
+    output: [{tea: 'Milk', alias: 'moo'}, {tea: 'Oolong', alias: 'B'}],
   },
   'when using arrays of values, when things are equal, the one with the higher index wins': {
     input: [
@@ -217,9 +189,7 @@ const tests = {
       'ap',
       {threshold: rankings.NO_MATCH},
     ],
-    output: [
-      'apple', 'grape', 'orange', 'banana',
-    ],
+    output: ['apple', 'grape', 'orange', 'banana'],
   },
   'when providing a rank threshold of EQUAL, it returns only the items that are equal': {
     input: [
@@ -227,9 +197,7 @@ const tests = {
       'app',
       {threshold: rankings.EQUAL},
     ],
-    output: [
-      'app',
-    ],
+    output: ['app'],
   },
   'when providing a rank threshold of CASE_SENSITIVE_EQUAL, it returns only case-sensitive equal matches': {
     input: [
@@ -237,9 +205,7 @@ const tests = {
       'app',
       {threshold: rankings.CASE_SENSITIVE_EQUAL},
     ],
-    output: [
-      'app',
-    ],
+    output: ['app'],
   },
   'when providing a rank threshold of WORD_STARTS_WITH, it returns only the items that are equal': {
     input: [
@@ -247,18 +213,14 @@ const tests = {
       'app',
       {threshold: rankings.WORD_STARTS_WITH},
     ],
-    output: [
-      'app', 'apple', 'apply', 'fiji apple',
-    ],
+    output: ['app', 'apple', 'apply', 'fiji apple'],
   },
   'defaults to ignore diacritics': {
     input: [
       ['jalapeño', 'à la carte', 'café', 'papier-mâché', 'à la mode'],
       'aa',
     ],
-    output: [
-      'jalapeño', 'à la carte', 'à la mode', 'papier-mâché',
-    ],
+    output: ['jalapeño', 'à la carte', 'à la mode', 'papier-mâché'],
   },
   'takes diacritics in account when keepDiacritics specified as true': {
     input: [
@@ -266,9 +228,7 @@ const tests = {
       'aa',
       {keepDiacritics: true},
     ],
-    output: [
-      'jalapeño', 'à la carte',
-    ],
+    output: ['jalapeño', 'à la carte'],
   },
   'sorts items based on how closely they match': {
     input: [
@@ -278,7 +238,10 @@ const tests = {
     output: [
       // these are sorted based on how closes their letters are to one another based on the input
       //    contains              2           6               8
-      'Bosnia and Herzegovina', 'India', 'Indonesia', 'Antigua and Barbuda',
+      'Bosnia and Herzegovina',
+      'India',
+      'Indonesia',
+      'Antigua and Barbuda',
       // though, technically, `India` comes up first because it matches with STARTS_WITH...
     ],
   },
@@ -307,9 +270,11 @@ const tests = {
 Object.keys(tests).forEach(title => {
   const {input, output, only, skip} = tests[title]
   if (only) {
-    test.only(title, testFn) // eslint-disable-line
+    // eslint-disable-next-line
+    test.only(title, testFn)
   } else if (skip) {
-    test.skip(title, testFn) // eslint-disable-line
+    // eslint-disable-next-line
+    test.skip(title, testFn)
   } else {
     test(title, testFn)
   }

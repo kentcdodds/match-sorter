@@ -1,11 +1,10 @@
 /**
  * @name match-sorter
  * @license MIT license.
- * @copyright (c) 2016 Kent C. Dodds
+ * @copyright (c) 2017 Kent C. Dodds
  * @author Kent C. Dodds <kent@doddsfamily.us>
  */
 import diacritics from 'diacritic'
-import globalObject from 'global-object'
 
 const rankings = {
   CASE_SENSITIVE_EQUAL: 7,
@@ -54,20 +53,23 @@ function getHighestRanking(item, keys, value, options) {
     return {rank: getMatchRanking(item, value, options), keyIndex: -1}
   }
   const valuesToRank = getAllValuesToRank(item, keys)
-  return valuesToRank.reduce(({rank, keyIndex}, {itemValue, attributes}, i) => {
-    let newRank = getMatchRanking(itemValue, value, options)
-    const {minRanking, maxRanking} = attributes
-    if (newRank < minRanking && newRank >= rankings.MATCHES) {
-      newRank = minRanking
-    } else if (newRank > maxRanking) {
-      newRank = maxRanking
-    }
-    if (newRank > rank) {
-      rank = newRank
-      keyIndex = i
-    }
-    return {rank, keyIndex}
-  }, {rank: rankings.NO_MATCH, keyIndex: -1})
+  return valuesToRank.reduce(
+    ({rank, keyIndex}, {itemValue, attributes}, i) => {
+      let newRank = getMatchRanking(itemValue, value, options)
+      const {minRanking, maxRanking} = attributes
+      if (newRank < minRanking && newRank >= rankings.MATCHES) {
+        newRank = minRanking
+      } else if (newRank > maxRanking) {
+        newRank = maxRanking
+      }
+      if (newRank > rank) {
+        rank = newRank
+        keyIndex = i
+      }
+      return {rank, keyIndex}
+    },
+    {rank: rankings.NO_MATCH, keyIndex: -1},
+  )
 }
 
 /**
@@ -172,7 +174,7 @@ function getClosenessRanking(testString, stringToRank) {
   }
   function getRanking(spread) {
     const matching = spread - stringToRank.length + 1
-    const ranking = rankings.MATCHES + (1 / (matching))
+    const ranking = rankings.MATCHES + 1 / matching
     return ranking
   }
   const firstIndex = findMatchingCharacter(stringToRank[0], testString, 0)
@@ -244,9 +246,12 @@ function getItemValues(item, key) {
   let value
   if (typeof key === 'function') {
     value = key(item)
-  } else if (key.indexOf('.') !== -1) { // eslint-disable-line no-negated-condition
+    // eslint-disable-next-line no-negated-condition
+  } else if (key.indexOf('.') !== -1) {
     // handle nested keys
-    value = key.split('.').reduce((itemObj, nestedKey) => itemObj[nestedKey], item)
+    value = key
+      .split('.')
+      .reduce((itemObj, nestedKey) => itemObj[nestedKey], item)
   } else {
     value = item[key]
   }
@@ -291,15 +296,5 @@ function getKeyAttributes(key) {
   }
 }
 
-// some manual ✨ magic umd ✨ here because Rollup isn't capable of exposing our module the way we want
-// see dist-test/index.js
-/* istanbul ignore next */
-if (typeof exports === 'object' && typeof module !== 'undefined') {
-  matchSorter.default = matchSorter
-  module.exports = matchSorter
-  Object.defineProperty(exports, '__esModule', {value: true})
-} else if (typeof define === 'function' && define.amd) { // eslint-disable-line
-  define(() => matchSorter) // eslint-disable-line
-} else {
-  globalObject.matchSorter = matchSorter // eslint-disable-line
-}
+export default matchSorter
+export {rankings}

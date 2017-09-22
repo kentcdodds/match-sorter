@@ -1,6 +1,12 @@
-# match-sorter
+<div align="center">
+<h1>match-sorter</h1>
 
-Simple, expected, and deterministic best-match sorting of an array in JavaScript. **[Demo](https://jsbin.com/vewoka/edit?js,output)**
+<p>Simple, expected, and deterministic best-match sorting of an array in JavaScript</p>
+</div>
+
+<hr />
+
+**[Demo](https://codesandbox.io/s/wyk856yo48)**
 
 [![Build Status][build-badge]][build]
 [![Code Coverage][coverage-badge]][coverage]
@@ -16,8 +22,8 @@ Simple, expected, and deterministic best-match sorting of an array in JavaScript
 [![Roadmap][roadmap-badge]][roadmap]
 [![Examples][examples-badge]][examples]
 
-[![gzip size][gzip-badge]][unpkg-umd]
-[![size][size-badge]][unpkg-umd]
+[![gzip size][gzip-badge]][unpkg-dist]
+[![size][size-badge]][unpkg-dist]
 [![module formats: umd and cjs][module-formats-badge]][module-formats]
 [![Watch on GitHub][github-watch-badge]][github-watch]
 [![Star on GitHub][github-star-badge]][github-star]
@@ -46,7 +52,6 @@ To explain the ranking system, I'll use countries as an example:
 7. **SIMPLE MATCH**: If the item has letters in the same order as the letters of the given value (ex. `iw` would match `Zimbabwe`, but not `Kuwait` because it must be in the same order). Furthermore, if the item is a closer match, it will rank higher (ex. `ua` matches `Uruguay` more closely than `United States of America`, therefore `Uruguay` will be ordered before `United States of America`)
 
 This ranking seems to make sense in people's minds. At least it does in mine. Feedback welcome!
-
 
 ## Getting Started
 
@@ -269,8 +274,8 @@ MIT
 [emojis]: https://github.com/kentcdodds/all-contributors#emoji-key
 [all-contributors]: https://github.com/kentcdodds/all-contributors
 [genie]: https://github.com/kentcdodds/genie
-[gzip-badge]: http://img.badgesize.io/https://unpkg.com/match-sorter/dist/umd/match-sorter.min.js?compression=gzip&label=gzip%20size&style=flat-square
-[size-badge]: http://img.badgesize.io/https://unpkg.com/match-sorter/dist/umd/match-sorter.min.js?label=size&style=flat-square
-[unpkg-umd]: https://unpkg.com/match-sorter/dist/umd/
+[gzip-badge]: http://img.badgesize.io/https://unpkg.com/match-sorter/dist/match-sorter.umd.min.js?compression=gzip&label=gzip%20size&style=flat-square
+[size-badge]: http://img.badgesize.io/https://unpkg.com/match-sorter/dist/match-sorter.umd.min.js?label=size&style=flat-square
+[unpkg-dist]: https://unpkg.com/match-sorter/dist/
 [module-formats-badge]: https://img.shields.io/badge/module%20formats-umd%2C%20cjs-green.svg?style=flat-square
-[module-formats]: https://unpkg.com/match-sorter@1.8.0/dist/
+[module-formats]: https://unpkg.com/match-sorter/dist/

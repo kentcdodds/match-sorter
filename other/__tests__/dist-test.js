@@ -15,26 +15,19 @@ import umdImport, {rankings as umdRankings} from '../dist/umd/match-sorter'
 const cjsRequire = require('../dist/cjs')
 const umdRequire = require('../dist/umd/match-sorter')
 
-
 assert(
   isMatchSorterFunction(cjsImport) && isRankingsObject(cjsRankings),
- 'CJS build has a problem with ES6 modules',
+  'CJS build has a problem with ES6 modules',
 )
 
-assert(
-  isMatchSorterFunction(cjsRequire),
-  'CJS build has a problem with CJS',
-)
+assert(isMatchSorterFunction(cjsRequire), 'CJS build has a problem with CJS')
 
 assert(
   isMatchSorterFunction(umdImport) && isRankingsObject(umdRankings),
   'UMD build has a problem with ES6 modules',
 )
 
-assert(
-  isMatchSorterFunction(umdRequire),
-  'UMD build has a problem with CJS',
-)
+assert(isMatchSorterFunction(umdRequire), 'UMD build has a problem with CJS')
 
 // TODO: how could we validate the AMD/global modules?
 
@@ -42,11 +35,15 @@ console.log('Built modules look good 👍')
 
 function isMatchSorterFunction(thing) {
   if (typeof thing !== 'function') {
-    console.error(`matchSorter thing should be a function. It's a ${typeof thing}`)
+    console.error(
+      `matchSorter thing should be a function. It's a ${typeof thing}`,
+    )
     return false
   }
   if (thing.name !== 'matchSorter') {
-    console.error(`the function is not called "matchSorter". It's called ${thing.name}`)
+    console.error(
+      `the function is not called "matchSorter". It's called ${thing.name}`,
+    )
     return false
   }
   return isRankingsObject(thing.rankings)
@@ -54,11 +51,17 @@ function isMatchSorterFunction(thing) {
 
 function isRankingsObject(thing) {
   if (typeof thing !== 'object') {
-    console.error(`rankings object thing should be an object. It's a ${typeof thing}`)
+    console.error(
+      `rankings object thing should be an object. It's a ${typeof thing}`,
+    )
     return false
   }
   if (!Object.keys(thing).includes('NO_MATCH')) {
-    console.error(`rankings object should include a NO_MATCH key. It only has ${Object.keys(thing)}`)
+    console.error(
+      `rankings object should include a NO_MATCH key. It only has ${Object.keys(
+        thing,
+      )}`,
+    )
     return false
   }
   return true
