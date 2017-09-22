@@ -33,7 +33,7 @@
     "diacritic": "0.0.2"
   },
   "devDependencies": {
-    "kcd-scripts": "^0.18.0"
+    "kcd-scripts": "^0.18.1"
   },
   "eslintConfig": {
     "extends": ["./node_modules/kcd-scripts/eslint.js"]
