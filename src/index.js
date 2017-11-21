@@ -251,7 +251,7 @@ function getItemValues(item, key) {
     // handle nested keys
     value = key
       .split('.')
-      .reduce((itemObj, nestedKey) => itemObj && itemObj[nestedKey] ? itemObj[nestedKey] : null, item)
+      .reduce((itemObj, nestedKey) => itemObj ? itemObj[nestedKey] : null, item)
   } else {
     value = item[key]
   }
