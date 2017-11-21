@@ -105,7 +105,14 @@ const tests = {
   },
   'can handle objected with nested keys': {
     input: [
-      [{name: {first: 'baz'}}, {name: {first: 'bat'}}, {name: {first: 'foo'}}],
+      [
+        {name: {first: 'baz'}},
+        {name: {first: 'bat'}},
+        {name: {first: 'foo'}},
+        {name: null},
+        {},
+        null,
+      ],
       'ba',
       {keys: ['name.first']},
     ],
