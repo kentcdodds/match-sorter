@@ -27,6 +27,7 @@ const caseRankings = {
 }
 
 matchSorter.rankings = rankings
+matchSorter.caseRankings = caseRankings
 
 /**
  * Takes an array of items and a value and returns a new array with the items that match the given value
@@ -200,30 +201,63 @@ function getCaseRanking(testString) {
 }
 
 /**
- * Returns whether the stringToRank is one of the case parts in the testString
+ * Returns whether the stringToRank is one of the case parts in the testString (works with any string case)
+ * @example
+ * // returns true
+ * isPartialOfCase('helloWorld', 'world', caseRankings.CAMEL)
+ * @example
+ * // returns false
+ * isPartialOfCase('helloWorld', 'oworl', caseRankings.CAMEL)
  * @param {String} testString - the string to test against
  * @param {String} stringToRank - the string to rank
  * @param {Number} caseRanking - the ranking score based on case of testString
  * @returns {Boolean} whether the stringToRank is one of the case parts in the testString
  */
 function isPartialOfCase(testString, stringToRank, caseRanking) {
-  const index = testString.toLowerCase().indexOf(stringToRank.toLowerCase())
-
-  if (index === -1) {
-    return false
-  }
+  const testIndex = testString.toLowerCase().indexOf(stringToRank.toLowerCase())
 
   switch (caseRanking) {
     case caseRankings.SNAKE:
-      return testString[index - 1] === '_'
+      return (
+        testString[testIndex - 1] === '_' ||
+        isShorthand(testString, stringToRank, '_')
+      )
     case caseRankings.KEBAB:
-      return testString[index - 1] === '-'
+      return (
+        testString[testIndex - 1] === '-' ||
+        isShorthand(testString, stringToRank, '-')
+      )
     case caseRankings.PASCAL:
-    case caseRankings.CAMEL:
-      return testString[index] === testString[index].toUpperCase()
+    case caseRankings.CAMEL: {
+      const isUpperCase =
+        testIndex !== -1 &&
+        testString[testIndex] === testString[testIndex].toUpperCase()
+      return isUpperCase || isShorthand(testString, stringToRank, /(?=[A-Z])/)
+    }
     default:
       return false
   }
+}
+
+/**
+ * Check if stringToRank is a shorthand for a partial case
+ * @example
+ * // returns true
+ * isShorthand('super_duper_file', 'sdf', '_')
+ * @param {String} testString - the string to test against
+ * @param {String} stringToRank - the shorthand to test
+ * @param {String|RegExp} splitValue -
+ * @returns {Boolean} whether the stringToRank is a shorthand for the testString
+ */
+function isShorthand(testString, stringToRank, splitValue) {
+  const splitTestString = testString.split(splitValue)
+  return stringToRank
+    .toLowerCase()
+    .split('')
+    .reduce((correct, char, charIndex) => {
+      const splitItem = splitTestString[charIndex]
+      return correct && splitItem && splitItem[0].toLowerCase() === char
+    }, true)
 }
 
 /**
