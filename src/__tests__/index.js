@@ -317,6 +317,30 @@ const tests = {
       'fake_caseThree',
     ],
   },
+  'takes case and acronym into account': {
+    input: [
+      [
+        'superduperfile',
+        'super-duper-file',
+        'super_duper_file',
+        'superDuperFile',
+        'SuperDuperFile',
+      ],
+      'sdf',
+    ],
+    output: [
+      'superDuperFile',
+      'SuperDuperFile',
+      'super-duper-file',
+      'super_duper_file',
+      // acronym
+      'superduperfile',
+    ],
+  },
+  'takes case acronym and equals into account': {
+    input: [['super-duper-file', 'sdff'], 'sdf'],
+    output: ['sdff', 'super-duper-file'],
+  },
 }
 
 Object.keys(tests).forEach(title => {
