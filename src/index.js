@@ -96,12 +96,12 @@ function getMatchRanking(testString, stringToRank, options) {
     return rankings.NO_MATCH
   }
 
-  const caseRank = getCaseRanking(testString, stringToRank)
-
   // case sensitive equals
   if (testString === stringToRank) {
     return rankings.CASE_SENSITIVE_EQUAL
   }
+
+  const caseRank = getCaseRanking(testString, stringToRank)
 
   // Lowercasing before further comparison
   testString = testString.toLowerCase()
