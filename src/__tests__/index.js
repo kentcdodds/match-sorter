@@ -252,8 +252,7 @@ const tests = {
       // though, technically, `India` comes up first because it matches with STARTS_WITH...
     ],
   },
-  'WORD_STARTS_WITH will take camelCase, PascalCase, kebab-case, and snake_case into account': {
-    skip: true, // wanna help make this a thing? File an issue!
+  'takes camelCase, PascalCase, kebab-case, and snake_case into account': {
     input: [
       [
         'somethingcontainedintheword', // if this is last, then we're good
@@ -270,6 +269,50 @@ const tests = {
       'kebab-case-contained-in-the-word',
       'snake_case_contained_in_the_word',
       'somethingcontainedintheword',
+    ],
+  },
+  'takes startsWith and case into account': {
+    input: [
+      [
+        'somethingcontainedintheword',
+        'camelCaseContainedInTheWord',
+        'PascalCaseContainedInTheWord',
+        'kebab-case-contained-in-the-word',
+        'snake_case_contained_in_the_word',
+      ],
+      's',
+    ],
+    output: [
+      'snake_case_contained_in_the_word',
+      'somethingcontainedintheword',
+      'camelCaseContainedInTheWord',
+      'PascalCaseContainedInTheWord',
+      'kebab-case-contained-in-the-word',
+    ],
+  },
+  'takes case into account and ignores fake case': {
+    input: [
+      [
+        'somethingcontainedintheword',
+        'camelCaseContainedInTheWord',
+        'PascalCaseContainedInTheWord',
+        'kebab-case-contained-in-the-word',
+        'snake_case_contained_in_the_word',
+        'fakeCase_one',
+        'fake_case-two',
+        'fake_caseThree',
+      ],
+      's',
+    ],
+    output: [
+      'snake_case_contained_in_the_word',
+      'somethingcontainedintheword',
+      'camelCaseContainedInTheWord',
+      'PascalCaseContainedInTheWord',
+      'kebab-case-contained-in-the-word',
+      'fakeCase_one',
+      'fake_case-two',
+      'fake_caseThree',
     ],
   },
 }
