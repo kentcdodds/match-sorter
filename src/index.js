@@ -15,6 +15,13 @@ const rankings = {
   ACRONYM: 2,
   MATCHES: 1,
   NO_MATCH: 0,
+  CASE: {
+    CAMEL: 0.8,
+    PASCAL: 0.6,
+    KEBAB: 0.4,
+    SNAKE: 0.2,
+    NO_CASE: 0,
+  },
 }
 
 matchSorter.rankings = rankings
@@ -89,6 +96,8 @@ function getMatchRanking(testString, stringToRank, options) {
     return rankings.NO_MATCH
   }
 
+  const caseRank = getCaseRanking(testString, stringToRank)
+
   // case sensitive equals
   if (testString === stringToRank) {
     return rankings.CASE_SENSITIVE_EQUAL
@@ -100,22 +109,22 @@ function getMatchRanking(testString, stringToRank, options) {
 
   // case insensitive equals
   if (testString === stringToRank) {
-    return rankings.EQUAL
+    return rankings.EQUAL + caseRank
   }
 
   // starts with
   if (testString.indexOf(stringToRank) === 0) {
-    return rankings.STARTS_WITH
+    return rankings.STARTS_WITH + caseRank
   }
 
   // word starts with
   if (testString.indexOf(` ${stringToRank}`) !== -1) {
-    return rankings.WORD_STARTS_WITH
+    return rankings.WORD_STARTS_WITH + caseRank
   }
 
   // contains
   if (testString.indexOf(stringToRank) !== -1) {
-    return rankings.CONTAINS
+    return rankings.CONTAINS + caseRank
   } else if (stringToRank.length === 1) {
     // If the only character in the given stringToRank
     //   isn't even contained in the testString, then
@@ -125,7 +134,7 @@ function getMatchRanking(testString, stringToRank, options) {
 
   // acronym
   if (getAcronym(testString).indexOf(stringToRank) !== -1) {
-    return rankings.ACRONYM
+    return rankings.ACRONYM + caseRank
   }
 
   // will return a number between rankings.MATCHES and
@@ -149,6 +158,39 @@ function getAcronym(string) {
     })
   })
   return acronym
+}
+
+/**
+ * Returns a score base on the case of the stringToRank
+ * @param {String} testString - the string to test against
+ * @param {String} stringToRank - the string to rank
+ * @returns {Number} the number of the ranking,
+ * based on the case between 0 and 1
+ * for how well the stringToRank matches the case
+ */
+function getCaseRanking(testString) {
+  const containsUpperCase = testString.toLowerCase() !== testString
+  const containsDash = testString.includes('-')
+  const containsUnderscore = testString.includes('_')
+
+  if (!containsUpperCase && !containsUnderscore && containsDash) {
+    return rankings.CASE.KEBAB
+  }
+
+  if (!containsUpperCase && containsUnderscore && !containsDash) {
+    return rankings.CASE.SNAKE
+  }
+
+  if (containsUpperCase && !containsDash && !containsUnderscore) {
+    const startsWithUpperCase = testString[0].toUpperCase() === testString[0]
+    if (startsWithUpperCase) {
+      return rankings.CASE.PASCAL
+    }
+
+    return rankings.CASE.CAMEL
+  }
+
+  return rankings.CASE.NO_CASE
 }
 
 /**
@@ -251,7 +293,10 @@ function getItemValues(item, key) {
     // handle nested keys
     value = key
       .split('.')
-      .reduce((itemObj, nestedKey) => itemObj ? itemObj[nestedKey] : null, item)
+      .reduce(
+        (itemObj, nestedKey) => (itemObj ? itemObj[nestedKey] : null),
+        item,
+      )
   } else {
     value = item[key]
   }
