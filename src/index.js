@@ -7,11 +7,12 @@
 import diacritics from 'diacritic'
 
 const rankings = {
-  CASE_SENSITIVE_EQUAL: 8,
-  EQUAL: 7,
-  STARTS_WITH: 6,
-  WORD_STARTS_WITH: 5,
-  STRING_CASE: 4,
+  CASE_SENSITIVE_EQUAL: 9,
+  EQUAL: 8,
+  STARTS_WITH: 7,
+  WORD_STARTS_WITH: 6,
+  STRING_CASE: 5,
+  STRING_CASE_ACRONYM: 4,
   CONTAINS: 3,
   ACRONYM: 2,
   MATCHES: 1,
@@ -90,7 +91,7 @@ function getHighestRanking(item, keys, value, options) {
  * @returns {Number} the ranking for how well stringToRank matches testString
  */
 function getMatchRanking(testString, stringToRank, options) {
-  /* eslint complexity:[2, 10] */
+  /* eslint complexity:[2, 11] */
   testString = prepareValueForComparison(testString, options)
   stringToRank = prepareValueForComparison(stringToRank, options)
 
@@ -106,6 +107,7 @@ function getMatchRanking(testString, stringToRank, options) {
 
   const caseRank = getCaseRanking(testString)
   const isPartial = isPartialOfCase(testString, stringToRank, caseRank)
+  const isCasedAcronym = isCaseAcronym(testString, stringToRank, caseRank)
 
   // Lowercasing before further comparison
   testString = testString.toLowerCase()
@@ -129,6 +131,11 @@ function getMatchRanking(testString, stringToRank, options) {
   // is a part inside a cased string
   if (isPartial) {
     return rankings.STRING_CASE + caseRank
+  }
+
+  // is acronym for a cased string
+  if (caseRank > 0 && isCasedAcronym) {
+    return rankings.STRING_CASE_ACRONYM + caseRank
   }
 
   // contains
@@ -218,22 +225,15 @@ function isPartialOfCase(testString, stringToRank, caseRanking) {
 
   switch (caseRanking) {
     case caseRankings.SNAKE:
-      return (
-        testString[testIndex - 1] === '_' ||
-        isShorthand(testString, stringToRank, '_')
-      )
+      return testString[testIndex - 1] === '_'
     case caseRankings.KEBAB:
-      return (
-        testString[testIndex - 1] === '-' ||
-        isShorthand(testString, stringToRank, '-')
-      )
+      return testString[testIndex - 1] === '-'
     case caseRankings.PASCAL:
-    case caseRankings.CAMEL: {
-      const isUpperCase =
+    case caseRankings.CAMEL:
+      return (
         testIndex !== -1 &&
         testString[testIndex] === testString[testIndex].toUpperCase()
-      return isUpperCase || isShorthand(testString, stringToRank, /(?=[A-Z])/)
-    }
+      )
     default:
       return false
   }
@@ -243,13 +243,29 @@ function isPartialOfCase(testString, stringToRank, caseRanking) {
  * Check if stringToRank is a shorthand for a partial case
  * @example
  * // returns true
- * isShorthand('super_duper_file', 'sdf', '_')
+ * isShorthand('super_duper_file', 'sdf', caseRankings.SNAKE)
  * @param {String} testString - the string to test against
  * @param {String} stringToRank - the shorthand to test
- * @param {String|RegExp} splitValue -
+ * @param {Number} caseRank - the ranking of the case
  * @returns {Boolean} whether the stringToRank is a shorthand for the testString
  */
-function isShorthand(testString, stringToRank, splitValue) {
+function isCaseAcronym(testString, stringToRank, caseRank) {
+  let splitValue = null
+  switch (caseRank) {
+    case caseRankings.SNAKE:
+      splitValue = '_'
+      break
+    case caseRankings.KEBAB:
+      splitValue = '-'
+      break
+    case caseRankings.PASCAL:
+    case caseRankings.CAMEL:
+      splitValue = /(?=[A-Z])/
+      break
+    default:
+      splitValue = null
+  }
+
   const splitTestString = testString.split(splitValue)
   return stringToRank
     .toLowerCase()

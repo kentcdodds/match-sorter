@@ -47,10 +47,11 @@ To explain the ranking system, I'll use countries as an example:
 2. **EQUALS**: Case-insensitive equality (ex. `France` would match `france`)
 3. **STARTS WITH**: If the item starts with the given value (ex. `Sou` would match `South Korea` or `South Africa`)
 4. **WORD STARTS WITH**: If the item has multiple words, then if one of those words starts with the given value (ex. `Repub` would match `Dominican Republic`)
-5. **CASE STARTS WITH**: If the item has a defined case (`camelCase`, `PascalCase`, `snake_case` or `kebab-case`), then if one of the parts starts with the given value (ex. `kingdom` would match `unitedKingdom` or `united_kingdom`). This also works with acronyms (ex. `uk` would match `united-kingdom` or `UnitedKingdom`)
-6. **CONTAINS**: If the item contains the given value (ex. `ham` would match `Bahamas`)
-7. **ACRONYM**: If the item's acronym is the given value (ex. `us` would match `United States`)
-8. **SIMPLE MATCH**: If the item has letters in the same order as the letters of the given value (ex. `iw` would match `Zimbabwe`, but not `Kuwait` because it must be in the same order). Furthermore, if the item is a closer match, it will rank higher (ex. `ua` matches `Uruguay` more closely than `United States of America`, therefore `Uruguay` will be ordered before `United States of America`)
+5. **CASE STARTS WITH**: If the item has a defined case (`camelCase`, `PascalCase`, `snake_case` or `kebab-case`), then if one of the parts starts with the given value (ex. `kingdom` would match `unitedKingdom` or `united_kingdom`)
+6. **CASE ACRONYM** If the item's case matches the synonym (ex. `uk` would match `united-kingdom` or `UnitedKingdom`)
+7. **CONTAINS**: If the item contains the given value (ex. `ham` would match `Bahamas`)
+8. **ACRONYM**: If the item's acronym is the given value (ex. `us` would match `United States`)
+9. **SIMPLE MATCH**: If the item has letters in the same order as the letters of the given value (ex. `iw` would match `Zimbabwe`, but not `Kuwait` because it must be in the same order). Furthermore, if the item is a closer match, it will rank higher (ex. `ua` matches `Uruguay` more closely than `United States of America`, therefore `Uruguay` will be ordered before `United States of America`)
 
 This ranking seems to make sense in people's minds. At least it does in mine. Feedback welcome!
 
@@ -174,6 +175,7 @@ Available thresholds (from top to bottom) are:
  * STARTS_WITH
  * WORD_STARTS_WITH
  * STRING_CASE
+ * STRING_CASE ACRONYM
  * CONTAINS
  * ACRONYM
  * MATCHES _(default value)_
