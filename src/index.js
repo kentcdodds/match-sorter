@@ -7,21 +7,23 @@
 import diacritics from 'diacritic'
 
 const rankings = {
-  CASE_SENSITIVE_EQUAL: 7,
-  EQUAL: 6,
-  STARTS_WITH: 5,
-  WORD_STARTS_WITH: 4,
+  CASE_SENSITIVE_EQUAL: 8,
+  EQUAL: 7,
+  STARTS_WITH: 6,
+  WORD_STARTS_WITH: 5,
+  STRING_CASE: 4,
   CONTAINS: 3,
   ACRONYM: 2,
   MATCHES: 1,
   NO_MATCH: 0,
-  CASE: {
-    CAMEL: 0.8,
-    PASCAL: 0.6,
-    KEBAB: 0.4,
-    SNAKE: 0.2,
-    NO_CASE: 0,
-  },
+}
+
+const caseRankings = {
+  CAMEL: 0.8,
+  PASCAL: 0.6,
+  KEBAB: 0.4,
+  SNAKE: 0.2,
+  NO_CASE: 0,
 }
 
 matchSorter.rankings = rankings
@@ -87,7 +89,7 @@ function getHighestRanking(item, keys, value, options) {
  * @returns {Number} the ranking for how well stringToRank matches testString
  */
 function getMatchRanking(testString, stringToRank, options) {
-  /* eslint complexity:[2, 9] */
+  /* eslint complexity:[2, 10] */
   testString = prepareValueForComparison(testString, options)
   stringToRank = prepareValueForComparison(stringToRank, options)
 
@@ -101,7 +103,8 @@ function getMatchRanking(testString, stringToRank, options) {
     return rankings.CASE_SENSITIVE_EQUAL
   }
 
-  const caseRank = getCaseRanking(testString, stringToRank)
+  const caseRank = getCaseRanking(testString)
+  const isPartial = isPartialOfCase(testString, stringToRank, caseRank)
 
   // Lowercasing before further comparison
   testString = testString.toLowerCase()
@@ -120,6 +123,11 @@ function getMatchRanking(testString, stringToRank, options) {
   // word starts with
   if (testString.indexOf(` ${stringToRank}`) !== -1) {
     return rankings.WORD_STARTS_WITH + caseRank
+  }
+
+  // is a part inside a cased string
+  if (isPartial) {
+    return rankings.STRING_CASE + caseRank
   }
 
   // contains
@@ -161,12 +169,10 @@ function getAcronym(string) {
 }
 
 /**
- * Returns a score base on the case of the stringToRank
+ * Returns a score base on the case of the testString
  * @param {String} testString - the string to test against
- * @param {String} stringToRank - the string to rank
  * @returns {Number} the number of the ranking,
- * based on the case between 0 and 1
- * for how well the stringToRank matches the case
+ * based on the case between 0 and 1 for how the testString matches the case
  */
 function getCaseRanking(testString) {
   const containsUpperCase = testString.toLowerCase() !== testString
@@ -174,23 +180,50 @@ function getCaseRanking(testString) {
   const containsUnderscore = testString.includes('_')
 
   if (!containsUpperCase && !containsUnderscore && containsDash) {
-    return rankings.CASE.KEBAB
+    return caseRankings.KEBAB
   }
 
   if (!containsUpperCase && containsUnderscore && !containsDash) {
-    return rankings.CASE.SNAKE
+    return caseRankings.SNAKE
   }
 
   if (containsUpperCase && !containsDash && !containsUnderscore) {
     const startsWithUpperCase = testString[0].toUpperCase() === testString[0]
     if (startsWithUpperCase) {
-      return rankings.CASE.PASCAL
+      return caseRankings.PASCAL
     }
 
-    return rankings.CASE.CAMEL
+    return caseRankings.CAMEL
   }
 
-  return rankings.CASE.NO_CASE
+  return caseRankings.NO_CASE
+}
+
+/**
+ * Returns whether the stringToRank is one of the case parts in the testString
+ * @param {String} testString - the string to test against
+ * @param {String} stringToRank - the string to rank
+ * @param {Number} caseRanking - the ranking score based on case of testString
+ * @returns {Boolean} whether the stringToRank is one of the case parts in the testString
+ */
+function isPartialOfCase(testString, stringToRank, caseRanking) {
+  const index = testString.toLowerCase().indexOf(stringToRank.toLowerCase())
+
+  if (index === -1) {
+    return false
+  }
+
+  switch (caseRanking) {
+    case caseRankings.SNAKE:
+      return testString[index - 1] === '_'
+    case caseRankings.KEBAB:
+      return testString[index - 1] === '-'
+    case caseRankings.PASCAL:
+    case caseRankings.CAMEL:
+      return testString[index] === testString[index].toUpperCase()
+    default:
+      return false
+  }
 }
 
 /**
