@@ -240,14 +240,14 @@ function isPartialOfCase(testString, stringToRank, caseRanking) {
 }
 
 /**
- * Check if stringToRank is a shorthand for a partial case
+ * Check if stringToRank is an acronym for a partial case
  * @example
  * // returns true
- * isShorthand('super_duper_file', 'sdf', caseRankings.SNAKE)
+ * isCaseAcronym('super_duper_file', 'sdf', caseRankings.SNAKE)
  * @param {String} testString - the string to test against
- * @param {String} stringToRank - the shorthand to test
+ * @param {String} stringToRank - the acronym to test
  * @param {Number} caseRank - the ranking of the case
- * @returns {Boolean} whether the stringToRank is a shorthand for the testString
+ * @returns {Boolean} whether the stringToRank is an acronym for the testString
  */
 function isCaseAcronym(testString, stringToRank, caseRank) {
   let splitValue = null
