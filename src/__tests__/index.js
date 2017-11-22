@@ -293,6 +293,7 @@ const tests = {
   'takes case into account and ignores fake case': {
     input: [
       [
+        'startingWith_s',
         'somethingcontainedintheword',
         'camelCaseContainedInTheWord',
         'PascalCaseContainedInTheWord',
@@ -306,6 +307,7 @@ const tests = {
     ],
     output: [
       'snake_case_contained_in_the_word',
+      'startingWith_s',
       'somethingcontainedintheword',
       'camelCaseContainedInTheWord',
       'PascalCaseContainedInTheWord',
