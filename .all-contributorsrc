@@ -72,6 +72,17 @@
         "doc",
         "test"
       ]
+    },
+    {
+      "login": "ChrisRu",
+      "name": "Christian Ruigrok",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/12719057?v=4",
+      "profile": "http://ruigrok.info",
+      "contributions": [
+        "bug",
+        "code",
+        "doc"
+      ]
     }
   ]
 }

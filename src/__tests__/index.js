@@ -25,14 +25,18 @@ const tests = {
         'The 1-ttotc-2 container', // contains
         'The Tail of Forty Cities', // match
         'The Tail of Two Cities', // acronym2
+        'kebab-ttotc-case', // case string
         'Word starts with ttotc-first right?', // wordStartsWith
+        'TheTailOfTwoCities', // case acronym
         'The Tail of Fifty Cities', // match2
         'no match', // no match
         'The second 3-ttotc-4 container', // contains2
         'ttotc-starts with', // startsWith
+        'the_tail_of_two_cities', // case acronym2
         'Another word starts with ttotc-second, super!', // wordStartsWith2
         'ttotc-2nd-starts with', // startsWith2
-        'TTotc', // equal2
+        'TTotc', // equal2,
+        'PascalTtotcCase', // case string
       ],
       'ttotc',
     ],
@@ -44,6 +48,10 @@ const tests = {
       'ttotc-2nd-starts with', // startsWith2
       'Word starts with ttotc-first right?', // wordStartsWith
       'Another word starts with ttotc-second, super!', // wordStartsWith2
+      'PascalTtotcCase', // case string
+      'kebab-ttotc-case', // case string
+      'TheTailOfTwoCities', // case acronym
+      'the_tail_of_two_cities', // case acronym2
       'The 1-ttotc-2 container', // contains
       'The second 3-ttotc-4 container', // contains2
       'The Tail of Two Cities 1', // acronym
@@ -252,8 +260,7 @@ const tests = {
       // though, technically, `India` comes up first because it matches with STARTS_WITH...
     ],
   },
-  'WORD_STARTS_WITH will take camelCase, PascalCase, kebab-case, and snake_case into account': {
-    skip: true, // wanna help make this a thing? File an issue!
+  'takes camelCase, PascalCase, kebab-case, and snake_case into account': {
     input: [
       [
         'somethingcontainedintheword', // if this is last, then we're good
@@ -270,6 +277,71 @@ const tests = {
       'kebab-case-contained-in-the-word',
       'snake_case_contained_in_the_word',
       'somethingcontainedintheword',
+    ],
+  },
+  'takes startsWith and case into account': {
+    input: [
+      [
+        'somethingcontainedintheword',
+        'camelCaseContainedInTheWord',
+        'PascalCaseContainedInTheWord',
+        'kebab-case-contained-in-the-word',
+        'snake_case_contained_in_the_word',
+      ],
+      's',
+    ],
+    output: [
+      'snake_case_contained_in_the_word',
+      'somethingcontainedintheword',
+      'camelCaseContainedInTheWord',
+      'PascalCaseContainedInTheWord',
+      'kebab-case-contained-in-the-word',
+    ],
+  },
+  'takes case into account and ignores fake case': {
+    input: [
+      [
+        'startingWith_s',
+        'somethingcontainedintheword',
+        'camelCaseContainedInTheWord',
+        'PascalCaseContainedInTheWord',
+        'kebab-case-contained-in-the-word',
+        'snake_case_contained_in_the_word',
+        'fakeCase_one',
+        'fake_case-two',
+        'fake_caseThree',
+      ],
+      's',
+    ],
+    output: [
+      'snake_case_contained_in_the_word',
+      'startingWith_s',
+      'somethingcontainedintheword',
+      'camelCaseContainedInTheWord',
+      'PascalCaseContainedInTheWord',
+      'kebab-case-contained-in-the-word',
+      'fakeCase_one',
+      'fake_case-two',
+      'fake_caseThree',
+    ],
+  },
+  'takes case and acronym into account': {
+    input: [
+      [
+        'superduperfile',
+        'super-duper-file',
+        'super_duper_file',
+        'superDuperFile',
+        'SuperDuperFile',
+      ],
+      'sdf',
+    ],
+    output: [
+      'superDuperFile',
+      'SuperDuperFile',
+      'super-duper-file',
+      'super_duper_file',
+      'superduperfile',
     ],
   },
 }

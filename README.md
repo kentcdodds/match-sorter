@@ -15,7 +15,7 @@
 [![downloads][downloads-badge]][npm-stat]
 [![MIT License][license-badge]][LICENSE]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs]
 [![Donate][donate-badge]][donate]
 [![Code of Conduct][coc-badge]][coc]
@@ -47,9 +47,11 @@ To explain the ranking system, I'll use countries as an example:
 2. **EQUALS**: Case-insensitive equality (ex. `France` would match `france`)
 3. **STARTS WITH**: If the item starts with the given value (ex. `Sou` would match `South Korea` or `South Africa`)
 4. **WORD STARTS WITH**: If the item has multiple words, then if one of those words starts with the given value (ex. `Repub` would match `Dominican Republic`)
-5. **CONTAINS**: If the item contains the given value (ex. `ham` would match `Bahamas`)
-6. **ACRONYM**: If the item's acronym is the given value (ex. `us` would match `United States`)
-7. **SIMPLE MATCH**: If the item has letters in the same order as the letters of the given value (ex. `iw` would match `Zimbabwe`, but not `Kuwait` because it must be in the same order). Furthermore, if the item is a closer match, it will rank higher (ex. `ua` matches `Uruguay` more closely than `United States of America`, therefore `Uruguay` will be ordered before `United States of America`)
+5. **CASE STARTS WITH**: If the item has a defined case (`camelCase`, `PascalCase`, `snake_case` or `kebab-case`), then if one of the parts starts with the given value (ex. `kingdom` would match `unitedKingdom` or `united_kingdom`)
+6. **CASE ACRONYM** If the item's case matches the synonym (ex. `uk` would match `united-kingdom` or `UnitedKingdom`)
+7. **CONTAINS**: If the item contains the given value (ex. `ham` would match `Bahamas`)
+8. **ACRONYM**: If the item's acronym is the given value (ex. `us` would match `United States`)
+9. **SIMPLE MATCH**: If the item has letters in the same order as the letters of the given value (ex. `iw` would match `Zimbabwe`, but not `Kuwait` because it must be in the same order). Furthermore, if the item is a closer match, it will rank higher (ex. `ua` matches `Uruguay` more closely than `United States of America`, therefore `Uruguay` will be ordered before `United States of America`)
 
 This ranking seems to make sense in people's minds. At least it does in mine. Feedback welcome!
 
@@ -172,6 +174,8 @@ Available thresholds (from top to bottom) are:
  * EQUAL
  * STARTS_WITH
  * WORD_STARTS_WITH
+ * STRING_CASE
+ * STRING_CASE ACRONYM
  * CONTAINS
  * ACRONYM
  * MATCHES _(default value)_
@@ -216,7 +220,7 @@ matchSorter(thingsWithDiacritics, 'à', {keepDiacritics: true})
 
 In the examples above, we're using CommonJS. If you're using ES6 modules, then you can do:
 
-`import matchSorter, {rankings} from 'match-sorter'`
+`import matchSorter, {rankings, caseRankings} from 'match-sorter'`
 
 ## Inspiration
 
@@ -231,8 +235,8 @@ You might try [Fuse.js](https://github.com/krisk/Fuse). It uses advanced math fa
 Thanks goes to these people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) [📖](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) 🚇 [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds) 👀 | [<img src="https://avatars.githubusercontent.com/u/8263298?v=3" width="100px;"/><br /><sub>Conor Hastings</sub>](http://conorhastings.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) [📖](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings) 👀 | [<img src="https://avatars.githubusercontent.com/u/574806?v=3" width="100px;"/><br /><sub>Rogelio Guzman</sub>](https://github.com/rogeliog)<br />[📖](https://github.com/kentcdodds/match-sorter/commits?author=rogeliog) | [<img src="https://avatars.githubusercontent.com/u/1416436?v=3" width="100px;"/><br /><sub>Claudéric Demers</sub>](http://ced.io)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=clauderic) [📖](https://github.com/kentcdodds/match-sorter/commits?author=clauderic) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=clauderic) | [<img src="https://avatars3.githubusercontent.com/u/4150097?v=3" width="100px;"/><br /><sub>Kevin Davis</sub>](kevindav.us)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=osfan501) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=osfan501) | [<img src="https://avatars1.githubusercontent.com/u/19157735?v=3" width="100px;"/><br /><sub>Denver Chen</sub>](https://github.com/nfdjps)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps) [📖](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps) [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps) |
-| :---: | :---: | :---: | :---: | :---: | :---: |
+| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub><b>Kent C. Dodds</b></sub>](https://kentcdodds.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds "Code") [📖](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds "Documentation") [🚇](#infra-kentcdodds "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds "Tests") [👀](#review-kentcdodds "Reviewed Pull Requests") | [<img src="https://avatars.githubusercontent.com/u/8263298?v=3" width="100px;"/><br /><sub><b>Conor Hastings</b></sub>](http://conorhastings.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings "Code") [📖](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings "Documentation") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings "Tests") [👀](#review-conorhastings "Reviewed Pull Requests") | [<img src="https://avatars.githubusercontent.com/u/574806?v=3" width="100px;"/><br /><sub><b>Rogelio Guzman</b></sub>](https://github.com/rogeliog)<br />[📖](https://github.com/kentcdodds/match-sorter/commits?author=rogeliog "Documentation") | [<img src="https://avatars.githubusercontent.com/u/1416436?v=3" width="100px;"/><br /><sub><b>Claudéric Demers</b></sub>](http://ced.io)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=clauderic "Code") [📖](https://github.com/kentcdodds/match-sorter/commits?author=clauderic "Documentation") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=clauderic "Tests") | [<img src="https://avatars3.githubusercontent.com/u/4150097?v=3" width="100px;"/><br /><sub><b>Kevin Davis</b></sub>](kevindav.us)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=osfan501 "Code") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=osfan501 "Tests") | [<img src="https://avatars1.githubusercontent.com/u/19157735?v=3" width="100px;"/><br /><sub><b>Denver Chen</b></sub>](https://github.com/nfdjps)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps "Code") [📖](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps "Documentation") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps "Tests") | [<img src="https://avatars0.githubusercontent.com/u/12719057?v=4" width="100px;"/><br /><sub><b>Christian Ruigrok</b></sub>](http://ruigrok.info)<br />[🐛](https://github.com/kentcdodds/match-sorter/issues?q=author%3AChrisRu "Bug reports") [💻](https://github.com/kentcdodds/match-sorter/commits?author=ChrisRu "Code") [📖](https://github.com/kentcdodds/match-sorter/commits?author=ChrisRu "Documentation") |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification. Contributions of any kind welcome!
