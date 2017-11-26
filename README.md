@@ -175,7 +175,7 @@ Available thresholds (from top to bottom) are:
  * STARTS_WITH
  * WORD_STARTS_WITH
  * STRING_CASE
- * STRING_CASE ACRONYM
+ * STRING_CASE_ACRONYM
  * CONTAINS
  * ACRONYM
  * MATCHES _(default value)_
