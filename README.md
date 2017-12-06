@@ -123,6 +123,16 @@ const nestedObjList = [
 ]
 matchSorter(nestedObjList, 'j', {keys: ['name.first']})
 // [{name: {first: 'Janice'}}, {name: {first: 'Jen'}}]
+
+const nestedObjList = [
+  {name: [{first: 'Janice'}]},
+  {name: [{first: 'Fred'}]},
+  {name: [{first: 'George'}]},
+  {name: [{first: 'Jen'}]},
+]
+matchSorter(nestedObjList, 'j', {keys: ['name.0.first']})
+// [{name: {first: 'Janice'}}, {name: {first: 'Jen'}}]
+// matchSorter(nestedObjList, 'j', {keys: ['name[0].first']}) does not work
 ```
 
 __Property Callbacks__: Alternatively, you may also pass in a callback function that resolves the value of the key(s) you wish to match on. This is especially useful when interfacing with libraries such as Immutable.js
