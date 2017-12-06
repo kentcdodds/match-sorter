@@ -5,6 +5,7 @@ dist
 .opt-out
 .DS_Store
 .eslintcache
+npm-debug.log
 
 # these cause more harm than good
 # when working with contributors
