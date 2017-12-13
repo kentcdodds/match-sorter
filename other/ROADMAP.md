@@ -2,7 +2,7 @@
 
 ## Want to do
 
-- ideas?
+- Implement possibility to get highlights for matched items. Something like https://github.com/moroshko/autosuggest-highlight#match
 
 ## Might do
 
