@@ -344,6 +344,22 @@ const tests = {
       'superduperfile',
     ],
   },
+  'skip matching when no search value is absent': {
+    input: [
+      [
+        {tea: 'Milk', alias: 'moo'},
+        {tea: 'Oolong', alias: 'B'},
+        {tea: 'Green', alias: 'C'},
+      ],
+      '',
+      {keys: ['tea']},
+    ],
+    output: [
+      {tea: 'Milk', alias: 'moo'},
+      {tea: 'Oolong', alias: 'B'},
+      {tea: 'Green', alias: 'C'},
+    ],
+  },
 }
 
 Object.keys(tests).forEach(title => {

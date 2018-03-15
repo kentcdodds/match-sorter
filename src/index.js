@@ -38,6 +38,9 @@ matchSorter.caseRankings = caseRankings
  * @return {Array} - the new sorted array
  */
 function matchSorter(items, value, options = {}) {
+  // not performing any search/sort if value(search term) is empty
+  if (!value) return items
+
   const {keys, threshold = rankings.MATCHES} = options
   const matchedItems = items.reduce(reduceItemsToRanked, [])
   return matchedItems.sort(sortRankedItems).map(({item}) => item)
@@ -91,7 +94,7 @@ function getHighestRanking(item, keys, value, options) {
  * @returns {Number} the ranking for how well stringToRank matches testString
  */
 function getMatchRanking(testString, stringToRank, options) {
-  /* eslint complexity:[2, 11] */
+  /* eslint complexity:[2, 12] */
   testString = prepareValueForComparison(testString, options)
   stringToRank = prepareValueForComparison(stringToRank, options)
 
@@ -109,7 +112,7 @@ function getMatchRanking(testString, stringToRank, options) {
   const isPartial = isPartialOfCase(testString, stringToRank, caseRank)
   const isCasedAcronym = isCaseAcronym(testString, stringToRank, caseRank)
 
-  // Lowercasing before further comparison
+  // Lower casing before further comparison
   testString = testString.toLowerCase()
   stringToRank = stringToRank.toLowerCase()
 
