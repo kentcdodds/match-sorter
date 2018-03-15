@@ -1,3 +1,25 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+* [match-sorter](#match-sorter)
+  * [The problem](#the-problem)
+  * [This solution](#this-solution)
+  * [Getting Started](#getting-started)
+    * [Installation](#installation)
+    * [Usage](#usage)
+  * [Advanced options](#advanced-options)
+    * [keys: `[string]`](#keys-string)
+    * [threshold: `number`](#threshold-number)
+    * [keepDiacritics: `boolean`](#keepdiacritics-boolean)
+  * [Using ES6?](#using-es6)
+  * [Inspiration](#inspiration)
+  * [Other Solutions](#other-solutions)
+  * [Contributors](#contributors)
+  * [LICENSE](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 <div align="center">
 <h1>match-sorter</h1>
 
@@ -13,9 +35,9 @@
 [![Dependencies][dependencyci-badge]][dependencyci]
 [![version][version-badge]][package]
 [![downloads][downloads-badge]][npm-stat]
-[![MIT License][license-badge]][LICENSE]
+[![MIT License][license-badge]][license]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs]
 [![Donate][donate-badge]][donate]
 [![Code of Conduct][coc-badge]][coc]
@@ -31,9 +53,9 @@
 
 ## The problem
 
-1. You have a list of dozens, hundreds, or thousands of items
-2. You want to filter and sort those items intelligently (maybe you have a filter input for the user)
-3. You want simple, expected, and deterministic sorting of the items (no fancy math algorithm that fancily changes the sorting as they type)
+1.  You have a list of dozens, hundreds, or thousands of items
+2.  You want to filter and sort those items intelligently (maybe you have a filter input for the user)
+3.  You want simple, expected, and deterministic sorting of the items (no fancy math algorithm that fancily changes the sorting as they type)
 
 ## This solution
 
@@ -41,15 +63,15 @@ This follows a simple and sensible (user friendly) algorithm that makes it easy 
 
 To explain the ranking system, I'll use countries as an example:
 
-1. **CASE SENSITIVE EQUALS**: Case-sensitive equality trumps all. These will be first. (ex. `France` would match `France `, but not `france`)
-2. **EQUALS**: Case-insensitive equality (ex. `France` would match `france`)
-3. **STARTS WITH**: If the item starts with the given value (ex. `Sou` would match `South Korea` or `South Africa`)
-4. **WORD STARTS WITH**: If the item has multiple words, then if one of those words starts with the given value (ex. `Repub` would match `Dominican Republic`)
-5. **CASE STARTS WITH**: If the item has a defined case (`camelCase`, `PascalCase`, `snake_case` or `kebab-case`), then if one of the parts starts with the given value (ex. `kingdom` would match `unitedKingdom` or `united_kingdom`)
-6. **CASE ACRONYM** If the item's case matches the synonym (ex. `uk` would match `united-kingdom` or `UnitedKingdom`)
-7. **CONTAINS**: If the item contains the given value (ex. `ham` would match `Bahamas`)
-8. **ACRONYM**: If the item's acronym is the given value (ex. `us` would match `United States`)
-9. **SIMPLE MATCH**: If the item has letters in the same order as the letters of the given value (ex. `iw` would match `Zimbabwe`, but not `Kuwait` because it must be in the same order). Furthermore, if the item is a closer match, it will rank higher (ex. `ua` matches `Uruguay` more closely than `United States of America`, therefore `Uruguay` will be ordered before `United States of America`)
+1.  **CASE SENSITIVE EQUALS**: Case-sensitive equality trumps all. These will be first. (ex. `France` would match `France`, but not `france`)
+2.  **EQUALS**: Case-insensitive equality (ex. `France` would match `france`)
+3.  **STARTS WITH**: If the item starts with the given value (ex. `Sou` would match `South Korea` or `South Africa`)
+4.  **WORD STARTS WITH**: If the item has multiple words, then if one of those words starts with the given value (ex. `Repub` would match `Dominican Republic`)
+5.  **CASE STARTS WITH**: If the item has a defined case (`camelCase`, `PascalCase`, `snake_case` or `kebab-case`), then if one of the parts starts with the given value (ex. `kingdom` would match `unitedKingdom` or `united_kingdom`)
+6.  **CASE ACRONYM** If the item's case matches the synonym (ex. `uk` would match `united-kingdom` or `UnitedKingdom`)
+7.  **CONTAINS**: If the item contains the given value (ex. `ham` would match `Bahamas`)
+8.  **ACRONYM**: If the item's acronym is the given value (ex. `us` would match `United States`)
+9.  **SIMPLE MATCH**: If the item has letters in the same order as the letters of the given value (ex. `iw` would match `Zimbabwe`, but not `Kuwait` because it must be in the same order). Furthermore, if the item is a closer match, it will rank higher (ex. `ua` matches `Uruguay` more closely than `United States of America`, therefore `Uruguay` will be ordered before `United States of America`)
 
 This ranking seems to make sense in people's minds. At least it does in mine. Feedback welcome!
 
@@ -98,7 +120,7 @@ matchSorter(objList, 're', {keys: ['color', 'name']})
 // [{name: 'Jen', color: 'Red'}, {name: 'Janice', color: 'Green'}, {name: 'Fred', color: 'Orange'}, {name: 'George', color: 'Blue'}]
 ```
 
-__Array of values__: When the specified key matches an array of values, the best match from the values of in the array is going to be used for the ranking.
+**Array of values**: When the specified key matches an array of values, the best match from the values of in the array is going to be used for the ranking.
 
 ```javascript
 const iceCreamYum = [
@@ -110,7 +132,7 @@ matchSorter(iceCreamYum, 'cc', {keys: ['favoriteIceCream']})
 // [{favoriteIceCream: ['candy cane', 'brownie']}, {favoriteIceCream: ['mint', 'chocolate']}]
 ```
 
-__Nested Keys__: You can specify nested keys using dot-notation.
+**Nested Keys**: You can specify nested keys using dot-notation.
 
 ```javascript
 const nestedObjList = [
@@ -133,20 +155,15 @@ matchSorter(nestedObjList, 'j', {keys: ['name.0.first']})
 // matchSorter(nestedObjList, 'j', {keys: ['name[0].first']}) does not work
 ```
 
-__Property Callbacks__: Alternatively, you may also pass in a callback function that resolves the value of the key(s) you wish to match on. This is especially useful when interfacing with libraries such as Immutable.js
+**Property Callbacks**: Alternatively, you may also pass in a callback function that resolves the value of the key(s) you wish to match on. This is especially useful when interfacing with libraries such as Immutable.js
 
 ```javascript
-const list = [
-  {name: 'Janice'},
-  {name: 'Fred'},
-  {name: 'George'},
-  {name: 'Jen'},
-]
-matchSorter(list, 'j', {keys: [(item) => item.name]})
+const list = [{name: 'Janice'}, {name: 'Fred'}, {name: 'George'}, {name: 'Jen'}]
+matchSorter(list, 'j', {keys: [item => item.name]})
 // [{name: 'Janice'}, {name: 'Jen'}]
 ```
 
-__Min and Max Ranking__: You may restrict specific keys to a minimum or maximum ranking by passing in an object. A key with a minimum rank will only get promoted if there is at least a simple match.
+**Min and Max Ranking**: You may restrict specific keys to a minimum or maximum ranking by passing in an object. A key with a minimum rank will only get promoted if there is at least a simple match.
 
 ```javascript
 const tea = [
@@ -154,7 +171,9 @@ const tea = [
   {tea: 'Assam', alias: 'B'},
   {tea: 'Black', alias: 'C'},
 ]
-matchSorter(tea, 'A', {keys: ['tea', {maxRanking: matchSorter.rankings.STARTS_WITH, key: 'alias'}]})
+matchSorter(tea, 'A', {
+  keys: ['tea', {maxRanking: matchSorter.rankings.STARTS_WITH, key: 'alias'}],
+})
 // without maxRanking, Earl Grey would come first because the alias "A" would be CASE_SENSITIVE_EQUAL
 // `tea` key comes before `alias` key, so Assam comes first even though both match as STARTS_WITH
 // [{tea: 'Assam', alias: 'B'}, {tea: 'Earl Grey', alias: 'A'},{tea: 'Black', alias: 'C'}]
@@ -166,28 +185,32 @@ const tea = [
   {tea: 'Oolong', alias: 'B'},
   {tea: 'Green', alias: 'C'},
 ]
-matchSorter(tea, 'oo', {keys: ['tea', {minRanking: matchSorter.rankings.EQUAL, key: 'alias'}]})
+matchSorter(tea, 'oo', {
+  keys: ['tea', {minRanking: matchSorter.rankings.EQUAL, key: 'alias'}],
+})
 // minRanking bumps Milk up to EQUAL from CONTAINS (alias)
 // Oolong matches as STARTS_WITH
 // Green is missing due to no match
 // [{tea: 'Milk', alias: 'moo'}, {tea: 'Oolong', alias: 'B'}]
 ```
+
 ### threshold: `number`
 
 _Default: `MATCHES`_
 
 Thresholds can be used to specify the criteria used to rank the results.
 Available thresholds (from top to bottom) are:
- * CASE_SENSITIVE_EQUAL
- * EQUAL
- * STARTS_WITH
- * WORD_STARTS_WITH
- * STRING_CASE
- * STRING_CASE_ACRONYM
- * CONTAINS
- * ACRONYM
- * MATCHES _(default value)_
- * NO_MATCH
+
+* CASE_SENSITIVE_EQUAL
+* EQUAL
+* STARTS_WITH
+* WORD_STARTS_WITH
+* STRING_CASE
+* STRING_CASE_ACRONYM
+* CONTAINS
+* ACRONYM
+* MATCHES _(default value)_
+* NO_MATCH
 
 ```javascript
 const fruit = ['orange', 'apple', 'grape', 'banana']
@@ -213,7 +236,13 @@ This is the default because it makes the most sense from a UX perspective.
 You can disable this behavior by specifying `keepDiacritics: true`
 
 ```javascript
-const thingsWithDiacritics = ['jalapeño', 'à la carte', 'café', 'papier-mâché', 'à la mode']
+const thingsWithDiacritics = [
+  'jalapeño',
+  'à la carte',
+  'café',
+  'papier-mâché',
+  'à la mode',
+]
 matchSorter(thingsWithDiacritics, 'aa')
 // ['jalapeño', 'à la carte', 'à la mode', 'papier-mâché']
 
@@ -243,8 +272,12 @@ You might try [Fuse.js](https://github.com/krisk/Fuse). It uses advanced math fa
 Thanks goes to these people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+
+<!-- prettier-ignore -->
 | [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub><b>Kent C. Dodds</b></sub>](https://kentcdodds.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds "Code") [📖](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds "Documentation") [🚇](#infra-kentcdodds "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds "Tests") [👀](#review-kentcdodds "Reviewed Pull Requests") | [<img src="https://avatars.githubusercontent.com/u/8263298?v=3" width="100px;"/><br /><sub><b>Conor Hastings</b></sub>](http://conorhastings.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings "Code") [📖](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings "Documentation") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings "Tests") [👀](#review-conorhastings "Reviewed Pull Requests") | [<img src="https://avatars.githubusercontent.com/u/574806?v=3" width="100px;"/><br /><sub><b>Rogelio Guzman</b></sub>](https://github.com/rogeliog)<br />[📖](https://github.com/kentcdodds/match-sorter/commits?author=rogeliog "Documentation") | [<img src="https://avatars.githubusercontent.com/u/1416436?v=3" width="100px;"/><br /><sub><b>Claudéric Demers</b></sub>](http://ced.io)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=clauderic "Code") [📖](https://github.com/kentcdodds/match-sorter/commits?author=clauderic "Documentation") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=clauderic "Tests") | [<img src="https://avatars3.githubusercontent.com/u/4150097?v=3" width="100px;"/><br /><sub><b>Kevin Davis</b></sub>](kevindav.us)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=osfan501 "Code") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=osfan501 "Tests") | [<img src="https://avatars1.githubusercontent.com/u/19157735?v=3" width="100px;"/><br /><sub><b>Denver Chen</b></sub>](https://github.com/nfdjps)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps "Code") [📖](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps "Documentation") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps "Tests") | [<img src="https://avatars0.githubusercontent.com/u/12719057?v=4" width="100px;"/><br /><sub><b>Christian Ruigrok</b></sub>](http://ruigrok.info)<br />[🐛](https://github.com/kentcdodds/match-sorter/issues?q=author%3AChrisRu "Bug reports") [💻](https://github.com/kentcdodds/match-sorter/commits?author=ChrisRu "Code") [📖](https://github.com/kentcdodds/match-sorter/commits?author=ChrisRu "Documentation") |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| [<img src="https://avatars1.githubusercontent.com/u/2084833?v=4" width="100px;"/><br /><sub><b>Hozefa</b></sub>](https://github.com/hozefaj)<br />[🐛](https://github.com/kentcdodds/match-sorter/issues?q=author%3Ahozefaj "Bug reports") [💻](https://github.com/kentcdodds/match-sorter/commits?author=hozefaj "Code") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=hozefaj "Tests") [🤔](#ideas-hozefaj "Ideas, Planning, & Feedback") |
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification. Contributions of any kind welcome!
