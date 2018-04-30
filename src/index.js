@@ -187,8 +187,8 @@ function getAcronym(string) {
  */
 function getCaseRanking(testString) {
   const containsUpperCase = testString.toLowerCase() !== testString
-  const containsDash = testString.includes('-')
-  const containsUnderscore = testString.includes('_')
+  const containsDash = testString.indexOf('-') >= 0
+  const containsUnderscore = testString.indexOf('_') >= 0
 
   if (!containsUpperCase && !containsUnderscore && containsDash) {
     return caseRankings.KEBAB
