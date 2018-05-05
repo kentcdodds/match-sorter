@@ -111,6 +111,19 @@ const tests = {
       {first: 'not', second: 'not', third: 'not', fourth: 'match'},
     ],
   },
+  'can handle the number 0 as a property value': {
+    input: [
+      [
+        {name: 'A', age: 0},
+        {name: 'B', age: 1},
+        {name: 'C', age: 2},
+        {name: 'D', age: 3},
+      ],
+      '0',
+      {keys: ['age']},
+    ],
+    output: [{name: 'A', age: 0}],
+  },
   'can handle objected with nested keys': {
     input: [
       [
