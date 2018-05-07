@@ -9,29 +9,27 @@
  */
 import assert from 'assert'
 
-import cjsImport, {rankings as cjsRankings} from '../dist/cjs'
-import umdImport, {rankings as umdRankings} from '../dist/umd/match-sorter'
+import cjsImport, {rankings as cjsRankings} from '../../dist/match-sorter.cjs'
+import umdImport, {rankings as umdRankings} from '../../dist/match-sorter.umd'
 
-const cjsRequire = require('../dist/cjs')
-const umdRequire = require('../dist/umd/match-sorter')
+const cjsRequire = require('../../dist/match-sorter.cjs')
+const umdRequire = require('../../dist/match-sorter.umd')
 
-assert(
-  isMatchSorterFunction(cjsImport) && isRankingsObject(cjsRankings),
-  'CJS build has a problem with ES6 modules',
-)
+test('built version works', () => {
+  assert(
+    isMatchSorterFunction(cjsImport) && isRankingsObject(cjsRankings),
+    'CJS build has a problem with ES6 modules',
+  )
 
-assert(isMatchSorterFunction(cjsRequire), 'CJS build has a problem with CJS')
+  assert(isMatchSorterFunction(cjsRequire), 'CJS build has a problem with CJS')
 
-assert(
-  isMatchSorterFunction(umdImport) && isRankingsObject(umdRankings),
-  'UMD build has a problem with ES6 modules',
-)
+  assert(
+    isMatchSorterFunction(umdImport) && isRankingsObject(umdRankings),
+    'UMD build has a problem with ES6 modules',
+  )
 
-assert(isMatchSorterFunction(umdRequire), 'UMD build has a problem with CJS')
-
-// TODO: how could we validate the AMD/global modules?
-
-console.log('Built modules look good 👍')
+  assert(isMatchSorterFunction(umdRequire), 'UMD build has a problem with CJS')
+})
 
 function isMatchSorterFunction(thing) {
   if (typeof thing !== 'function') {

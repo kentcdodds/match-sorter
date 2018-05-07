@@ -1,25 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-* [match-sorter](#match-sorter)
-  * [The problem](#the-problem)
-  * [This solution](#this-solution)
-  * [Getting Started](#getting-started)
-    * [Installation](#installation)
-    * [Usage](#usage)
-  * [Advanced options](#advanced-options)
-    * [keys: `[string]`](#keys-string)
-    * [threshold: `number`](#threshold-number)
-    * [keepDiacritics: `boolean`](#keepdiacritics-boolean)
-  * [Using ES6?](#using-es6)
-  * [Inspiration](#inspiration)
-  * [Other Solutions](#other-solutions)
-  * [Contributors](#contributors)
-  * [LICENSE](#license)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 <div align="center">
 <h1>match-sorter</h1>
 
@@ -74,6 +52,25 @@ To explain the ranking system, I'll use countries as an example:
 9.  **SIMPLE MATCH**: If the item has letters in the same order as the letters of the given value (ex. `iw` would match `Zimbabwe`, but not `Kuwait` because it must be in the same order). Furthermore, if the item is a closer match, it will rank higher (ex. `ua` matches `Uruguay` more closely than `United States of America`, therefore `Uruguay` will be ordered before `United States of America`)
 
 This ranking seems to make sense in people's minds. At least it does in mine. Feedback welcome!
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+* [Getting Started](#getting-started)
+  * [Installation](#installation)
+  * [Usage](#usage)
+* [Advanced options](#advanced-options)
+  * [keys: `[string]`](#keys-string)
+  * [threshold: `number`](#threshold-number)
+  * [keepDiacritics: `boolean`](#keepdiacritics-boolean)
+* [Using ES6?](#using-es6)
+* [Inspiration](#inspiration)
+* [Other Solutions](#other-solutions)
+* [Contributors](#contributors)
+* [LICENSE](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Getting Started
 
