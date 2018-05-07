@@ -15,7 +15,8 @@
     "test:update": "npm run test:cover -s -- --updateSnapshot",
     "test:build": "kcd-scripts test --config other/jest.config.js --no-watch",
     "build-and-test": "npm run build -s && npm run test:build -s",
-    "validate": "kcd-scripts validate lint,build-and-test,test:cover,test:ts",
+    "validate": "kcd-scripts validate lint,build-and-test,test:cover",
+    "setup": "npm install && npm run validate",
     "precommit": "kcd-scripts precommit"
   },
   "files": ["dist"],
@@ -33,7 +34,7 @@
     "diacritic": "0.0.2"
   },
   "devDependencies": {
-    "kcd-scripts": "^0.37.0"
+    "kcd-scripts": "^0.38.1"
   },
   "eslintConfig": {
     "extends": ["./node_modules/kcd-scripts/eslint.js"]
