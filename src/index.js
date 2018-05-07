@@ -387,7 +387,7 @@ function getItemValues(item, key) {
     value = item[key]
   }
   // concat because `value` can be a string or an array
-  return value || value === 0 ? [].concat(value) : null
+  return value != null ? [].concat(value) : null
 }
 
 /**
