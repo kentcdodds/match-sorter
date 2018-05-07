@@ -387,6 +387,7 @@ function getItemValues(item, key) {
     value = item[key]
   }
   // concat because `value` can be a string or an array
+  // eslint-disable-next-line
   return value != null ? [].concat(value) : null
 }
 
