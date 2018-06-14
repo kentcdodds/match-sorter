@@ -60,7 +60,7 @@ function matchSorter(items, value, options = {}) {
  * @param {Array} keys - the keys to get values from the item for the ranking
  * @param {String} value - the value to rank against
  * @param {Object} options - options to control the ranking
- * @return {Number} - the highest ranking
+ * @return {{rank: Number, keyIndex: Number}} - the highest ranking
  */
 function getHighestRanking(item, keys, value, options) {
   if (!keys) {
