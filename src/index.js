@@ -52,7 +52,7 @@ function matchSorter(items, value, options = {}) {
       value,
       options,
     )
-    if (rank >= threshold && rank >= keyThreshold) {
+    if (rank >= keyThreshold) {
       matches.push({item, rank, index, keyIndex})
     }
     return matches
