@@ -160,6 +160,16 @@ matchSorter(list, 'j', {keys: [item => item.name]})
 // [{name: 'Janice'}, {name: 'Jen'}]
 ```
 
+**Threshold**: You may specify an individual threshold for specific keys. A key will only match if it meets the specified threshold. _For more information regarding thresholds [see below](#threshold-number)_
+
+```javascript
+const list = [{name: 'Fred', color: 'Orange'}, {name: 'Jen', color: 'Red'}]
+matchSorter(list, 'ed', {
+  keys: [{threshold: rankings.STARTS_WITH, key: 'name'}, 'color'],
+})
+//[{name: 'Jen', color: 'Red'}]
+```
+
 **Min and Max Ranking**: You may restrict specific keys to a minimum or maximum ranking by passing in an object. A key with a minimum rank will only get promoted if there is at least a simple match.
 
 ```javascript
