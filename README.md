@@ -15,7 +15,7 @@
 [![downloads][downloads-badge]][npm-stat]
 [![MIT License][license-badge]][license]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs]
 [![Donate][donate-badge]][donate]
 [![Code of Conduct][coc-badge]][coc]
@@ -54,21 +54,20 @@ To explain the ranking system, I'll use countries as an example:
 This ranking seems to make sense in people's minds. At least it does in mine. Feedback welcome!
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
-
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-* [Getting Started](#getting-started)
-  * [Installation](#installation)
-  * [Usage](#usage)
-* [Advanced options](#advanced-options)
-  * [keys: `[string]`](#keys-string)
-  * [threshold: `number`](#threshold-number)
-  * [keepDiacritics: `boolean`](#keepdiacritics-boolean)
-* [Using ES6?](#using-es6)
-* [Inspiration](#inspiration)
-* [Other Solutions](#other-solutions)
-* [Contributors](#contributors)
-* [LICENSE](#license)
+- [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Usage](#usage)
+- [Advanced options](#advanced-options)
+  - [keys: `[string]`](#keys-string)
+  - [threshold: `number`](#threshold-number)
+  - [keepDiacritics: `boolean`](#keepdiacritics-boolean)
+- [Using ES6?](#using-es6)
+- [Inspiration](#inspiration)
+- [Other Solutions](#other-solutions)
+- [Contributors](#contributors)
+- [LICENSE](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -208,16 +207,16 @@ _Default: `MATCHES`_
 Thresholds can be used to specify the criteria used to rank the results.
 Available thresholds (from top to bottom) are:
 
-* CASE_SENSITIVE_EQUAL
-* EQUAL
-* STARTS_WITH
-* WORD_STARTS_WITH
-* STRING_CASE
-* STRING_CASE_ACRONYM
-* CONTAINS
-* ACRONYM
-* MATCHES _(default value)_
-* NO_MATCH
+- CASE_SENSITIVE_EQUAL
+- EQUAL
+- STARTS_WITH
+- WORD_STARTS_WITH
+- STRING_CASE
+- STRING_CASE_ACRONYM
+- CONTAINS
+- ACRONYM
+- MATCHES _(default value)_
+- NO_MATCH
 
 ```javascript
 const fruit = ['orange', 'apple', 'grape', 'banana']
@@ -279,11 +278,10 @@ You might try [Fuse.js](https://github.com/krisk/Fuse). It uses advanced math fa
 Thanks goes to these people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-
 <!-- prettier-ignore -->
 | [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub><b>Kent C. Dodds</b></sub>](https://kentcdodds.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds "Code") [📖](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds "Documentation") [🚇](#infra-kentcdodds "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds "Tests") [👀](#review-kentcdodds "Reviewed Pull Requests") | [<img src="https://avatars.githubusercontent.com/u/8263298?v=3" width="100px;"/><br /><sub><b>Conor Hastings</b></sub>](http://conorhastings.com)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings "Code") [📖](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings "Documentation") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=conorhastings "Tests") [👀](#review-conorhastings "Reviewed Pull Requests") | [<img src="https://avatars.githubusercontent.com/u/574806?v=3" width="100px;"/><br /><sub><b>Rogelio Guzman</b></sub>](https://github.com/rogeliog)<br />[📖](https://github.com/kentcdodds/match-sorter/commits?author=rogeliog "Documentation") | [<img src="https://avatars.githubusercontent.com/u/1416436?v=3" width="100px;"/><br /><sub><b>Claudéric Demers</b></sub>](http://ced.io)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=clauderic "Code") [📖](https://github.com/kentcdodds/match-sorter/commits?author=clauderic "Documentation") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=clauderic "Tests") | [<img src="https://avatars3.githubusercontent.com/u/4150097?v=3" width="100px;"/><br /><sub><b>Kevin Davis</b></sub>](kevindav.us)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=osfan501 "Code") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=osfan501 "Tests") | [<img src="https://avatars1.githubusercontent.com/u/19157735?v=3" width="100px;"/><br /><sub><b>Denver Chen</b></sub>](https://github.com/nfdjps)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps "Code") [📖](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps "Documentation") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=nfdjps "Tests") | [<img src="https://avatars0.githubusercontent.com/u/12719057?v=4" width="100px;"/><br /><sub><b>Christian Ruigrok</b></sub>](http://ruigrok.info)<br />[🐛](https://github.com/kentcdodds/match-sorter/issues?q=author%3AChrisRu "Bug reports") [💻](https://github.com/kentcdodds/match-sorter/commits?author=ChrisRu "Code") [📖](https://github.com/kentcdodds/match-sorter/commits?author=ChrisRu "Documentation") |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| [<img src="https://avatars1.githubusercontent.com/u/2084833?v=4" width="100px;"/><br /><sub><b>Hozefa</b></sub>](https://github.com/hozefaj)<br />[🐛](https://github.com/kentcdodds/match-sorter/issues?q=author%3Ahozefaj "Bug reports") [💻](https://github.com/kentcdodds/match-sorter/commits?author=hozefaj "Code") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=hozefaj "Tests") [🤔](#ideas-hozefaj "Ideas, Planning, & Feedback") | [<img src="https://avatars3.githubusercontent.com/u/9403361?v=4" width="100px;"/><br /><sub><b>pushpinder107</b></sub>](https://github.com/pushpinder107)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=pushpinder107 "Code") |
+| [<img src="https://avatars1.githubusercontent.com/u/2084833?v=4" width="100px;"/><br /><sub><b>Hozefa</b></sub>](https://github.com/hozefaj)<br />[🐛](https://github.com/kentcdodds/match-sorter/issues?q=author%3Ahozefaj "Bug reports") [💻](https://github.com/kentcdodds/match-sorter/commits?author=hozefaj "Code") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=hozefaj "Tests") [🤔](#ideas-hozefaj "Ideas, Planning, & Feedback") | [<img src="https://avatars3.githubusercontent.com/u/9403361?v=4" width="100px;"/><br /><sub><b>pushpinder107</b></sub>](https://github.com/pushpinder107)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=pushpinder107 "Code") | [<img src="https://avatars3.githubusercontent.com/u/200528?v=4" width="100px;"/><br /><sub><b>Mordy Tikotzky</b></sub>](https://github.com/tikotzky)<br />[💻](https://github.com/kentcdodds/match-sorter/commits?author=tikotzky "Code") [📖](https://github.com/kentcdodds/match-sorter/commits?author=tikotzky "Documentation") [⚠️](https://github.com/kentcdodds/match-sorter/commits?author=tikotzky "Tests") |
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
