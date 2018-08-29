@@ -373,6 +373,16 @@ const tests = {
       {tea: 'Green', alias: 'C'},
     ],
   },
+  'only match when key meets threshold': {
+    input: [
+      [{name: 'Fred', color: 'Orange'}, {name: 'Jen', color: 'Red'}],
+      'ed',
+      {
+        keys: [{threshold: rankings.STARTS_WITH, key: 'name'}, 'color'],
+      },
+    ],
+    output: [{name: 'Jen', color: 'Red'}],
+  },
 }
 
 Object.keys(tests).forEach(title => {
