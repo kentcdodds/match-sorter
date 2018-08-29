@@ -104,6 +104,17 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "tikotzky",
+      "name": "Mordy Tikotzky",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/200528?v=4",
+      "profile": "https://github.com/tikotzky",
+      "contributions": [
+        "code",
+        "doc",
+        "test"
+      ]
     }
   ],
   "repoType": "github"

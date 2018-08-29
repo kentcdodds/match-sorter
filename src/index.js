@@ -46,8 +46,13 @@ function matchSorter(items, value, options = {}) {
   return matchedItems.sort(sortRankedItems).map(({item}) => item)
 
   function reduceItemsToRanked(matches, item, index) {
-    const {rank, keyIndex} = getHighestRanking(item, keys, value, options)
-    if (rank >= threshold) {
+    const {rank, keyIndex, keyThreshold = threshold} = getHighestRanking(
+      item,
+      keys,
+      value,
+      options,
+    )
+    if (rank >= keyThreshold) {
       matches.push({item, rank, index, keyIndex})
     }
     return matches
@@ -60,17 +65,21 @@ function matchSorter(items, value, options = {}) {
  * @param {Array} keys - the keys to get values from the item for the ranking
  * @param {String} value - the value to rank against
  * @param {Object} options - options to control the ranking
- * @return {{rank: Number, keyIndex: Number}} - the highest ranking
+ * @return {{rank: Number, keyIndex: Number, keyThreshold: Number}} - the highest ranking
  */
 function getHighestRanking(item, keys, value, options) {
   if (!keys) {
-    return {rank: getMatchRanking(item, value, options), keyIndex: -1}
+    return {
+      rank: getMatchRanking(item, value, options),
+      keyIndex: -1,
+      keyThreshold: options.threshold,
+    }
   }
   const valuesToRank = getAllValuesToRank(item, keys)
   return valuesToRank.reduce(
-    ({rank, keyIndex}, {itemValue, attributes}, i) => {
+    ({rank, keyIndex, keyThreshold}, {itemValue, attributes}, i) => {
       let newRank = getMatchRanking(itemValue, value, options)
-      const {minRanking, maxRanking} = attributes
+      const {minRanking, maxRanking, threshold} = attributes
       if (newRank < minRanking && newRank >= rankings.MATCHES) {
         newRank = minRanking
       } else if (newRank > maxRanking) {
@@ -79,10 +88,11 @@ function getHighestRanking(item, keys, value, options) {
       if (newRank > rank) {
         rank = newRank
         keyIndex = i
+        keyThreshold = threshold
       }
-      return {rank, keyIndex}
+      return {rank, keyIndex, keyThreshold}
     },
-    {rank: rankings.NO_MATCH, keyIndex: -1},
+    {rank: rankings.NO_MATCH, keyIndex: -1, keyThreshold: options.threshold},
   )
 }
 

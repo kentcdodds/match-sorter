@@ -373,6 +373,27 @@ const tests = {
       {tea: 'Green', alias: 'C'},
     ],
   },
+  'only match when key meets threshold': {
+    input: [
+      [{name: 'Fred', color: 'Orange'}, {name: 'Jen', color: 'Red'}],
+      'ed',
+      {
+        keys: [{threshold: rankings.STARTS_WITH, key: 'name'}, 'color'],
+      },
+    ],
+    output: [{name: 'Jen', color: 'Red'}],
+  },
+  'should match when key threshold is lower than the default threshold': {
+    input: [
+      [{name: 'Fred', color: 'Orange'}, {name: 'Jen', color: 'Red'}],
+      'ed',
+      {
+        keys: ['name', {threshold: rankings.CONTAINS, key: 'color'}],
+        threshold: rankings.STARTS_WITH,
+      },
+    ],
+    output: [{name: 'Jen', color: 'Red'}],
+  },
 }
 
 Object.keys(tests).forEach(title => {
