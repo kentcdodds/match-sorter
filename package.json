@@ -1,8 +1,7 @@
 {
   "name": "match-sorter",
   "version": "0.0.0-semantically-released",
-  "description":
-    "Simple, expected, and deterministic best-match sorting of an array in JavaScript",
+  "description": "Simple, expected, and deterministic best-match sorting of an array in JavaScript",
   "main": "dist/match-sorter.cjs.js",
   "jsnext:main": "dist/match-sorter.esm.js",
   "module": "dist/match-sorter.esm.js",
@@ -19,7 +18,9 @@
     "setup": "npm install && npm run validate",
     "precommit": "kcd-scripts precommit"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "autocomplete",
     "filter list",
@@ -29,17 +30,25 @@
   ],
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
-  "bundledDependencies": ["diacritic"],
+  "bundledDependencies": [
+    "remove-accents"
+  ],
   "dependencies": {
-    "diacritic": "0.0.2"
+    "remove-accents": "0.4.2"
   },
   "devDependencies": {
     "kcd-scripts": "^0.38.1"
   },
   "eslintConfig": {
-    "extends": ["./node_modules/kcd-scripts/eslint.js"]
+    "extends": [
+      "./node_modules/kcd-scripts/eslint.js"
+    ]
   },
-  "eslintIgnore": ["node_modules", "coverage", "dist"],
+  "eslintIgnore": [
+    "node_modules",
+    "coverage",
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/kentcdodds/match-sorter.git"
