@@ -4,7 +4,7 @@
  * @copyright (c) 2017 Kent C. Dodds
  * @author Kent C. Dodds <kent@doddsfamily.us>
  */
-import diacritics from 'diacritic'
+import removeAccents from 'remove-accents'
 
 const rankings = {
   CASE_SENSITIVE_EQUAL: 9,
@@ -366,7 +366,7 @@ function sortRankedItems(a, b) {
 function prepareValueForComparison(value, {keepDiacritics}) {
   value = `${value}` // toString
   if (!keepDiacritics) {
-    value = diacritics.clean(value)
+    value = removeAccents(value)
   }
   return value
 }

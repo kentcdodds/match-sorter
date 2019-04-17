@@ -394,6 +394,10 @@ const tests = {
     ],
     output: [{name: 'Jen', color: 'Red'}],
   },
+  'case insensitive cyrillic match': {
+    input: [['Привет', 'Лед'], 'л'],
+    output: ['Лед'],
+  },
 }
 
 Object.keys(tests).forEach(title => {
