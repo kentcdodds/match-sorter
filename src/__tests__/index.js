@@ -243,6 +243,14 @@ const tests = {
     ],
     output: ['app', 'apple', 'apply', 'fiji apple'],
   },
+  'when providing a rank threshold of ACRONYM, it returns only the items that meet the rank': {
+    input: [
+      ['apple', 'atop', 'alpaca', 'vamped'],
+      'ap',
+      {threshold: rankings.ACRONYM},
+    ],
+    output: ['apple'],
+  },
   'defaults to ignore diacritics': {
     input: [
       ['jalapeño', 'à la carte', 'café', 'papier-mâché', 'à la mode'],
