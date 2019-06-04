@@ -293,27 +293,30 @@ function isCaseAcronym(testString, stringToRank, caseRank) {
  * Returns a score based on how spread apart the
  * characters from the stringToRank are within the testString.
  * A number close to rankings.MATCHES represents a loose match. A number close
- * to rankings.MATCHES + 1 represents a loose match.
+ * to rankings.MATCHES + 1 represents a tighter match.
  * @param {String} testString - the string to test against
  * @param {String} stringToRank - the string to rank
  * @returns {Number} the number between rankings.MATCHES and
  * rankings.MATCHES + 1 for how well stringToRank matches testString
  */
 function getClosenessRanking(testString, stringToRank) {
+  let matchingInOrderCharCount = 0;
   let charNumber = 0
   function findMatchingCharacter(matchChar, string, index) {
     for (let j = index; j < string.length; j++) {
       const stringChar = string[j]
       if (stringChar === matchChar) {
+        matchingInOrderCharCount += 1
         return j + 1
       }
     }
     return -1
   }
   function getRanking(spread) {
-    const matching = spread - stringToRank.length + 1
-    const ranking = rankings.MATCHES + 1 / matching
-    return ranking
+    const spreadPercentage = 1 / spread;
+    const inOrderPercentage = matchingInOrderCharCount / stringToRank.length;
+    const ranking  = 1 + inOrderPercentage * spreadPercentage;
+    return ranking;
   }
   const firstIndex = findMatchingCharacter(stringToRank[0], testString, 0)
   if (firstIndex < 0) {
