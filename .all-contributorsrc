@@ -115,7 +115,19 @@
         "doc",
         "test"
       ]
+    },
+    {
+      "login": "sdbrannum",
+      "name": "Steven Brannum",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/11765845?v=4",
+      "profile": "https://github.com/sdbrannum",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
-  "repoType": "github"
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "contributorsPerLine": 7
 }
