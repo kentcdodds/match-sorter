@@ -44,20 +44,20 @@ const tests = {
       'ttotc', // case-sensitive-equal
       'tTOtc', // equal
       'TTotc', // equal2
-      'ttotc-starts with', // startsWith
-      'ttotc-2nd-starts with', // startsWith2
-      'Word starts with ttotc-first right?', // wordStartsWith
-      'Another word starts with ttotc-second, super!', // wordStartsWith2
+      'ttotc-2nd-starts with', // startsWith
+      'ttotc-starts with', // startsWith2
+      'Another word starts with ttotc-second, super!', // wordStartsWith
+      'Word starts with ttotc-first right?', // wordStartsWith2
       'PascalTtotcCase', // case string
       'kebab-ttotc-case', // case string
       'TheTailOfTwoCities', // case acronym
       'the_tail_of_two_cities', // case acronym2
       'The 1-ttotc-2 container', // contains
       'The second 3-ttotc-4 container', // contains2
-      'The Tail of Two Cities 1', // acronym
-      'The Tail of Two Cities', // acronym2
-      'The Tail of Forty Cities', // match
-      'The Tail of Fifty Cities', // match2
+      'The Tail of Two Cities', // acronym
+      'The Tail of Two Cities 1', // acronym2
+      'The Tail of Fifty Cities', // match
+      'The Tail of Forty Cities', // match2
     ],
   },
   'sorts equally ranking items in the same order in which they appeared in the original array': {
@@ -217,7 +217,7 @@ const tests = {
       'ap',
       {threshold: rankings.NO_MATCH},
     ],
-    output: ['apple', 'grape', 'orange', 'banana'],
+    output: ['apple', 'grape', 'banana', 'orange'],
   },
   'when providing a rank threshold of EQUAL, it returns only the items that are equal': {
     input: [
@@ -336,14 +336,14 @@ const tests = {
     ],
     output: [
       'snake_case_contained_in_the_word',
-      'startingWith_s',
       'somethingcontainedintheword',
+      'startingWith_s',
       'camelCaseContainedInTheWord',
       'PascalCaseContainedInTheWord',
       'kebab-case-contained-in-the-word',
-      'fakeCase_one',
       'fake_case-two',
       'fake_caseThree',
+      'fakeCase_one',
     ],
   },
   'takes case and acronym into account': {
@@ -405,6 +405,32 @@ const tests = {
   'case insensitive cyrillic match': {
     input: [['Привет', 'Лед'], 'л'],
     output: ['Лед'],
+  },
+  'should sort same ranked items alphabetically while ignoring diacritics': {
+    input: [
+      [
+        'jalapeño',
+        'anothernodiacritics',
+        'à la carte',
+        'nodiacritics',
+        'café',
+        'papier-mâché',
+        'à la mode',
+      ],
+      'z',
+      {
+        threshold: rankings.NO_MATCH,
+      },
+    ],
+    output: [
+      'à la carte',
+      'à la mode',
+      'anothernodiacritics',
+      'café',
+      'jalapeño',
+      'nodiacritics',
+      'papier-mâché',
+    ],
   },
 }
 
