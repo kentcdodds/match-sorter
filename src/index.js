@@ -46,14 +46,14 @@ function matchSorter(items, value, options = {}) {
   return matchedItems.sort(sortRankedItems).map(({item}) => item)
 
   function reduceItemsToRanked(matches, item, index) {
-    const {rank, keyIndex, keyThreshold = threshold} = getHighestRanking(
-      item,
-      keys,
-      value,
-      options,
-    )
+    const {
+      rankedItem,
+      rank,
+      keyIndex,
+      keyThreshold = threshold,
+    } = getHighestRanking(item, keys, value, options)
     if (rank >= keyThreshold) {
-      matches.push({item, rank, index, keyIndex})
+      matches.push({rankedItem, item, rank, index, keyIndex})
     }
     return matches
   }
@@ -70,6 +70,8 @@ function matchSorter(items, value, options = {}) {
 function getHighestRanking(item, keys, value, options) {
   if (!keys) {
     return {
+      // ends up being duplicate of 'item' in matches but consistent
+      rankedItem: item,
       rank: getMatchRanking(item, value, options),
       keyIndex: -1,
       keyThreshold: options.threshold,
@@ -90,7 +92,7 @@ function getHighestRanking(item, keys, value, options) {
         keyIndex = i
         keyThreshold = threshold
       }
-      return {rank, keyIndex, keyThreshold}
+      return {rankedItem: itemValue, rank, keyIndex, keyThreshold}
     },
     {rank: rankings.NO_MATCH, keyIndex: -1, keyThreshold: options.threshold},
   )
@@ -300,7 +302,7 @@ function isCaseAcronym(testString, stringToRank, caseRank) {
  * rankings.MATCHES + 1 for how well stringToRank matches testString
  */
 function getClosenessRanking(testString, stringToRank) {
-  let matchingInOrderCharCount = 0;
+  let matchingInOrderCharCount = 0
   let charNumber = 0
   function findMatchingCharacter(matchChar, string, index) {
     for (let j = index; j < string.length; j++) {
@@ -313,10 +315,10 @@ function getClosenessRanking(testString, stringToRank) {
     return -1
   }
   function getRanking(spread) {
-    const spreadPercentage = 1 / spread;
-    const inOrderPercentage = matchingInOrderCharCount / stringToRank.length;
-    const ranking  = 1 + inOrderPercentage * spreadPercentage;
-    return ranking;
+    const spreadPercentage = 1 / spread
+    const inOrderPercentage = matchingInOrderCharCount / stringToRank.length
+    const ranking = rankings.MATCHES + inOrderPercentage * spreadPercentage
+    return ranking
   }
   const firstIndex = findMatchingCharacter(stringToRank[0], testString, 0)
   if (firstIndex < 0) {
@@ -346,12 +348,12 @@ function getClosenessRanking(testString, stringToRank) {
 function sortRankedItems(a, b) {
   const aFirst = -1
   const bFirst = 1
-  const {rank: aRank, index: aIndex, keyIndex: aKeyIndex} = a
-  const {rank: bRank, index: bIndex, keyIndex: bKeyIndex} = b
+  const {rankedItem: aRankedItem, rank: aRank, keyIndex: aKeyIndex} = a
+  const {rankedItem: bRankedItem, rank: bRank, keyIndex: bKeyIndex} = b
   const same = aRank === bRank
   if (same) {
     if (aKeyIndex === bKeyIndex) {
-      return aIndex < bIndex ? aFirst : bFirst
+      return aRankedItem.localeCompare(bRankedItem)
     } else {
       return aKeyIndex < bKeyIndex ? aFirst : bFirst
     }
