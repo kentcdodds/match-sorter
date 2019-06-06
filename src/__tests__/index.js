@@ -44,25 +44,21 @@ const tests = {
       'ttotc', // case-sensitive-equal
       'tTOtc', // equal
       'TTotc', // equal2
-      'ttotc-starts with', // startsWith
-      'ttotc-2nd-starts with', // startsWith2
-      'Word starts with ttotc-first right?', // wordStartsWith
-      'Another word starts with ttotc-second, super!', // wordStartsWith2
+      'ttotc-2nd-starts with', // startsWith
+      'ttotc-starts with', // startsWith2
+      'Another word starts with ttotc-second, super!', // wordStartsWith
+      'Word starts with ttotc-first right?', // wordStartsWith2
       'PascalTtotcCase', // case string
       'kebab-ttotc-case', // case string
       'TheTailOfTwoCities', // case acronym
       'the_tail_of_two_cities', // case acronym2
       'The 1-ttotc-2 container', // contains
       'The second 3-ttotc-4 container', // contains2
-      'The Tail of Two Cities 1', // acronym
-      'The Tail of Two Cities', // acronym2
-      'The Tail of Forty Cities', // match
-      'The Tail of Fifty Cities', // match2
+      'The Tail of Two Cities', // acronym
+      'The Tail of Two Cities 1', // acronym2
+      'The Tail of Fifty Cities', // match
+      'The Tail of Forty Cities', // match2
     ],
-  },
-  'sorts equally ranking items in the same order in which they appeared in the original array': {
-    input: [['Foo1', 'Bar', 'Foo2'], 'foo'],
-    output: ['Foo1', 'Foo2'],
   },
   'no match for single character inputs that are not equal': {
     input: [['abc'], 'd'],
@@ -74,7 +70,7 @@ const tests = {
       'ba',
       {keys: ['name']},
     ],
-    output: [{name: 'baz'}, {name: 'bat'}],
+    output: [{name: 'bat'}, {name: 'baz'}],
   },
   'can handle multiple keys specified': {
     input: [
@@ -88,12 +84,12 @@ const tests = {
       {keys: ['name', 'reverse']},
     ],
     output: [
-      {name: 'baz', reverse: 'zab'},
-      {name: 'bat', reverse: 'tab'},
       {name: 'bag', reverse: 'gab'},
+      {name: 'bat', reverse: 'tab'},
+      {name: 'baz', reverse: 'zab'},
     ],
   },
-  'with multiple keys specified, all other things being equal, it prioritizes first keys first over index': {
+  'with multiple keys specified, all other things being equal, it prioritizes key index over alphabetizing': {
     input: [
       [
         {first: 'not', second: 'not', third: 'match'},
@@ -137,7 +133,7 @@ const tests = {
       'ba',
       {keys: ['name.first']},
     ],
-    output: [{name: {first: 'baz'}}, {name: {first: 'bat'}}],
+    output: [{name: {first: 'bat'}}, {name: {first: 'baz'}}],
   },
   'can handle property callback': {
     input: [
@@ -145,7 +141,7 @@ const tests = {
       'ba',
       {keys: [item => item.name.first]},
     ],
-    output: [{name: {first: 'baz'}}, {name: {first: 'bat'}}],
+    output: [{name: {first: 'bat'}}, {name: {first: 'baz'}}],
   },
   'can handle keys that are an array of values': {
     input: [
@@ -197,7 +193,7 @@ const tests = {
     // Green is missing due to no match
     output: [{tea: 'Milk', alias: 'moo'}, {tea: 'Oolong', alias: 'B'}],
   },
-  'when using arrays of values, when things are equal, the one with the higher index wins': {
+  'when using arrays of values, when things are equal, the one with the higher key index wins': {
     input: [
       [
         {favoriteIceCream: ['mint', 'chocolate']},
@@ -217,7 +213,7 @@ const tests = {
       'ap',
       {threshold: rankings.NO_MATCH},
     ],
-    output: ['apple', 'grape', 'orange', 'banana'],
+    output: ['apple', 'grape', 'banana', 'orange'],
   },
   'when providing a rank threshold of EQUAL, it returns only the items that are equal': {
     input: [
@@ -336,14 +332,14 @@ const tests = {
     ],
     output: [
       'snake_case_contained_in_the_word',
-      'startingWith_s',
       'somethingcontainedintheword',
+      'startingWith_s',
       'camelCaseContainedInTheWord',
       'PascalCaseContainedInTheWord',
       'kebab-case-contained-in-the-word',
-      'fakeCase_one',
       'fake_case-two',
       'fake_caseThree',
+      'fakeCase_one',
     ],
   },
   'takes case and acronym into account': {
@@ -405,6 +401,32 @@ const tests = {
   'case insensitive cyrillic match': {
     input: [['Привет', 'Лед'], 'л'],
     output: ['Лед'],
+  },
+  'should sort same ranked items alphabetically while when mixed with diacritics': {
+    input: [
+      [
+        'jalapeño',
+        'anothernodiacritics',
+        'à la carte',
+        'nodiacritics',
+        'café',
+        'papier-mâché',
+        'à la mode',
+      ],
+      'z',
+      {
+        threshold: rankings.NO_MATCH,
+      },
+    ],
+    output: [
+      'à la carte',
+      'à la mode',
+      'anothernodiacritics',
+      'café',
+      'jalapeño',
+      'nodiacritics',
+      'papier-mâché',
+    ],
   },
 }
 
