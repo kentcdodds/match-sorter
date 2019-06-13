@@ -353,7 +353,7 @@ function sortRankedItems(a, b) {
   const same = aRank === bRank
   if (same) {
     if (aKeyIndex === bKeyIndex) {
-      return aRankedItem.localeCompare(bRankedItem)
+      return String(aRankedItem).localeCompare(bRankedItem)
     } else {
       return aKeyIndex < bKeyIndex ? aFirst : bFirst
     }
