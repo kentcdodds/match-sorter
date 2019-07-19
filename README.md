@@ -17,7 +17,6 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-13-orange.svg?style=flat-square)](#contributors-)
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
-[![Roadmap][roadmap-badge]][roadmap]
 [![Examples][examples-badge]][examples]
 
 [![gzip size][gzip-badge]][unpkg-dist]
