@@ -3,20 +3,15 @@
   "version": "0.0.0-semantically-released",
   "description": "Simple, expected, and deterministic best-match sorting of an array in JavaScript",
   "main": "dist/match-sorter.cjs.js",
-  "jsnext:main": "dist/match-sorter.esm.js",
   "module": "dist/match-sorter.esm.js",
   "scripts": {
-    "add-contributor": "kcd-scripts contributors add",
     "build": "kcd-scripts build --bundle --environment BUILD_NAME:matchSorter",
     "lint": "kcd-scripts lint",
     "test": "kcd-scripts test",
     "test:cover": "kcd-scripts test --coverage",
     "test:update": "npm run test:cover -s -- --updateSnapshot",
-    "test:build": "kcd-scripts test --config other/jest.config.js --no-watch",
-    "build-and-test": "npm run build -s && npm run test:build -s",
-    "validate": "kcd-scripts validate lint,build-and-test,test:cover",
-    "setup": "npm install && npm run validate",
-    "precommit": "kcd-scripts precommit"
+    "validate": "kcd-scripts validate",
+    "setup": "npm install && npm run validate"
   },
   "files": [
     "dist"
@@ -30,14 +25,16 @@
   ],
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
-  "bundledDependencies": [
-    "remove-accents"
-  ],
   "dependencies": {
     "remove-accents": "0.4.2"
   },
   "devDependencies": {
-    "kcd-scripts": "^0.38.1"
+    "kcd-scripts": "^1.5.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "kcd-scripts pre-commit"
+    }
   },
   "eslintConfig": {
     "extends": [

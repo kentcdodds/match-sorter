@@ -10,21 +10,18 @@
 
 [![Build Status][build-badge]][build]
 [![Code Coverage][coverage-badge]][coverage]
-[![Dependencies][dependencyci-badge]][dependencyci]
 [![version][version-badge]][package]
-[![downloads][downloads-badge]][npm-stat]
+[![downloads][downloads-badge]][npm-trends]
 [![MIT License][license-badge]][license]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-13-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-13-orange.svg?style=flat-square)](#contributors-)
 [![PRs Welcome][prs-badge]][prs]
-[![Donate][donate-badge]][donate]
 [![Code of Conduct][coc-badge]][coc]
 [![Roadmap][roadmap-badge]][roadmap]
 [![Examples][examples-badge]][examples]
 
 [![gzip size][gzip-badge]][unpkg-dist]
 [![size][size-badge]][unpkg-dist]
-[![module formats: umd and cjs][module-formats-badge]][module-formats]
 [![Watch on GitHub][github-watch-badge]][github-watch]
 [![Star on GitHub][github-star-badge]][github-star]
 [![Tweet][twitter-badge]][twitter]
@@ -85,9 +82,9 @@ npm install --save match-sorter
 ### Usage
 
 ```javascript
-const matchSorter = require('match-sorter')
-// ES6 imports work too
-// Also available in global environment via `matchSorter` global
+import matchSorter from 'match-sorter'
+// or const matchSorter = require('match-sorter').default
+// or window.matchSorter
 const list = ['hi', 'hey', 'hello', 'sup', 'yo']
 matchSorter(list, 'h') // ['hi', 'hey', 'hello']
 matchSorter(list, 'y') // ['yo', 'hey']
@@ -278,8 +275,30 @@ You might try [Fuse.js](https://github.com/krisk/Fuse). It uses advanced math fa
 Thanks goes to these people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore -->
-<table><tr><td align="center"><a href="https://kentcdodds.com"><img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;" alt="Kent C. Dodds"/><br /><sub><b>Kent C. Dodds</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds" title="Documentation">📖</a> <a href="#infra-kentcdodds" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds" title="Tests">⚠️</a> <a href="#review-kentcdodds" title="Reviewed Pull Requests">👀</a></td><td align="center"><a href="http://conorhastings.com"><img src="https://avatars.githubusercontent.com/u/8263298?v=3" width="100px;" alt="Conor Hastings"/><br /><sub><b>Conor Hastings</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=conorhastings" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=conorhastings" title="Documentation">📖</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=conorhastings" title="Tests">⚠️</a> <a href="#review-conorhastings" title="Reviewed Pull Requests">👀</a></td><td align="center"><a href="https://github.com/rogeliog"><img src="https://avatars.githubusercontent.com/u/574806?v=3" width="100px;" alt="Rogelio Guzman"/><br /><sub><b>Rogelio Guzman</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=rogeliog" title="Documentation">📖</a></td><td align="center"><a href="http://ced.io"><img src="https://avatars.githubusercontent.com/u/1416436?v=3" width="100px;" alt="Claudéric Demers"/><br /><sub><b>Claudéric Demers</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=clauderic" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=clauderic" title="Documentation">📖</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=clauderic" title="Tests">⚠️</a></td><td align="center"><a href="kevindav.us"><img src="https://avatars3.githubusercontent.com/u/4150097?v=3" width="100px;" alt="Kevin Davis"/><br /><sub><b>Kevin Davis</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=osfan501" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=osfan501" title="Tests">⚠️</a></td><td align="center"><a href="https://github.com/nfdjps"><img src="https://avatars1.githubusercontent.com/u/19157735?v=3" width="100px;" alt="Denver Chen"/><br /><sub><b>Denver Chen</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=nfdjps" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=nfdjps" title="Documentation">📖</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=nfdjps" title="Tests">⚠️</a></td><td align="center"><a href="http://ruigrok.info"><img src="https://avatars0.githubusercontent.com/u/12719057?v=4" width="100px;" alt="Christian Ruigrok"/><br /><sub><b>Christian Ruigrok</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/issues?q=author%3AChrisRu" title="Bug reports">🐛</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=ChrisRu" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=ChrisRu" title="Documentation">📖</a></td></tr><tr><td align="center"><a href="https://github.com/hozefaj"><img src="https://avatars1.githubusercontent.com/u/2084833?v=4" width="100px;" alt="Hozefa"/><br /><sub><b>Hozefa</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/issues?q=author%3Ahozefaj" title="Bug reports">🐛</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=hozefaj" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=hozefaj" title="Tests">⚠️</a> <a href="#ideas-hozefaj" title="Ideas, Planning, & Feedback">🤔</a></td><td align="center"><a href="https://github.com/pushpinder107"><img src="https://avatars3.githubusercontent.com/u/9403361?v=4" width="100px;" alt="pushpinder107"/><br /><sub><b>pushpinder107</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=pushpinder107" title="Code">💻</a></td><td align="center"><a href="https://github.com/tikotzky"><img src="https://avatars3.githubusercontent.com/u/200528?v=4" width="100px;" alt="Mordy Tikotzky"/><br /><sub><b>Mordy Tikotzky</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=tikotzky" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=tikotzky" title="Documentation">📖</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=tikotzky" title="Tests">⚠️</a></td><td align="center"><a href="https://github.com/sdbrannum"><img src="https://avatars1.githubusercontent.com/u/11765845?v=4" width="100px;" alt="Steven Brannum"/><br /><sub><b>Steven Brannum</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=sdbrannum" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=sdbrannum" title="Tests">⚠️</a></td><td align="center"><a href="https://github.com/cmeeren"><img src="https://avatars0.githubusercontent.com/u/7766733?v=4" width="100px;" alt="Christer van der Meeren"/><br /><sub><b>Christer van der Meeren</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/issues?q=author%3Acmeeren" title="Bug reports">🐛</a></td><td align="center"><a href="http://securitynull.net/"><img src="https://avatars0.githubusercontent.com/u/3801362?v=4" width="100px;" alt="Samuel Petrosyan"/><br /><sub><b>Samuel Petrosyan</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=samyan" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/issues?q=author%3Asamyan" title="Bug reports">🐛</a></td></tr></table>
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://kentcdodds.com"><img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;" alt="Kent C. Dodds"/><br /><sub><b>Kent C. Dodds</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds" title="Documentation">📖</a> <a href="#infra-kentcdodds" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds" title="Tests">⚠️</a> <a href="#review-kentcdodds" title="Reviewed Pull Requests">👀</a></td>
+    <td align="center"><a href="http://conorhastings.com"><img src="https://avatars.githubusercontent.com/u/8263298?v=3" width="100px;" alt="Conor Hastings"/><br /><sub><b>Conor Hastings</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=conorhastings" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=conorhastings" title="Documentation">📖</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=conorhastings" title="Tests">⚠️</a> <a href="#review-conorhastings" title="Reviewed Pull Requests">👀</a></td>
+    <td align="center"><a href="https://github.com/rogeliog"><img src="https://avatars.githubusercontent.com/u/574806?v=3" width="100px;" alt="Rogelio Guzman"/><br /><sub><b>Rogelio Guzman</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=rogeliog" title="Documentation">📖</a></td>
+    <td align="center"><a href="http://ced.io"><img src="https://avatars.githubusercontent.com/u/1416436?v=3" width="100px;" alt="Claudéric Demers"/><br /><sub><b>Claudéric Demers</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=clauderic" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=clauderic" title="Documentation">📖</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=clauderic" title="Tests">⚠️</a></td>
+    <td align="center"><a href="kevindav.us"><img src="https://avatars3.githubusercontent.com/u/4150097?v=3" width="100px;" alt="Kevin Davis"/><br /><sub><b>Kevin Davis</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=osfan501" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=osfan501" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/nfdjps"><img src="https://avatars1.githubusercontent.com/u/19157735?v=3" width="100px;" alt="Denver Chen"/><br /><sub><b>Denver Chen</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=nfdjps" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=nfdjps" title="Documentation">📖</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=nfdjps" title="Tests">⚠️</a></td>
+    <td align="center"><a href="http://ruigrok.info"><img src="https://avatars0.githubusercontent.com/u/12719057?v=4" width="100px;" alt="Christian Ruigrok"/><br /><sub><b>Christian Ruigrok</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/issues?q=author%3AChrisRu" title="Bug reports">🐛</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=ChrisRu" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=ChrisRu" title="Documentation">📖</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/hozefaj"><img src="https://avatars1.githubusercontent.com/u/2084833?v=4" width="100px;" alt="Hozefa"/><br /><sub><b>Hozefa</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/issues?q=author%3Ahozefaj" title="Bug reports">🐛</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=hozefaj" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=hozefaj" title="Tests">⚠️</a> <a href="#ideas-hozefaj" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/pushpinder107"><img src="https://avatars3.githubusercontent.com/u/9403361?v=4" width="100px;" alt="pushpinder107"/><br /><sub><b>pushpinder107</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=pushpinder107" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/tikotzky"><img src="https://avatars3.githubusercontent.com/u/200528?v=4" width="100px;" alt="Mordy Tikotzky"/><br /><sub><b>Mordy Tikotzky</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=tikotzky" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=tikotzky" title="Documentation">📖</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=tikotzky" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/sdbrannum"><img src="https://avatars1.githubusercontent.com/u/11765845?v=4" width="100px;" alt="Steven Brannum"/><br /><sub><b>Steven Brannum</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=sdbrannum" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=sdbrannum" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/cmeeren"><img src="https://avatars0.githubusercontent.com/u/7766733?v=4" width="100px;" alt="Christer van der Meeren"/><br /><sub><b>Christer van der Meeren</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/issues?q=author%3Acmeeren" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="http://securitynull.net/"><img src="https://avatars0.githubusercontent.com/u/3801362?v=4" width="100px;" alt="Samuel Petrosyan"/><br /><sub><b>Samuel Petrosyan</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=samyan" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/issues?q=author%3Asamyan" title="Bug reports">🐛</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
@@ -295,22 +314,16 @@ MIT
 [build]: https://travis-ci.org/kentcdodds/match-sorter
 [coverage-badge]: https://img.shields.io/codecov/c/github/kentcdodds/match-sorter.svg?style=flat-square
 [coverage]: https://codecov.io/github/kentcdodds/match-sorter
-[dependencyci-badge]: https://dependencyci.com/github/kentcdodds/match-sorter/badge?style=flat-square
-[dependencyci]: https://dependencyci.com/github/kentcdodds/match-sorter
 [version-badge]: https://img.shields.io/npm/v/match-sorter.svg?style=flat-square
 [package]: https://www.npmjs.com/package/match-sorter
 [downloads-badge]: https://img.shields.io/npm/dm/match-sorter.svg?style=flat-square
-[npm-stat]: http://npm-stat.com/charts.html?package=match-sorter&from=2016-04-01
+[npm-trends]: https://www.npmtrends.com/match-sorter
 [license-badge]: https://img.shields.io/npm/l/match-sorter.svg?style=flat-square
 [license]: https://github.com/kentcdodds/match-sorter/blob/master/other/LICENSE
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
-[donate-badge]: https://img.shields.io/badge/$-support-green.svg?style=flat-square
-[donate]: http://kcd.im/donate
 [coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
 [coc]: https://github.com/kentcdodds/match-sorter/blob/master/other/CODE_OF_CONDUCT.md
-[roadmap-badge]: https://img.shields.io/badge/%F0%9F%93%94-roadmap-CD9523.svg?style=flat-square
-[roadmap]: https://github.com/kentcdodds/match-sorter/blob/master/other/ROADMAP.md
 [examples-badge]: https://img.shields.io/badge/%F0%9F%92%A1-examples-8C8E93.svg?style=flat-square
 [examples]: https://github.com/kentcdodds/match-sorter/blob/master/other/EXAMPLES.md
 [github-watch-badge]: https://img.shields.io/github/watchers/kentcdodds/match-sorter.svg?style=social
@@ -325,5 +338,3 @@ MIT
 [gzip-badge]: http://img.badgesize.io/https://unpkg.com/match-sorter/dist/match-sorter.umd.min.js?compression=gzip&label=gzip%20size&style=flat-square
 [size-badge]: http://img.badgesize.io/https://unpkg.com/match-sorter/dist/match-sorter.umd.min.js?label=size&style=flat-square
 [unpkg-dist]: https://unpkg.com/match-sorter/dist/
-[module-formats-badge]: https://img.shields.io/badge/module%20formats-umd%2C%20cjs-green.svg?style=flat-square
-[module-formats]: https://unpkg.com/match-sorter/dist/

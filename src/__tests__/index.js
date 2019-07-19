@@ -1,6 +1,3 @@
-// have to disable eslint for the next line because we have to
-// do weird things to make things work with UMD
-// eslint-disable-next-line import/default,import/named
 import matchSorter, {rankings} from '../'
 
 const tests = {
