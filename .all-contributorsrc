@@ -144,6 +144,15 @@
         "code",
         "bug"
       ]
+    },
+    {
+      "login": "brandonkal",
+      "name": "Brandon Kalinowski",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/4714862?v=4",
+      "profile": "https://brandonkalinowski.com",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "repoType": "github",
