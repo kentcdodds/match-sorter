@@ -274,8 +274,7 @@ You might try [Fuse.js](https://github.com/krisk/Fuse). It uses advanced math fa
 Thanks goes to these people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
+<!-- prettier-ignore -->
 <table>
   <tr>
     <td align="center"><a href="https://kentcdodds.com"><img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;" alt="Kent C. Dodds"/><br /><sub><b>Kent C. Dodds</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds" title="Documentation">📖</a> <a href="#infra-kentcdodds" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=kentcdodds" title="Tests">⚠️</a> <a href="#review-kentcdodds" title="Reviewed Pull Requests">👀</a></td>
@@ -293,11 +292,9 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/sdbrannum"><img src="https://avatars1.githubusercontent.com/u/11765845?v=4" width="100px;" alt="Steven Brannum"/><br /><sub><b>Steven Brannum</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=sdbrannum" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=sdbrannum" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/cmeeren"><img src="https://avatars0.githubusercontent.com/u/7766733?v=4" width="100px;" alt="Christer van der Meeren"/><br /><sub><b>Christer van der Meeren</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/issues?q=author%3Acmeeren" title="Bug reports">🐛</a></td>
     <td align="center"><a href="http://securitynull.net/"><img src="https://avatars0.githubusercontent.com/u/3801362?v=4" width="100px;" alt="Samuel Petrosyan"/><br /><sub><b>Samuel Petrosyan</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=samyan" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/issues?q=author%3Asamyan" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://brandonkalinowski.com"><img src="https://avatars3.githubusercontent.com/u/4714862?v=4" width="100px;" alt="Brandon Kalinowski"/><br /><sub><b>Brandon Kalinowski</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/issues?q=author%3Abrandonkal" title="Bug reports">🐛</a></td>
   </tr>
 </table>
-
-<!-- markdownlint-enable -->
-<!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
