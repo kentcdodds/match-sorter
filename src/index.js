@@ -41,8 +41,11 @@ function matchSorter(items, value, options = {}) {
   // not performing any search/sort if value(search term) is empty
   if (!value) return items
 
-  const {keys, threshold = rankings.MATCHES} = options
+  const {keys, threshold = rankings.MATCHES, preserveSort} = options
   const matchedItems = items.reduce(reduceItemsToRanked, [])
+  if (preserveSort) {
+    return matchedItems.map(({item}) => item)
+  }
   return matchedItems.sort(sortRankedItems).map(({item}) => item)
 
   function reduceItemsToRanked(matches, item, index) {

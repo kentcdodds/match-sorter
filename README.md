@@ -59,6 +59,7 @@ This ranking seems to make sense in people's minds. At least it does in mine. Fe
   - [keys: `[string]`](#keys-string)
   - [threshold: `number`](#threshold-number)
   - [keepDiacritics: `boolean`](#keepdiacritics-boolean)
+  - [preserveSort: `boolean`](#preservesort-boolean)
 - [Using ES6?](#using-es6)
 - [Inspiration](#inspiration)
 - [Other Solutions](#other-solutions)
@@ -253,6 +254,19 @@ matchSorter(thingsWithDiacritics, 'aa', {keepDiacritics: true})
 
 matchSorter(thingsWithDiacritics, 'à', {keepDiacritics: true})
 // ['à la carte', 'à la mode']
+```
+
+### preserveSort: `boolean`
+
+_Default: `false`_
+
+By default, match-sorter will return a collection sorted by its rank.
+
+You can disble this behavior by specifying `preserveSort: true`
+
+```javascript
+const list = ['hey', 'hello', 'sup', 'yo', 'hi]
+matchSorter(list, 'h', {preserveSort: true}) // ['hey', 'hello', 'hi']
 ```
 
 ## Using ES6?

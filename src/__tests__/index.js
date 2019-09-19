@@ -425,6 +425,10 @@ const tests = {
       'papier-mâché',
     ],
   },
+  'should preserve the sort of the input array when indicated': {
+    input: [['Charzard', 'Chakotay', 'Brunt'], 'Ch', {preserveSort: true}],
+    output: ['Charzard', 'Chakotay'],
+  },
 }
 
 Object.keys(tests).forEach(title => {
