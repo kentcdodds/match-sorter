@@ -300,6 +300,9 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="http://securitynull.net/"><img src="https://avatars0.githubusercontent.com/u/3801362?v=4" width="100px;" alt="Samuel Petrosyan"/><br /><sub><b>Samuel Petrosyan</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=samyan" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/issues?q=author%3Asamyan" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://brandonkalinowski.com"><img src="https://avatars3.githubusercontent.com/u/4714862?v=4" width="100px;" alt="Brandon Kalinowski"/><br /><sub><b>Brandon Kalinowski</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/issues?q=author%3Abrandonkal" title="Bug reports">🐛</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://codefund.io"><img src="https://avatars2.githubusercontent.com/u/12481?v=4" width="100px;" alt="Eric Berry"/><br /><sub><b>Eric Berry</b></sub></a><br /><a href="#fundingFinding-coderberry" title="Funding Finding">🔍</a></td>
+  </tr>
 </table>
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
