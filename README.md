@@ -1,4 +1,10 @@
 <div align="center">
+<a href="https://codefund.io/properties/446/visit-sponsor">
+  <img src="https://codefund.io/properties/446/sponsor" />
+</a>
+</div>
+  
+<div align="center">
 <h1>match-sorter</h1>
 
 <p>Simple, expected, and deterministic best-match sorting of an array in JavaScript</p>
