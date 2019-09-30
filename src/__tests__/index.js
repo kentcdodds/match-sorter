@@ -425,6 +425,22 @@ const tests = {
       'papier-mâché',
     ],
   },
+  'returns objects in their original order': {
+    input: [
+      [
+        {country: 'Italy', counter: 3},
+        {country: 'Italy', counter: 2},
+        {country: 'Italy', counter: 1},
+      ],
+      'Italy',
+      {keys: ['country', 'counter']},
+    ],
+    output: [
+      {country: 'Italy', counter: 3},
+      {country: 'Italy', counter: 2},
+      {country: 'Italy', counter: 1},
+    ],
+  },
 }
 
 Object.keys(tests).forEach(title => {

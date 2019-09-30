@@ -79,8 +79,13 @@ function getHighestRanking(item, keys, value, options) {
   }
   const valuesToRank = getAllValuesToRank(item, keys)
   return valuesToRank.reduce(
-    ({rank, keyIndex, keyThreshold}, {itemValue, attributes}, i) => {
+    (
+      {rank, rankedItem, keyIndex, keyThreshold},
+      {itemValue, attributes},
+      i,
+    ) => {
       let newRank = getMatchRanking(itemValue, value, options)
+      let newRankedItem = rankedItem
       const {minRanking, maxRanking, threshold} = attributes
       if (newRank < minRanking && newRank >= rankings.MATCHES) {
         newRank = minRanking
@@ -91,8 +96,9 @@ function getHighestRanking(item, keys, value, options) {
         rank = newRank
         keyIndex = i
         keyThreshold = threshold
+        newRankedItem = itemValue
       }
-      return {rankedItem: itemValue, rank, keyIndex, keyThreshold}
+      return {rankedItem: newRankedItem, rank, keyIndex, keyThreshold}
     },
     {rank: rankings.NO_MATCH, keyIndex: -1, keyThreshold: options.threshold},
   )
@@ -342,8 +348,7 @@ function getClosenessRanking(testString, stringToRank) {
  * Sorts items that have a rank, index, and keyIndex
  * @param {Object} a - the first item to sort
  * @param {Object} b - the second item to sort
- * @return {Number} -1 if a should come first, 1 if b should come first
- * Note: will never return 0
+ * @return {Number} -1 if a should come first, 1 if b should come first, 0 if equal
  */
 function sortRankedItems(a, b) {
   const aFirst = -1
@@ -353,6 +358,9 @@ function sortRankedItems(a, b) {
   const same = aRank === bRank
   if (same) {
     if (aKeyIndex === bKeyIndex) {
+      // localeCompare returns 0 if both values are equal,
+      // so we rely on JS engines stably sorting the results
+      // (de facto, all modern engine do this).
       return String(aRankedItem).localeCompare(bRankedItem)
     } else {
       return aKeyIndex < bKeyIndex ? aFirst : bFirst
