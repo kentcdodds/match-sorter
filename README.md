@@ -329,6 +329,7 @@ Thanks goes to these people ([emoji key][emojis]):
   </tr>
   <tr>
     <td align="center"><a href="https://codefund.io"><img src="https://avatars2.githubusercontent.com/u/12481?v=4" width="100px;" alt="Eric Berry"/><br /><sub><b>Eric Berry</b></sub></a><br /><a href="#fundingFinding-coderberry" title="Funding Finding">🔍</a></td>
+    <td align="center"><a href="https://github.com/skube"><img src="https://avatars3.githubusercontent.com/u/146396?v=4" width="100px;" alt="Skubie Doo"/><br /><sub><b>Skubie Doo</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=skube" title="Documentation">📖</a></td>
   </tr>
 </table>
 
