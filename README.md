@@ -161,6 +161,33 @@ matchSorter(list, 'j', {keys: [item => item.name]})
 // [{name: 'Janice'}, {name: 'Jen'}]
 ```
 
+For more complex structures, expanding on the `nestedObjList` example above, you can use `map`:
+
+```javascript
+const nestedObjList = [
+  {
+    name: [
+      { first: 'Janice', last: 'Smith' },
+      { first: 'Jon', last: 'Doe' }
+    ],
+  },
+  {
+    name: [
+      { first: 'Fred', last: 'Astaire' },
+      { first: 'Jenny', last: 'Doe' },
+      { first: 'Wilma', last: 'Flintstone' },
+    ],
+  },
+];
+matchSorter(nestedObjList, 'doe', {
+  keys: [
+    item => item.name.map(i => i.first),
+    item => item.name.map(i => i.last),
+  ],
+})
+// [name: [{ first: 'Janice', last: 'Smith' },{ first: 'Jon', last: 'Doe' }], name: [{ first: 'Fred', last: 'Astaire' },{ first: 'Jenny', last: 'Doe' },{ first: 'Wilma', last: 'Flintstone' }]]
+```
+
 **Threshold**: You may specify an individual threshold for specific keys. A key will only match if it meets the specified threshold. _For more information regarding thresholds [see below](#threshold-number)_
 
 ```javascript
