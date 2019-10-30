@@ -162,6 +162,15 @@
       "contributions": [
         "fundingFinding"
       ]
+    },
+    {
+      "login": "skube",
+      "name": "Skubie Doo",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/146396?v=4",
+      "profile": "https://github.com/skube",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "repoType": "github",
