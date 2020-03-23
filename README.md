@@ -4,50 +4,68 @@
 <p>Simple, expected, and deterministic best-match sorting of an array in JavaScript</p>
 </div>
 
-<hr />
+---
 
 **[Demo](https://codesandbox.io/s/wyk856yo48)**
 
+<!-- prettier-ignore-start -->
 [![Build Status][build-badge]][build]
 [![Code Coverage][coverage-badge]][coverage]
 [![version][version-badge]][package]
-[![downloads][downloads-badge]][npm-trends]
+[![downloads][downloads-badge]][npmtrends]
 [![MIT License][license-badge]][license]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-13-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-13-orange.svg?style=flat-square)](#contributors)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
 [![Examples][examples-badge]][examples]
-
-[![gzip size][gzip-badge]][unpkg-dist]
-[![size][size-badge]][unpkg-dist]
-[![Watch on GitHub][github-watch-badge]][github-watch]
-[![Star on GitHub][github-star-badge]][github-star]
-[![Tweet][twitter-badge]][twitter]
+<!-- prettier-ignore-end -->
 
 ## The problem
 
 1.  You have a list of dozens, hundreds, or thousands of items
-2.  You want to filter and sort those items intelligently (maybe you have a filter input for the user)
-3.  You want simple, expected, and deterministic sorting of the items (no fancy math algorithm that fancily changes the sorting as they type)
+2.  You want to filter and sort those items intelligently (maybe you have a
+    filter input for the user)
+3.  You want simple, expected, and deterministic sorting of the items (no fancy
+    math algorithm that fancily changes the sorting as they type)
 
 ## This solution
 
-This follows a simple and sensible (user friendly) algorithm that makes it easy for you to filter and sort a list of items based on given input. Items are ranked based on sensible criteria that result in a better user experience.
+This follows a simple and sensible (user friendly) algorithm that makes it easy
+for you to filter and sort a list of items based on given input. Items are
+ranked based on sensible criteria that result in a better user experience.
 
 To explain the ranking system, I'll use countries as an example:
 
-1.  **CASE SENSITIVE EQUALS**: Case-sensitive equality trumps all. These will be first. (ex. `France` would match `France`, but not `france`)
+1.  **CASE SENSITIVE EQUALS**: Case-sensitive equality trumps all. These will be
+    first. (ex. `France` would match `France`, but not `france`)
 2.  **EQUALS**: Case-insensitive equality (ex. `France` would match `france`)
-3.  **STARTS WITH**: If the item starts with the given value (ex. `Sou` would match `South Korea` or `South Africa`)
-4.  **WORD STARTS WITH**: If the item has multiple words, then if one of those words starts with the given value (ex. `Repub` would match `Dominican Republic`)
-5.  **CASE STARTS WITH**: If the item has a defined case (`camelCase`, `PascalCase`, `snake_case` or `kebab-case`), then if one of the parts starts with the given value (ex. `kingdom` would match `unitedKingdom` or `united_kingdom`)
-6.  **CASE ACRONYM** If the item's case matches the synonym (ex. `uk` would match `united-kingdom` or `UnitedKingdom`)
-7.  **CONTAINS**: If the item contains the given value (ex. `ham` would match `Bahamas`)
-8.  **ACRONYM**: If the item's acronym is the given value (ex. `us` would match `United States`)
-9.  **SIMPLE MATCH**: If the item has letters in the same order as the letters of the given value (ex. `iw` would match `Zimbabwe`, but not `Kuwait` because it must be in the same order). Furthermore, if the item is a closer match, it will rank higher (ex. `ua` matches `Uruguay` more closely than `United States of America`, therefore `Uruguay` will be ordered before `United States of America`)
+3.  **STARTS WITH**: If the item starts with the given value (ex. `Sou` would
+    match `South Korea` or `South Africa`)
+4.  **WORD STARTS WITH**: If the item has multiple words, then if one of those
+    words starts with the given value (ex. `Repub` would match
+    `Dominican Republic`)
+5.  **CASE STARTS WITH**: If the item has a defined case (`camelCase`,
+    `PascalCase`, `snake_case` or `kebab-case`), then if one of the parts starts
+    with the given value (ex. `kingdom` would match `unitedKingdom` or
+    `united_kingdom`)
+6.  **CASE ACRONYM** If the item's case matches the synonym (ex. `uk` would
+    match `united-kingdom` or `UnitedKingdom`)
+7.  **CONTAINS**: If the item contains the given value (ex. `ham` would match
+    `Bahamas`)
+8.  **ACRONYM**: If the item's acronym is the given value (ex. `us` would match
+    `United States`)
+9.  **SIMPLE MATCH**: If the item has letters in the same order as the letters
+    of the given value (ex. `iw` would match `Zimbabwe`, but not `Kuwait`
+    because it must be in the same order). Furthermore, if the item is a closer
+    match, it will rank higher (ex. `ua` matches `Uruguay` more closely than
+    `United States of America`, therefore `Uruguay` will be ordered before
+    `United States of America`)
 
-This ranking seems to make sense in people's minds. At least it does in mine. Feedback welcome!
+This ranking seems to make sense in people's minds. At least it does in mine.
+Feedback welcome!
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -71,8 +89,8 @@ This ranking seems to make sense in people's minds. At least it does in mine. Fe
 
 ### Installation
 
-This module is distributed via [npm][npm] which is bundled with [node][node] and should
-be installed as one of your project's `dependencies`:
+This module is distributed via [npm][npm] which is bundled with [node][node] and
+should be installed as one of your project's `dependencies`:
 
 ```
 npm install --save match-sorter
@@ -96,7 +114,8 @@ matchSorter(list, 'z') // []
 
 _Default: `undefined`_
 
-By default it just uses the value itself as above. Passing an array tells match-sorter which keys to use for the ranking.
+By default it just uses the value itself as above. Passing an array tells
+match-sorter which keys to use for the ranking.
 
 ```javascript
 const objList = [
@@ -112,7 +131,8 @@ matchSorter(objList, 're', {keys: ['color', 'name']})
 // [{name: 'Jen', color: 'Red'}, {name: 'Janice', color: 'Green'}, {name: 'Fred', color: 'Orange'}, {name: 'George', color: 'Blue'}]
 ```
 
-**Array of values**: When the specified key matches an array of values, the best match from the values of in the array is going to be used for the ranking.
+**Array of values**: When the specified key matches an array of values, the best
+match from the values of in the array is going to be used for the ranking.
 
 ```javascript
 const iceCreamYum = [
@@ -147,7 +167,9 @@ matchSorter(nestedObjList, 'j', {keys: ['name.0.first']})
 // matchSorter(nestedObjList, 'j', {keys: ['name[0].first']}) does not work
 ```
 
-**Property Callbacks**: Alternatively, you may also pass in a callback function that resolves the value of the key(s) you wish to match on. This is especially useful when interfacing with libraries such as Immutable.js
+**Property Callbacks**: Alternatively, you may also pass in a callback function
+that resolves the value of the key(s) you wish to match on. This is especially
+useful when interfacing with libraries such as Immutable.js
 
 ```javascript
 const list = [{name: 'Janice'}, {name: 'Fred'}, {name: 'George'}, {name: 'Jen'}]
@@ -155,24 +177,25 @@ matchSorter(list, 'j', {keys: [item => item.name]})
 // [{name: 'Janice'}, {name: 'Jen'}]
 ```
 
-For more complex structures, expanding on the `nestedObjList` example above, you can use `map`:
+For more complex structures, expanding on the `nestedObjList` example above, you
+can use `map`:
 
 ```javascript
 const nestedObjList = [
   {
     name: [
-      { first: 'Janice', last: 'Smith' },
-      { first: 'Jon', last: 'Doe' }
+      {first: 'Janice', last: 'Smith'},
+      {first: 'Jon', last: 'Doe'},
     ],
   },
   {
     name: [
-      { first: 'Fred', last: 'Astaire' },
-      { first: 'Jenny', last: 'Doe' },
-      { first: 'Wilma', last: 'Flintstone' },
+      {first: 'Fred', last: 'Astaire'},
+      {first: 'Jenny', last: 'Doe'},
+      {first: 'Wilma', last: 'Flintstone'},
     ],
   },
-];
+]
 matchSorter(nestedObjList, 'doe', {
   keys: [
     item => item.name.map(i => i.first),
@@ -182,17 +205,24 @@ matchSorter(nestedObjList, 'doe', {
 // [name: [{ first: 'Janice', last: 'Smith' },{ first: 'Jon', last: 'Doe' }], name: [{ first: 'Fred', last: 'Astaire' },{ first: 'Jenny', last: 'Doe' },{ first: 'Wilma', last: 'Flintstone' }]]
 ```
 
-**Threshold**: You may specify an individual threshold for specific keys. A key will only match if it meets the specified threshold. _For more information regarding thresholds [see below](#threshold-number)_
+**Threshold**: You may specify an individual threshold for specific keys. A key
+will only match if it meets the specified threshold. _For more information
+regarding thresholds [see below](#threshold-number)_
 
 ```javascript
-const list = [{name: 'Fred', color: 'Orange'}, {name: 'Jen', color: 'Red'}]
+const list = [
+  {name: 'Fred', color: 'Orange'},
+  {name: 'Jen', color: 'Red'},
+]
 matchSorter(list, 'ed', {
   keys: [{threshold: rankings.STARTS_WITH, key: 'name'}, 'color'],
 })
 //[{name: 'Jen', color: 'Red'}]
 ```
 
-**Min and Max Ranking**: You may restrict specific keys to a minimum or maximum ranking by passing in an object. A key with a minimum rank will only get promoted if there is at least a simple match.
+**Min and Max Ranking**: You may restrict specific keys to a minimum or maximum
+ranking by passing in an object. A key with a minimum rank will only get
+promoted if there is at least a simple match.
 
 ```javascript
 const tea = [
@@ -284,17 +314,21 @@ matchSorter(thingsWithDiacritics, 'à', {keepDiacritics: true})
 
 ## Using ES6?
 
-In the examples above, we're using CommonJS. If you're using ES6 modules, then you can do:
+In the examples above, we're using CommonJS. If you're using ES6 modules, then
+you can do:
 
 `import matchSorter, {rankings, caseRankings} from 'match-sorter'`
 
 ## Inspiration
 
-Actually, most of this code was extracted from the _very first_ library I ever wrote: [genie][genie]!
+Actually, most of this code was extracted from the _very first_ library I ever
+wrote: [genie][genie]!
 
 ## Other Solutions
 
-You might try [Fuse.js](https://github.com/krisk/Fuse). It uses advanced math fanciness to get the closest match. Unfortunately what's "closest" doesn't always really make sense. So I extracted this from [genie][genie].
+You might try [Fuse.js](https://github.com/krisk/Fuse). It uses advanced math
+fanciness to get the closest match. Unfortunately what's "closest" doesn't
+always really make sense. So I extracted this from [genie][genie].
 
 ## Contributors
 
@@ -327,15 +361,19 @@ Thanks goes to these people ([emoji key][emojis]):
   </tr>
 </table>
 
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the [all-contributors][all-contributors] specification. Contributions of any kind welcome!
+This project follows the [all-contributors][all-contributors] specification.
+Contributions of any kind welcome!
 
 ## LICENSE
 
 MIT
 
-[npm]: https://www.npmjs.com/
+<!-- prettier-ignore-start -->
+[npm]: https://www.npmjs.com
 [node]: https://nodejs.org
 [build-badge]: https://img.shields.io/travis/kentcdodds/match-sorter.svg?style=flat-square
 [build]: https://travis-ci.org/kentcdodds/match-sorter
@@ -364,4 +402,5 @@ MIT
 [genie]: https://github.com/kentcdodds/genie
 [gzip-badge]: http://img.badgesize.io/https://unpkg.com/match-sorter/dist/match-sorter.umd.min.js?compression=gzip&label=gzip%20size&style=flat-square
 [size-badge]: http://img.badgesize.io/https://unpkg.com/match-sorter/dist/match-sorter.umd.min.js?label=size&style=flat-square
-[unpkg-dist]: https://unpkg.com/match-sorter/dist/
+[unpkg-dist]: https://unpkg.com/match-sorter/dist
+<!-- prettier-ignore-end -->
