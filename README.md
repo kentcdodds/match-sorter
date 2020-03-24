@@ -70,9 +70,8 @@ Feedback welcome!
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [Getting Started](#getting-started)
-  - [Installation](#installation)
-  - [Usage](#usage)
+- [Installation](#installation)
+- [Usage](#usage)
 - [Advanced options](#advanced-options)
   - [keys: `[string]`](#keys-string)
   - [threshold: `number`](#threshold-number)
@@ -80,23 +79,24 @@ Feedback welcome!
 - [Using ES6?](#using-es6)
 - [Inspiration](#inspiration)
 - [Other Solutions](#other-solutions)
-- [Contributors](#contributors)
+- [Issues](#issues)
+  - [🐛 Bugs](#-bugs)
+  - [💡 Feature Requests](#-feature-requests)
+- [Contributors ✨](#contributors-)
 - [LICENSE](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Getting Started
-
-### Installation
+## Installation
 
 This module is distributed via [npm][npm] which is bundled with [node][node] and
 should be installed as one of your project's `dependencies`:
 
 ```
-npm install --save match-sorter
+npm install match-sorter
 ```
 
-### Usage
+## Usage
 
 ```javascript
 import matchSorter from 'match-sorter'
@@ -330,7 +330,25 @@ You might try [Fuse.js](https://github.com/krisk/Fuse). It uses advanced math
 fanciness to get the closest match. Unfortunately what's "closest" doesn't
 always really make sense. So I extracted this from [genie][genie].
 
-## Contributors
+## Issues
+
+_Looking to contribute? Look for the [Good First Issue][good-first-issue]
+label._
+
+### 🐛 Bugs
+
+Please file an issue for bugs, missing documentation, or unexpected behavior.
+
+[**See Bugs**][bugs]
+
+### 💡 Feature Requests
+
+Please file an issue to suggest new features. Vote on feature requests by adding
+a 👍. This helps maintainers prioritize what to work on.
+
+[**See Feature Requests**][requests]
+
+## Contributors ✨
 
 Thanks goes to these people ([emoji key][emojis]):
 
@@ -391,16 +409,8 @@ MIT
 [coc]: https://github.com/kentcdodds/match-sorter/blob/master/other/CODE_OF_CONDUCT.md
 [examples-badge]: https://img.shields.io/badge/%F0%9F%92%A1-examples-8C8E93.svg?style=flat-square
 [examples]: https://github.com/kentcdodds/match-sorter/blob/master/other/EXAMPLES.md
-[github-watch-badge]: https://img.shields.io/github/watchers/kentcdodds/match-sorter.svg?style=social
-[github-watch]: https://github.com/kentcdodds/match-sorter/watchers
-[github-star-badge]: https://img.shields.io/github/stars/kentcdodds/match-sorter.svg?style=social
-[github-star]: https://github.com/kentcdodds/match-sorter/stargazers
-[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20match-sorter!%20https://github.com/kentcdodds/match-sorter%20%F0%9F%91%8D
-[twitter-badge]: https://img.shields.io/twitter/url/https/github.com/kentcdodds/match-sorter.svg?style=social
-[emojis]: https://github.com/kentcdodds/all-contributors#emoji-key
-[all-contributors]: https://github.com/kentcdodds/all-contributors
+[emojis]: https://github.com/all-contributors/all-contributors#emoji-key
+[all-contributors]: https://github.com/all-contributors/all-contributors
+
 [genie]: https://github.com/kentcdodds/genie
-[gzip-badge]: http://img.badgesize.io/https://unpkg.com/match-sorter/dist/match-sorter.umd.min.js?compression=gzip&label=gzip%20size&style=flat-square
-[size-badge]: http://img.badgesize.io/https://unpkg.com/match-sorter/dist/match-sorter.umd.min.js?label=size&style=flat-square
-[unpkg-dist]: https://unpkg.com/match-sorter/dist
 <!-- prettier-ignore-end -->
