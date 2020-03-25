@@ -188,7 +188,10 @@ const tests = {
     // minRanking bumps Milk up to EQUAL from CONTAINS (alias)
     // Oolong matches as STARTS_WITH
     // Green is missing due to no match
-    output: [{tea: 'Milk', alias: 'moo'}, {tea: 'Oolong', alias: 'B'}],
+    output: [
+      {tea: 'Milk', alias: 'moo'},
+      {tea: 'Oolong', alias: 'B'},
+    ],
   },
   'when using arrays of values, when things are equal, the one with the higher key index wins': {
     input: [
@@ -376,7 +379,10 @@ const tests = {
   },
   'only match when key meets threshold': {
     input: [
-      [{name: 'Fred', color: 'Orange'}, {name: 'Jen', color: 'Red'}],
+      [
+        {name: 'Fred', color: 'Orange'},
+        {name: 'Jen', color: 'Red'},
+      ],
       'ed',
       {
         keys: [{threshold: rankings.STARTS_WITH, key: 'name'}, 'color'],
@@ -386,7 +392,10 @@ const tests = {
   },
   'should match when key threshold is lower than the default threshold': {
     input: [
-      [{name: 'Fred', color: 'Orange'}, {name: 'Jen', color: 'Red'}],
+      [
+        {name: 'Fred', color: 'Orange'},
+        {name: 'Jen', color: 'Red'},
+      ],
       'ed',
       {
         keys: ['name', {threshold: rankings.CONTAINS, key: 'color'}],
