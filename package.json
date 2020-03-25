@@ -48,9 +48,5 @@
   "bugs": {
     "url": "https://github.com/kentcdodds/match-sorter/issues"
   },
-  "homepage": "https://github.com/kentcdodds/match-sorter#readme",
-  "engines": {
-    "node": ">=10",
-    "npm": ">=6"
-  }
+  "homepage": "https://github.com/kentcdodds/match-sorter#readme"
 }
