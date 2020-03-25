@@ -42,5 +42,5 @@ requests! Thanks!
 
 <!-- prettier-ignore-start -->
 [egghead]: https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github
-[issues]: https://github.com/kentcdodds/generator-kcd-oss/issues
+[issues]: https://github.com/kentcdodds/match-sorter/issues
 <!-- prettier-ignore-end -->
