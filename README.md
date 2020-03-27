@@ -402,7 +402,7 @@ MIT
 [version-badge]: https://img.shields.io/npm/v/match-sorter.svg?style=flat-square
 [package]: https://www.npmjs.com/package/match-sorter
 [downloads-badge]: https://img.shields.io/npm/dm/match-sorter.svg?style=flat-square
-[npm-trends]: https://www.npmtrends.com/match-sorter
+[npmtrends]: https://www.npmtrends.com/match-sorter
 [license-badge]: https://img.shields.io/npm/l/match-sorter.svg?style=flat-square
 [license]: https://github.com/kentcdodds/match-sorter/blob/master/other/LICENSE
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
