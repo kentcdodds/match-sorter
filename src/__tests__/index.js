@@ -450,6 +450,14 @@ const tests = {
       {country: 'Italy', counter: 1},
     ],
   },
+  'supports a custom baseSort function for tie-breakers': {
+    input: [
+      ['appl', 'C apple', 'B apple', 'A apple', 'app', 'applebutter'],
+      'apple',
+      {baseSort: (a, b) => (a.index < b.index ? -1 : 1)},
+    ],
+    output: ['applebutter', 'C apple', 'B apple', 'A apple'],
+  },
 }
 
 Object.keys(tests).forEach(title => {

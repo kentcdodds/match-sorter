@@ -30,6 +30,9 @@ const caseRankings = {
 matchSorter.rankings = rankings
 matchSorter.caseRankings = caseRankings
 
+const defaultBaseSortFn = (a, b) =>
+  String(a.rankedItem).localeCompare(b.rankedItem)
+
 /**
  * Takes an array of items and a value and returns a new array with the items that match the given value
  * @param {Array} items - the items to sort
@@ -41,9 +44,15 @@ function matchSorter(items, value, options = {}) {
   // not performing any search/sort if value(search term) is empty
   if (!value) return items
 
-  const {keys, threshold = rankings.MATCHES} = options
+  const {
+    keys,
+    threshold = rankings.MATCHES,
+    baseSort = defaultBaseSortFn,
+  } = options
   const matchedItems = items.reduce(reduceItemsToRanked, [])
-  return matchedItems.sort(sortRankedItems).map(({item}) => item)
+  return matchedItems
+    .sort((a, b) => sortRankedItems(a, b, baseSort))
+    .map(({item}) => item)
 
   function reduceItemsToRanked(matches, item, index) {
     const {
@@ -350,18 +359,16 @@ function getClosenessRanking(testString, stringToRank) {
  * @param {Object} b - the second item to sort
  * @return {Number} -1 if a should come first, 1 if b should come first, 0 if equal
  */
-function sortRankedItems(a, b) {
+function sortRankedItems(a, b, baseSort) {
   const aFirst = -1
   const bFirst = 1
-  const {rankedItem: aRankedItem, rank: aRank, keyIndex: aKeyIndex} = a
-  const {rankedItem: bRankedItem, rank: bRank, keyIndex: bKeyIndex} = b
+  const {rank: aRank, keyIndex: aKeyIndex} = a
+  const {rank: bRank, keyIndex: bKeyIndex} = b
   const same = aRank === bRank
   if (same) {
     if (aKeyIndex === bKeyIndex) {
-      // localeCompare returns 0 if both values are equal,
-      // so we rely on JS engines stably sorting the results
-      // (de facto, all modern engine do this).
-      return String(aRankedItem).localeCompare(bRankedItem)
+      // use the base sort function as a tie-breaker
+      return baseSort(a, b)
     } else {
       return aKeyIndex < bKeyIndex ? aFirst : bFirst
     }

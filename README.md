@@ -76,6 +76,7 @@ Feedback welcome!
   - [keys: `[string]`](#keys-string)
   - [threshold: `number`](#threshold-number)
   - [keepDiacritics: `boolean`](#keepdiacritics-boolean)
+  - [baseSort: `function(itemA, itemB): -1 | 0 | 1`](#basesort-functionitema-itemb--1--0--1)
 - [Using ES6?](#using-es6)
 - [Inspiration](#inspiration)
 - [Other Solutions](#other-solutions)
@@ -312,6 +313,28 @@ matchSorter(thingsWithDiacritics, 'à', {keepDiacritics: true})
 // ['à la carte', 'à la mode']
 ```
 
+### baseSort: `function(itemA, itemB): -1 | 0 | 1`
+
+_Default: `(a, b) => String(a.rankedItem).localeCompare(b.rankedItem)`_
+
+By default, match-sorter uses the `String.localeCompare` function to tie-break
+items that have the same ranking. This results in a stable, alphabetic sort.
+
+```javascript
+const list = ['C apple', 'B apple', 'A apple']
+matchSorter(list, 'apple')
+// ['A apple', 'B apple', 'C apple']
+```
+
+_You can customize this behavior by specifying a custom `baseSort` function:_
+
+```javascript
+const list = ['C apple', 'B apple', 'A apple']
+// This baseSort function will use the original index of items as the tie breaker
+matchSorter(list, 'apple', {baseSort: (a, b) => (a.index < b.index ? -1 : 1)})
+// ['C apple', 'B apple', 'A apple']
+```
+
 ## Using ES6?
 
 In the examples above, we're using CommonJS. If you're using ES6 modules, then
@@ -383,6 +406,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
