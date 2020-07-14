@@ -25,11 +25,11 @@
   "author": "Kent C. Dodds <me@kentcdodds.com> (https://kentcdodds.com)",
   "license": "MIT",
   "dependencies": {
-    "@babel/runtime": "^7.9.2",
+    "@babel/runtime": "^7.10.5",
     "remove-accents": "0.4.2"
   },
   "devDependencies": {
-    "kcd-scripts": "^5.6.0"
+    "kcd-scripts": "^6.2.4"
   },
   "eslintConfig": {
     "extends": [

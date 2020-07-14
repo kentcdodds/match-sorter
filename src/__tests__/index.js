@@ -455,10 +455,8 @@ const tests = {
 Object.keys(tests).forEach(title => {
   const {input, output, only, skip} = tests[title]
   if (only) {
-    // eslint-disable-next-line
     test.only(title, testFn)
   } else if (skip) {
-    // eslint-disable-next-line
     test.skip(title, testFn)
   } else {
     test(title, testFn)
@@ -468,3 +466,10 @@ Object.keys(tests).forEach(title => {
     expect(matchSorter(...input)).toEqual(output)
   }
 })
+
+/*
+eslint
+  jest/valid-title: "off",
+  jest/no-disabled-tests: "off",
+  jest/no-focused-tests: "off",
+*/
