@@ -342,6 +342,45 @@ you can do:
 
 `import matchSorter, {rankings, caseRankings} from 'match-sorter'`
 
+## Recipes
+
+### Match many words across multiple fields (table filtering)
+
+By default, `match-sorter` will return matches from objects where one of the properties 
+matches _the entire_ search term. For multi-column data sets it can be beneficial to split
+words in search string and match each word separately. This can be done by chaining
+`match-sorter` calls. 
+
+The benefit of this is that a filter string of "two words" will match both "two" and "words", but
+will return rows where the two words are found in _different_ columns as well as when both words
+match in the same column. For single-column matches it will also return matches out of order
+(column = "wordstwo" will match just as well as column="twowords", the latter getting a higher score).
+
+```javascript
+function fuzzySearchMutipleWords(
+  rows, // array of data [{a: "a", b: "b"}, {a: "c", b: "d"}]
+  keys, // keys to search ["a", "b"]
+  filterValue: string, // potentially multi-word search string "two words"
+) {
+  if (!filterValue || !filterValue.length) {
+    return rows
+  }
+
+  const terms = filterValue.split(' ')
+  if (!terms) {
+    return rows
+  }
+
+  // reduceRight will mean sorting is done by score for the _first_ entered word.
+  return terms.reduceRight(
+    (results, term) => matchSorter(results, term, {keys}),
+    rows,
+  )
+}
+```
+
+[Multi-column code sandbox](https://codesandbox.io/s/match-sorter-example-forked-1ko35)
+
 ## Inspiration
 
 Actually, most of this code was extracted from the _very first_ library I ever
