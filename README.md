@@ -16,7 +16,7 @@
 [![MIT License][license-badge]][license]
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-18-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-19-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
@@ -441,12 +441,12 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/skube"><img src="https://avatars3.githubusercontent.com/u/146396?v=4" width="100px;" alt=""/><br /><sub><b>Skubie Doo</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=skube" title="Documentation">📖</a></td>
     <td align="center"><a href="https://michaeldeboey.be"><img src="https://avatars3.githubusercontent.com/u/6643991?v=4" width="100px;" alt=""/><br /><sub><b>Michaël De Boey</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=MichaelDeBoey" title="Code">💻</a></td>
     <td align="center"><a href="https://tannerlinsley.com"><img src="https://avatars0.githubusercontent.com/u/5580297?v=4" width="100px;" alt=""/><br /><sub><b>Tanner Linsley</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=tannerlinsley" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/SweVictor"><img src="https://avatars1.githubusercontent.com/u/449347?v=4" width="100px;" alt=""/><br /><sub><b>Victor</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=SweVictor" title="Documentation">📖</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
