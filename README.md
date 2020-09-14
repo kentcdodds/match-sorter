@@ -104,7 +104,7 @@ import matchSorter from 'match-sorter'
 // or const matchSorter = require('match-sorter').default
 // or window.matchSorter
 const list = ['hi', 'hey', 'hello', 'sup', 'yo']
-matchSorter(list, 'h') // ['hi', 'hey', 'hello']
+matchSorter(list, 'h') // ['hello', 'hey', 'hi']
 matchSorter(list, 'y') // ['yo', 'hey']
 matchSorter(list, 'z') // []
 ```
