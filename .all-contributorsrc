@@ -209,7 +209,11 @@
       "avatar_url": "https://avatars1.githubusercontent.com/u/7224206?v=4",
       "profile": "https://github.com/RebeccaStevens",
       "contributions": [
-        "bug"
+
+        "bug",
+        "doc"
+
+
       ]
     }
   ]
