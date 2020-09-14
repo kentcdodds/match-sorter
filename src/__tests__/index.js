@@ -361,7 +361,7 @@ const tests = {
       'superduperfile',
     ],
   },
-  'skip matching when no search value is absent': {
+  'sort when search value is absent': {
     input: [
       [
         {tea: 'Milk', alias: 'moo'},
@@ -372,9 +372,9 @@ const tests = {
       {keys: ['tea']},
     ],
     output: [
+      {tea: 'Green', alias: 'C'},
       {tea: 'Milk', alias: 'moo'},
       {tea: 'Oolong', alias: 'B'},
-      {tea: 'Green', alias: 'C'},
     ],
   },
   'only match when key meets threshold': {

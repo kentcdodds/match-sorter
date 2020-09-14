@@ -41,9 +41,6 @@ const defaultBaseSortFn = (a, b) =>
  * @return {Array} - the new sorted array
  */
 function matchSorter(items, value, options = {}) {
-  // not performing any search/sort if value(search term) is empty
-  if (!value) return items
-
   const {
     keys,
     threshold = rankings.MATCHES,
