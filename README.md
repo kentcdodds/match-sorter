@@ -216,7 +216,7 @@ const list = [
   {name: 'Jen', color: 'Red'},
 ]
 matchSorter(list, 'ed', {
-  keys: [{threshold: rankings.STARTS_WITH, key: 'name'}, 'color'],
+  keys: [{threshold: matchSorter.rankings.STARTS_WITH, key: 'name'}, 'color'],
 })
 //[{name: 'Jen', color: 'Red'}]
 ```
