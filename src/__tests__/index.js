@@ -458,6 +458,13 @@ const tests = {
     ],
     output: ['applebutter', 'C apple', 'B apple', 'A apple'],
   },
+  'sorts items alphabetically by default': {
+    input: [
+      ['orange', 'apple-juice', 'strawberry-pie', 'bannana', 'cherry'],
+      '',
+    ],
+    output: ['apple-juice', 'bannana', 'cherry', 'orange', 'strawberry-pie'],
+  },
 }
 
 Object.keys(tests).forEach(title => {
