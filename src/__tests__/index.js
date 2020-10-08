@@ -458,10 +458,25 @@ const tests = {
     ],
     output: ['applebutter', 'C apple', 'B apple', 'A apple'],
   },
+  // This can't be done be default unless we bump major :/
+  /*
   'sorts items alphabetically by default': {
     input: [
       ['orange', 'apple-juice', 'strawberry-pie', 'bannana', 'cherry'],
       '',
+    ],
+    output: ['apple-juice', 'bannana', 'cherry', 'orange', 'strawberry-pie'],
+  },
+  */
+  'sorts items (numbers) alphabetically with an option set': {
+    input: [[1, 90, 5, 9, 111], '', {sortAlphabetically: true}],
+    output: [1, 111, 5, 9, 90],
+  },
+  'sorts items (strings) alphabetically with an option set': {
+    input: [
+      ['orange', 'apple-juice', 'strawberry-pie', 'bannana', 'cherry'],
+      '',
+      {sortAlphabetically: true},
     ],
     output: ['apple-juice', 'bannana', 'cherry', 'orange', 'strawberry-pie'],
   },

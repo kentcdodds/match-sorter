@@ -45,10 +45,11 @@ function matchSorter(items, value, options = {}) {
     keys,
     threshold = rankings.MATCHES,
     baseSort = defaultBaseSortFn,
+    sortAlphabetically = false,
   } = options
   const matchedItems = items.reduce(reduceItemsToRanked, [])
   return matchedItems
-    .sort((a, b) => sortRankedItems(a, b, baseSort))
+    .sort((a, b) => sortRankedItems(a, b, baseSort, sortAlphabetically))
     .map(({item}) => item)
 
   function reduceItemsToRanked(matches, item, index) {
@@ -356,12 +357,12 @@ function getClosenessRanking(testString, stringToRank) {
  * @param {Object} b - the second item to sort
  * @return {Number} -1 if a should come first, 1 if b should come first, 0 if equal
  */
-function sortRankedItems(a, b, baseSort) {
+function sortRankedItems(a, b, baseSort, sortAlphabetically) {
   const aFirst = -1
   const bFirst = 1
-  const {rank: aRank, keyIndex: aKeyIndex} = a
-  const {rank: bRank, keyIndex: bKeyIndex} = b
-  const same = aRank === bRank
+  const {rank: aRank, rankedItem: aValue, keyIndex: aKeyIndex} = a
+  const {rank: bRank, rankedItem: bValue, keyIndex: bKeyIndex} = b
+  const same = sortAlphabetically ? aValue === bValue : aRank === bRank
   if (same) {
     if (aKeyIndex === bKeyIndex) {
       // use the base sort function as a tie-breaker
@@ -370,6 +371,10 @@ function sortRankedItems(a, b, baseSort) {
       return aKeyIndex < bKeyIndex ? aFirst : bFirst
     }
   } else {
+    if (sortAlphabetically) {
+      return defaultBaseSortFn(a, b)
+    }
+
     return aRank > bRank ? aFirst : bFirst
   }
 }
