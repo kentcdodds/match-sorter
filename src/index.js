@@ -1,8 +1,8 @@
 /**
  * @name match-sorter
  * @license MIT license.
- * @copyright (c) 2019 Kent C. Dodds
- * @author Kent C. Dodds <kent@doddsfamily.us>
+ * @copyright (c) 2020 Kent C. Dodds
+ * @author Kent C. Dodds <me@kentcdodds.com> (https://kentcdodds.com)
  */
 import removeAccents from 'remove-accents'
 
