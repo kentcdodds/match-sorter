@@ -7,28 +7,17 @@
 import removeAccents from 'remove-accents'
 
 const rankings = {
-  CASE_SENSITIVE_EQUAL: 9,
-  EQUAL: 8,
-  STARTS_WITH: 7,
-  WORD_STARTS_WITH: 6,
-  STRING_CASE: 5,
-  STRING_CASE_ACRONYM: 4,
+  CASE_SENSITIVE_EQUAL: 7,
+  EQUAL: 6,
+  STARTS_WITH: 5,
+  WORD_STARTS_WITH: 4,
   CONTAINS: 3,
   ACRONYM: 2,
   MATCHES: 1,
   NO_MATCH: 0,
 }
 
-const caseRankings = {
-  CAMEL: 0.8,
-  PASCAL: 0.6,
-  KEBAB: 0.4,
-  SNAKE: 0.2,
-  NO_CASE: 0,
-}
-
 matchSorter.rankings = rankings
-matchSorter.caseRankings = caseRankings
 
 const defaultBaseSortFn = (a, b) =>
   String(a.rankedItem).localeCompare(b.rankedItem)
@@ -132,42 +121,28 @@ function getMatchRanking(testString, stringToRank, options) {
     return rankings.CASE_SENSITIVE_EQUAL
   }
 
-  const caseRank = getCaseRanking(testString)
-  const isPartial = isPartialOfCase(testString, stringToRank, caseRank)
-  const isCasedAcronym = isCaseAcronym(testString, stringToRank, caseRank)
-
   // Lower casing before further comparison
   testString = testString.toLowerCase()
   stringToRank = stringToRank.toLowerCase()
 
   // case insensitive equals
   if (testString === stringToRank) {
-    return rankings.EQUAL + caseRank
+    return rankings.EQUAL
   }
 
   // starts with
   if (testString.indexOf(stringToRank) === 0) {
-    return rankings.STARTS_WITH + caseRank
+    return rankings.STARTS_WITH
   }
 
   // word starts with
   if (testString.indexOf(` ${stringToRank}`) !== -1) {
-    return rankings.WORD_STARTS_WITH + caseRank
-  }
-
-  // is a part inside a cased string
-  if (isPartial) {
-    return rankings.STRING_CASE + caseRank
-  }
-
-  // is acronym for a cased string
-  if (caseRank > 0 && isCasedAcronym) {
-    return rankings.STRING_CASE_ACRONYM + caseRank
+    return rankings.WORD_STARTS_WITH
   }
 
   // contains
   if (testString.indexOf(stringToRank) !== -1) {
-    return rankings.CONTAINS + caseRank
+    return rankings.CONTAINS
   } else if (stringToRank.length === 1) {
     // If the only character in the given stringToRank
     //   isn't even contained in the testString, then
@@ -177,7 +152,7 @@ function getMatchRanking(testString, stringToRank, options) {
 
   // acronym
   if (getAcronym(testString).indexOf(stringToRank) !== -1) {
-    return rankings.ACRONYM + caseRank
+    return rankings.ACRONYM
   }
 
   // will return a number between rankings.MATCHES and
@@ -201,106 +176,6 @@ function getAcronym(string) {
     })
   })
   return acronym
-}
-
-/**
- * Returns a score base on the case of the testString
- * @param {String} testString - the string to test against
- * @returns {Number} the number of the ranking,
- * based on the case between 0 and 1 for how the testString matches the case
- */
-function getCaseRanking(testString) {
-  const containsUpperCase = testString.toLowerCase() !== testString
-  const containsDash = testString.indexOf('-') >= 0
-  const containsUnderscore = testString.indexOf('_') >= 0
-
-  if (!containsUpperCase && !containsUnderscore && containsDash) {
-    return caseRankings.KEBAB
-  }
-
-  if (!containsUpperCase && containsUnderscore && !containsDash) {
-    return caseRankings.SNAKE
-  }
-
-  if (containsUpperCase && !containsDash && !containsUnderscore) {
-    const startsWithUpperCase = testString[0].toUpperCase() === testString[0]
-    if (startsWithUpperCase) {
-      return caseRankings.PASCAL
-    }
-
-    return caseRankings.CAMEL
-  }
-
-  return caseRankings.NO_CASE
-}
-
-/**
- * Returns whether the stringToRank is one of the case parts in the testString (works with any string case)
- * @example
- * // returns true
- * isPartialOfCase('helloWorld', 'world', caseRankings.CAMEL)
- * @example
- * // returns false
- * isPartialOfCase('helloWorld', 'oworl', caseRankings.CAMEL)
- * @param {String} testString - the string to test against
- * @param {String} stringToRank - the string to rank
- * @param {Number} caseRanking - the ranking score based on case of testString
- * @returns {Boolean} whether the stringToRank is one of the case parts in the testString
- */
-function isPartialOfCase(testString, stringToRank, caseRanking) {
-  const testIndex = testString.toLowerCase().indexOf(stringToRank.toLowerCase())
-
-  switch (caseRanking) {
-    case caseRankings.SNAKE:
-      return testString[testIndex - 1] === '_'
-    case caseRankings.KEBAB:
-      return testString[testIndex - 1] === '-'
-    case caseRankings.PASCAL:
-    case caseRankings.CAMEL:
-      return (
-        testIndex !== -1 &&
-        testString[testIndex] === testString[testIndex].toUpperCase()
-      )
-    default:
-      return false
-  }
-}
-
-/**
- * Check if stringToRank is an acronym for a partial case
- * @example
- * // returns true
- * isCaseAcronym('super_duper_file', 'sdf', caseRankings.SNAKE)
- * @param {String} testString - the string to test against
- * @param {String} stringToRank - the acronym to test
- * @param {Number} caseRank - the ranking of the case
- * @returns {Boolean} whether the stringToRank is an acronym for the testString
- */
-function isCaseAcronym(testString, stringToRank, caseRank) {
-  let splitValue = null
-  switch (caseRank) {
-    case caseRankings.SNAKE:
-      splitValue = '_'
-      break
-    case caseRankings.KEBAB:
-      splitValue = '-'
-      break
-    case caseRankings.PASCAL:
-    case caseRankings.CAMEL:
-      splitValue = /(?=[A-Z])/
-      break
-    default:
-      splitValue = null
-  }
-
-  const splitTestString = testString.split(splitValue)
-  return stringToRank
-    .toLowerCase()
-    .split('')
-    .reduce((correct, char, charIndex) => {
-      const splitItem = splitTestString[charIndex]
-      return correct && splitItem && splitItem[0].toLowerCase() === char
-    }, true)
 }
 
 /**

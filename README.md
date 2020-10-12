@@ -47,17 +47,11 @@ To explain the ranking system, I'll use countries as an example:
 4.  **WORD STARTS WITH**: If the item has multiple words, then if one of those
     words starts with the given value (ex. `Repub` would match
     `Dominican Republic`)
-5.  **CASE STARTS WITH**: If the item has a defined case (`camelCase`,
-    `PascalCase`, `snake_case` or `kebab-case`), then if one of the parts starts
-    with the given value (ex. `kingdom` would match `unitedKingdom` or
-    `united_kingdom`)
-6.  **CASE ACRONYM** If the item's case matches the synonym (ex. `uk` would
-    match `united-kingdom` or `UnitedKingdom`)
-7.  **CONTAINS**: If the item contains the given value (ex. `ham` would match
+5.  **CONTAINS**: If the item contains the given value (ex. `ham` would match
     `Bahamas`)
-8.  **ACRONYM**: If the item's acronym is the given value (ex. `us` would match
+6.  **ACRONYM**: If the item's acronym is the given value (ex. `us` would match
     `United States`)
-9.  **SIMPLE MATCH**: If the item has letters in the same order as the letters
+7.  **SIMPLE MATCH**: If the item has letters in the same order as the letters
     of the given value (ex. `iw` would match `Zimbabwe`, but not `Kuwait`
     because it must be in the same order). Furthermore, if the item is a closer
     match, it will rank higher (ex. `ua` matches `Uruguay` more closely than
@@ -78,6 +72,9 @@ Feedback welcome!
   - [keepDiacritics: `boolean`](#keepdiacritics-boolean)
   - [baseSort: `function(itemA, itemB): -1 | 0 | 1`](#basesort-functionitema-itemb--1--0--1)
 - [Using ES6?](#using-es6)
+- [Recipes](#recipes)
+  - [Match PascalCase, camelCase, snake_case, or kebab-case as words](#match-pascalcase-camelcase-snake_case-or-kebab-case-as-words)
+  - [Match many words across multiple fields (table filtering)](#match-many-words-across-multiple-fields-table-filtering)
 - [Inspiration](#inspiration)
 - [Other Solutions](#other-solutions)
 - [Issues](#issues)
@@ -340,21 +337,39 @@ matchSorter(list, 'apple', {baseSort: (a, b) => (a.index < b.index ? -1 : 1)})
 In the examples above, we're using CommonJS. If you're using ES6 modules, then
 you can do:
 
-`import matchSorter, {rankings, caseRankings} from 'match-sorter'`
+`import matchSorter, {rankings} from 'match-sorter'`
 
 ## Recipes
 
+### Match PascalCase, camelCase, snake_case, or kebab-case as words
+
+By default, `match-sorter` assumes spaces to be the word separator. However, if
+your data has a different word separator, you can use a property callback to
+replace your separator with spaces. For example, for `snake_case`:
+
+```javascript
+const list = [
+  {name: 'Janice_Kurtis'},
+  {name: 'Fred_Mertz'},
+  {name: 'George_Foreman'},
+  {name: 'Jen_Smith'},
+]
+matchSorter(list, 'js', {keys: [item => item.name.replace(/_/g, ' ')]})
+// [{name: 'Jen_Smith'}, {name: 'Janice_Kurtis'}]
+```
+
 ### Match many words across multiple fields (table filtering)
 
-By default, `match-sorter` will return matches from objects where one of the properties 
-matches _the entire_ search term. For multi-column data sets it can be beneficial to split
-words in search string and match each word separately. This can be done by chaining
-`match-sorter` calls. 
+By default, `match-sorter` will return matches from objects where one of the
+properties matches _the entire_ search term. For multi-column data sets it can
+be beneficial to split words in search string and match each word separately.
+This can be done by chaining `match-sorter` calls.
 
-The benefit of this is that a filter string of "two words" will match both "two" and "words", but
-will return rows where the two words are found in _different_ columns as well as when both words
-match in the same column. For single-column matches it will also return matches out of order
-(column = "wordstwo" will match just as well as column="twowords", the latter getting a higher score).
+The benefit of this is that a filter string of "two words" will match both "two"
+and "words", but will return rows where the two words are found in _different_
+columns as well as when both words match in the same column. For single-column
+matches it will also return matches out of order (column = "wordstwo" will match
+just as well as column="twowords", the latter getting a higher score).
 
 ```javascript
 function fuzzySearchMutipleWords(
@@ -449,6 +464,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
