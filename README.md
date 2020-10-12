@@ -71,7 +71,6 @@ Feedback welcome!
   - [threshold: `number`](#threshold-number)
   - [keepDiacritics: `boolean`](#keepdiacritics-boolean)
   - [baseSort: `function(itemA, itemB): -1 | 0 | 1`](#basesort-functionitema-itemb--1--0--1)
-- [Using ES6?](#using-es6)
 - [Recipes](#recipes)
   - [Match PascalCase, camelCase, snake_case, or kebab-case as words](#match-pascalcase-camelcase-snake_case-or-kebab-case-as-words)
   - [Match many words across multiple fields (table filtering)](#match-many-words-across-multiple-fields-table-filtering)
@@ -97,8 +96,8 @@ npm install match-sorter
 ## Usage
 
 ```javascript
-import matchSorter from 'match-sorter'
-// or const matchSorter = require('match-sorter').default
+import {matchSorter} from 'match-sorter'
+// or const {matchSorter} = require('match-sorter')
 // or window.matchSorter
 const list = ['hi', 'hey', 'hello', 'sup', 'yo']
 matchSorter(list, 'h') // ['hello', 'hey', 'hi']
@@ -331,13 +330,6 @@ const list = ['C apple', 'B apple', 'A apple']
 matchSorter(list, 'apple', {baseSort: (a, b) => (a.index < b.index ? -1 : 1)})
 // ['C apple', 'B apple', 'A apple']
 ```
-
-## Using ES6?
-
-In the examples above, we're using CommonJS. If you're using ES6 modules, then
-you can do:
-
-`import matchSorter, {rankings} from 'match-sorter'`
 
 ## Recipes
 

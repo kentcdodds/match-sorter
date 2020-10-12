@@ -330,5 +330,4 @@ function getKeyAttributes(key) {
   }
 }
 
-export default matchSorter
-export {rankings}
+export {matchSorter, rankings}

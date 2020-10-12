@@ -1,4 +1,4 @@
-import matchSorter, {rankings} from '../'
+import {matchSorter, rankings} from '../'
 
 const tests = {
   'returns an empty array with a string that is too long': {
