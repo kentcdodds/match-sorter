@@ -98,7 +98,7 @@ npm install match-sorter
 ```javascript
 import {matchSorter} from 'match-sorter'
 // or const {matchSorter} = require('match-sorter')
-// or window.matchSorter
+// or window.matchSorter.matchSorter
 const list = ['hi', 'hey', 'hello', 'sup', 'yo']
 matchSorter(list, 'h') // ['hello', 'hey', 'hi']
 matchSorter(list, 'y') // ['yo', 'hey']
