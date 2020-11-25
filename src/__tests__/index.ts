@@ -1,10 +1,13 @@
-import {matchSorter, rankings} from '../'
+import {matchSorter, rankings, MatchSorterOptions} from '../'
 
-const tests = {
-  'returns an empty array with a string that is too long': {
-    input: [['Chakotay', 'Charzard'], 'JonathanJonathan'],
-    output: [],
-  },
+type TestCase = {
+  input: [Array<unknown>, string, MatchSorterOptions?]
+  output: Array<unknown>
+  only?: boolean
+  skip?: boolean
+}
+
+const tests: Record<string, TestCase> = {
   'returns an empty array with a string that matches no items': {
     input: [['Chakotay', 'Charzard'], 'nomatch'],
     output: [],
@@ -130,6 +133,7 @@ const tests = {
     input: [
       [{name: {first: 'baz'}}, {name: {first: 'bat'}}, {name: {first: 'foo'}}],
       'ba',
+      // @ts-expect-error I don't know how to make this typed properly
       {keys: [item => item.name.first]},
     ],
     output: [{name: {first: 'bat'}}, {name: {first: 'baz'}}],
@@ -381,14 +385,19 @@ const tests = {
         {name: 'Jen_Smith'},
       ],
       'js',
+      // @ts-expect-error I don't know how to make this typed properly
       {keys: [item => item.name.replace(/_/g, ' ')]},
     ],
     output: [{name: 'Jen_Smith'}, {name: 'Janice_Kurtis'}],
   },
 }
 
-Object.keys(tests).forEach(title => {
-  const {input, output, only, skip} = tests[title]
+for (const [
+  title,
+  {input, output, only = false, skip = false},
+] of Object.entries<TestCase>(tests)) {
+  const testFn = () => expect(matchSorter(...input)).toEqual(output)
+
   if (only) {
     test.only(title, testFn)
   } else if (skip) {
@@ -396,15 +405,13 @@ Object.keys(tests).forEach(title => {
   } else {
     test(title, testFn)
   }
-
-  function testFn() {
-    expect(matchSorter(...input)).toEqual(output)
-  }
-})
+}
 
 /*
 eslint
   jest/valid-title: "off",
   jest/no-disabled-tests: "off",
   jest/no-focused-tests: "off",
+  @typescript-eslint/no-unsafe-call: "off",
+  @typescript-eslint/no-unsafe-member-access: "off"
 */
