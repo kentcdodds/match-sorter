@@ -13,11 +13,11 @@ learn how: http://kcd.im/pull-request
 
 - `match-sorter` version:
 - `node` version:
-- `npm` (or `yarn`) version:
 
 Relevant code or config
 
 ```javascript
+
 ```
 
 What you did:

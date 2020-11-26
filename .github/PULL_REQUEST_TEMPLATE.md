@@ -31,7 +31,6 @@ merge of your pull request!
 **Checklist**:
 
 <!-- add "N/A" to the end of each line that's irrelevant to your changes -->
-
 <!-- to check an item, place an "x" in the box like so: "- [x] Documentation" -->
 
 - [ ] Documentation

@@ -14,10 +14,7 @@
 [![version][version-badge]][package]
 [![downloads][downloads-badge]][npmtrends]
 [![MIT License][license-badge]][license]
-
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-23-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
+[![All Contributors][all-contributors-badge]](#contributors-)
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
 [![Examples][examples-badge]][examples]
@@ -311,7 +308,7 @@ matchSorter(thingsWithDiacritics, 'à', {keepDiacritics: true})
 
 ### baseSort: `function(itemA, itemB): -1 | 0 | 1`
 
-_Default: `(a, b) => String(a.rankedItem).localeCompare(b.rankedItem)`_
+_Default: `(a, b) => String(a.rankedValue).localeCompare(b.rankedValue)`_
 
 By default, match-sorter uses the `String.localeCompare` function to tie-break
 items that have the same ranking. This results in a stable, alphabetic sort.
@@ -460,6 +457,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
@@ -472,8 +470,8 @@ MIT
 <!-- prettier-ignore-start -->
 [npm]: https://www.npmjs.com
 [node]: https://nodejs.org
-[build-badge]: https://img.shields.io/travis/kentcdodds/match-sorter.svg?style=flat-square
-[build]: https://travis-ci.org/kentcdodds/match-sorter
+[build-badge]: https://img.shields.io/github/workflow/status/kentcdodds/match-sorter/validate?logo=github&style=flat-square
+[build]: https://github.com/kentcdodds/match-sorter/actions?query=workflow%3Avalidate
 [coverage-badge]: https://img.shields.io/codecov/c/github/kentcdodds/match-sorter.svg?style=flat-square
 [coverage]: https://codecov.io/github/kentcdodds/match-sorter
 [version-badge]: https://img.shields.io/npm/v/match-sorter.svg?style=flat-square
@@ -481,15 +479,19 @@ MIT
 [downloads-badge]: https://img.shields.io/npm/dm/match-sorter.svg?style=flat-square
 [npmtrends]: https://www.npmtrends.com/match-sorter
 [license-badge]: https://img.shields.io/npm/l/match-sorter.svg?style=flat-square
-[license]: https://github.com/kentcdodds/match-sorter/blob/master/other/LICENSE
+[license]: https://github.com/kentcdodds/match-sorter/blob/master/LICENSE
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
 [coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
-[coc]: https://github.com/kentcdodds/match-sorter/blob/master/other/CODE_OF_CONDUCT.md
+[coc]: https://github.com/kentcdodds/match-sorter/blob/master/CODE_OF_CONDUCT.md
 [examples-badge]: https://img.shields.io/badge/%F0%9F%92%A1-examples-8C8E93.svg?style=flat-square
 [examples]: https://github.com/kentcdodds/match-sorter/blob/master/other/EXAMPLES.md
 [emojis]: https://github.com/all-contributors/all-contributors#emoji-key
 [all-contributors]: https://github.com/all-contributors/all-contributors
+[all-contributors-badge]: https://img.shields.io/github/all-contributors/kentcdodds/match-sorter?color=orange&style=flat-square
+[bugs]: https://github.com/kentcdodds/match-sorter/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+sort%3Acreated-desc+label%3Abug
+[requests]: https://github.com/kentcdodds/match-sorter/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+sort%3Areactions-%2B1-desc+label%3Aenhancement
+[good-first-issue]: https://github.com/kentcdodds/match-sorter/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+sort%3Areactions-%2B1-desc+label%3Aenhancement+label%3A%22good+first+issue%22
 
 [genie]: https://github.com/kentcdodds/genie
 <!-- prettier-ignore-end -->

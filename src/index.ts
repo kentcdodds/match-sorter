@@ -6,6 +6,51 @@
  */
 import removeAccents from 'remove-accents'
 
+type KeyAttributes = {
+  threshold?: number
+  maxRanking: number
+  minRanking: number
+}
+interface RankingInfo {
+  rankedValue: string
+  rank: number
+  keyIndex: number
+  keyThreshold: number | undefined
+}
+
+interface ValueGetterKey<ItemType> {
+  (item: ItemType): string
+}
+interface IndexedItem<ItemType> {
+  item: ItemType
+  index: number
+}
+interface RankedItem<ItemType> extends RankingInfo, IndexedItem<ItemType> {}
+
+interface BaseSorter<ItemType> {
+  (a: RankedItem<ItemType>, b: RankedItem<ItemType>): number
+}
+
+interface KeyAttributesOptions<ItemType> {
+  key?: string | ValueGetterKey<ItemType>
+  threshold?: number
+  maxRanking?: number
+  minRanking?: number
+}
+
+type KeyOption<ItemType> =
+  | KeyAttributesOptions<ItemType>
+  | ValueGetterKey<ItemType>
+  | string
+
+// ItemType = unknown allowed me to make these changes without the need to change the current tests
+interface MatchSorterOptions<ItemType = unknown> {
+  keys?: Array<KeyOption<ItemType>>
+  threshold?: number
+  baseSort?: BaseSorter<ItemType>
+  keepDiacritics?: boolean
+}
+
 const rankings = {
   CASE_SENSITIVE_EQUAL: 7,
   EQUAL: 6,
@@ -19,8 +64,8 @@ const rankings = {
 
 matchSorter.rankings = rankings
 
-const defaultBaseSortFn = (a, b) =>
-  String(a.rankedItem).localeCompare(b.rankedItem)
+const defaultBaseSortFn: BaseSorter<unknown> = (a, b) =>
+  String(a.rankedValue).localeCompare(String(b.rankedValue))
 
 /**
  * Takes an array of items and a value and returns a new array with the items that match the given value
@@ -29,26 +74,33 @@ const defaultBaseSortFn = (a, b) =>
  * @param {Object} options - Some options to configure the sorter
  * @return {Array} - the new sorted array
  */
-function matchSorter(items, value, options = {}) {
+function matchSorter<ItemType = string>(
+  items: Array<ItemType>,
+  value: string,
+  options: MatchSorterOptions<ItemType> = {},
+): Array<ItemType> {
   const {
     keys,
     threshold = rankings.MATCHES,
     baseSort = defaultBaseSortFn,
   } = options
-  const matchedItems = items.reduce(reduceItemsToRanked, [])
+  const matchedItems = items.reduce<Array<RankedItem<ItemType>>>(
+    reduceItemsToRanked,
+    [],
+  )
   return matchedItems
-    .sort((a, b) => sortRankedItems(a, b, baseSort))
+    .sort((a, b) => sortRankedValues<ItemType>(a, b, baseSort))
     .map(({item}) => item)
 
-  function reduceItemsToRanked(matches, item, index) {
-    const {
-      rankedItem,
-      rank,
-      keyIndex,
-      keyThreshold = threshold,
-    } = getHighestRanking(item, keys, value, options)
+  function reduceItemsToRanked(
+    matches: Array<RankedItem<ItemType>>,
+    item: ItemType,
+    index: number,
+  ): Array<RankedItem<ItemType>> {
+    const rankingInfo = getHighestRanking<ItemType>(item, keys, value, options)
+    const {rank, keyThreshold = threshold} = rankingInfo
     if (rank >= keyThreshold) {
-      matches.push({rankedItem, item, rank, index, keyIndex})
+      matches.push({...rankingInfo, item, index})
     }
     return matches
   }
@@ -62,25 +114,37 @@ function matchSorter(items, value, options = {}) {
  * @param {Object} options - options to control the ranking
  * @return {{rank: Number, keyIndex: Number, keyThreshold: Number}} - the highest ranking
  */
-function getHighestRanking(item, keys, value, options) {
+function getHighestRanking<ItemType>(
+  item: ItemType,
+  keys: Array<KeyOption<ItemType>> | undefined,
+  value: string,
+  options: MatchSorterOptions<ItemType>,
+): RankingInfo {
   if (!keys) {
+    // if keys is not specified, then we assume the item given is ready to be matched
+    const stringItem = (item as unknown) as string
     return {
       // ends up being duplicate of 'item' in matches but consistent
-      rankedItem: item,
-      rank: getMatchRanking(item, value, options),
+      rankedValue: stringItem,
+      rank: getMatchRanking(stringItem, value, options),
       keyIndex: -1,
       keyThreshold: options.threshold,
     }
   }
-  const valuesToRank = getAllValuesToRank(item, keys)
-  return valuesToRank.reduce(
+  const valuesToRank = getAllValuesToRank<ItemType>(item, keys)
+  return valuesToRank.reduce<{
+    rankedValue: string
+    rank: number
+    keyIndex: number
+    keyThreshold: number | undefined
+  }>(
     (
-      {rank, rankedItem, keyIndex, keyThreshold},
+      {rank, rankedValue, keyIndex, keyThreshold},
       {itemValue, attributes},
       i,
     ) => {
-      let newRank = getMatchRanking(itemValue, value, options)
-      let newRankedItem = rankedItem
+      let newRank = getMatchRanking<ItemType>(itemValue, value, options)
+      let newRankedValue = rankedValue
       const {minRanking, maxRanking, threshold} = attributes
       if (newRank < minRanking && newRank >= rankings.MATCHES) {
         newRank = minRanking
@@ -91,11 +155,16 @@ function getHighestRanking(item, keys, value, options) {
         rank = newRank
         keyIndex = i
         keyThreshold = threshold
-        newRankedItem = itemValue
+        newRankedValue = itemValue
       }
-      return {rankedItem: newRankedItem, rank, keyIndex, keyThreshold}
+      return {rankedValue: newRankedValue, rank, keyIndex, keyThreshold}
     },
-    {rank: rankings.NO_MATCH, keyIndex: -1, keyThreshold: options.threshold},
+    {
+      rankedValue: (item as unknown) as string,
+      rank: rankings.NO_MATCH,
+      keyIndex: -1,
+      keyThreshold: options.threshold,
+    },
   )
 }
 
@@ -106,10 +175,14 @@ function getHighestRanking(item, keys, value, options) {
  * @param {Object} options - options for the match (like keepDiacritics for comparison)
  * @returns {Number} the ranking for how well stringToRank matches testString
  */
-function getMatchRanking(testString, stringToRank, options) {
+function getMatchRanking<ItemType>(
+  testString: string,
+  stringToRank: string,
+  options: MatchSorterOptions<ItemType>,
+): number {
   /* eslint complexity:[2, 12] */
-  testString = prepareValueForComparison(testString, options)
-  stringToRank = prepareValueForComparison(stringToRank, options)
+  testString = prepareValueForComparison<ItemType>(testString, options)
+  stringToRank = prepareValueForComparison<ItemType>(stringToRank, options)
 
   // too long
   if (stringToRank.length > testString.length) {
@@ -131,17 +204,17 @@ function getMatchRanking(testString, stringToRank, options) {
   }
 
   // starts with
-  if (testString.indexOf(stringToRank) === 0) {
+  if (testString.startsWith(stringToRank)) {
     return rankings.STARTS_WITH
   }
 
   // word starts with
-  if (testString.indexOf(` ${stringToRank}`) !== -1) {
+  if (testString.includes(` ${stringToRank}`)) {
     return rankings.WORD_STARTS_WITH
   }
 
   // contains
-  if (testString.indexOf(stringToRank) !== -1) {
+  if (testString.includes(stringToRank)) {
     return rankings.CONTAINS
   } else if (stringToRank.length === 1) {
     // If the only character in the given stringToRank
@@ -151,7 +224,7 @@ function getMatchRanking(testString, stringToRank, options) {
   }
 
   // acronym
-  if (getAcronym(testString).indexOf(stringToRank) !== -1) {
+  if (getAcronym(testString).includes(stringToRank)) {
     return rankings.ACRONYM
   }
 
@@ -166,7 +239,7 @@ function getMatchRanking(testString, stringToRank, options) {
  * @param {String} string the string for which to produce the acronym
  * @returns {String} the acronym
  */
-function getAcronym(string) {
+function getAcronym(string: string): string {
   let acronym = ''
   const wordsInString = string.split(' ')
   wordsInString.forEach(wordInString => {
@@ -188,10 +261,14 @@ function getAcronym(string) {
  * @returns {Number} the number between rankings.MATCHES and
  * rankings.MATCHES + 1 for how well stringToRank matches testString
  */
-function getClosenessRanking(testString, stringToRank) {
+function getClosenessRanking(testString: string, stringToRank: string): number {
   let matchingInOrderCharCount = 0
   let charNumber = 0
-  function findMatchingCharacter(matchChar, string, index) {
+  function findMatchingCharacter(
+    matchChar: string,
+    string: string,
+    index: number,
+  ) {
     for (let j = index; j < string.length; j++) {
       const stringChar = string[j]
       if (stringChar === matchChar) {
@@ -201,7 +278,7 @@ function getClosenessRanking(testString, stringToRank) {
     }
     return -1
   }
-  function getRanking(spread) {
+  function getRanking(spread: number) {
     const spreadPercentage = 1 / spread
     const inOrderPercentage = matchingInOrderCharCount / stringToRank.length
     const ranking = rankings.MATCHES + inOrderPercentage * spreadPercentage
@@ -231,7 +308,11 @@ function getClosenessRanking(testString, stringToRank) {
  * @param {Object} b - the second item to sort
  * @return {Number} -1 if a should come first, 1 if b should come first, 0 if equal
  */
-function sortRankedItems(a, b, baseSort) {
+function sortRankedValues<ItemType>(
+  a: RankedItem<ItemType>,
+  b: RankedItem<ItemType>,
+  baseSort: BaseSorter<ItemType>,
+): number {
   const aFirst = -1
   const bFirst = 1
   const {rank: aRank, keyIndex: aKeyIndex} = a
@@ -255,7 +336,12 @@ function sortRankedItems(a, b, baseSort) {
  * @param {Object} options - {keepDiacritics: whether to remove diacritics}
  * @return {String} the prepared value
  */
-function prepareValueForComparison(value, {keepDiacritics}) {
+function prepareValueForComparison<ItemType>(
+  value: string,
+  {keepDiacritics}: MatchSorterOptions<ItemType>,
+): string {
+  // value might not actually be a string at this point (we don't get to choose)
+  // so part of preparing the value for comparison is ensure that it is a string
   value = `${value}` // toString
   if (!keepDiacritics) {
     value = removeAccents(value)
@@ -269,65 +355,97 @@ function prepareValueForComparison(value, {keepDiacritics}) {
  * @param {Object|Function} key - the potentially nested keypath or property callback
  * @return {Array} - an array containing the value(s) at the nested keypath
  */
-function getItemValues(item, key) {
+function getItemValues<ItemType>(
+  item: ItemType,
+  key: KeyOption<ItemType>,
+): Array<string> | null {
   if (typeof key === 'object') {
-    key = key.key
+    key = key.key as string
   }
-  let value
+  let value: string | Array<string> | null
   if (typeof key === 'function') {
     value = key(item)
     // eslint-disable-next-line no-negated-condition
-  } else if (key.indexOf('.') !== -1) {
-    // handle nested keys
-    value = key
-      .split('.')
-      .reduce(
-        (itemObj, nestedKey) => (itemObj ? itemObj[nestedKey] : null),
-        item,
-      )
   } else {
-    value = item[key]
+    value = getNestedValue<ItemType>(key, item)
   }
+  const values: Array<string> = []
   // concat because `value` can be a string or an array
   // eslint-disable-next-line
-  return value != null ? [].concat(value) : null
+  return value != null ? values.concat(value) : null
+}
+
+/**
+ * Given key: "foo.bar.baz"
+ * And obj: {foo: {bar: {baz: 'buzz'}}}
+ *   -> 'buzz'
+ * @param key a dot-separated set of keys
+ * @param obj the object to get the value from
+ */
+function getNestedValue<ItemType>(
+  key: string,
+  obj: ItemType,
+): string | Array<string> | null {
+  // @ts-expect-error really have no idea how to type this properly...
+  return key.split('.').reduce((itemObj: object | null, nestedKey: string):
+    | object
+    | string
+    | null => {
+    // @ts-expect-error lost on this one as well...
+    return itemObj ? itemObj[nestedKey] : null
+  }, obj)
 }
 
 /**
  * Gets all the values for the given keys in the given item and returns an array of those values
- * @param {Object} item - the item from which the values will be retrieved
- * @param {Array} keys - the keys to use to retrieve the values
- * @return {Array} objects with {itemValue, attributes}
+ * @param item - the item from which the values will be retrieved
+ * @param keys - the keys to use to retrieve the values
+ * @return objects with {itemValue, attributes}
  */
-function getAllValuesToRank(item, keys) {
-  return keys.reduce((allVals, key) => {
-    const values = getItemValues(item, key)
-    if (values) {
-      values.forEach(itemValue => {
-        allVals.push({
-          itemValue,
-          attributes: getKeyAttributes(key),
+function getAllValuesToRank<ItemType>(
+  item: ItemType,
+  keys: Array<KeyOption<ItemType>>,
+) {
+  return keys.reduce<Array<{itemValue: string; attributes: KeyAttributes}>>(
+    (allVals, key) => {
+      const values = getItemValues<ItemType>(item, key)
+      if (values) {
+        values.forEach(itemValue => {
+          allVals.push({
+            itemValue,
+            attributes: getKeyAttributes<ItemType>(key),
+          })
         })
-      })
-    }
-    return allVals
-  }, [])
+      }
+      return allVals
+    },
+    [],
+  )
 }
 
+const defaultKeyAttributes = {
+  maxRanking: Infinity,
+  minRanking: -Infinity,
+}
 /**
  * Gets all the attributes for the given key
- * @param {Object|String} key - the key from which the attributes will be retrieved
- * @return {Object} object containing the key's attributes
+ * @param key - the key from which the attributes will be retrieved
+ * @return object containing the key's attributes
  */
-function getKeyAttributes(key) {
+function getKeyAttributes<ItemType>(key: KeyOption<ItemType>): KeyAttributes {
   if (typeof key === 'string') {
-    key = {key}
+    return defaultKeyAttributes
   }
-  return {
-    maxRanking: Infinity,
-    minRanking: -Infinity,
-    ...key,
-  }
+  return {...defaultKeyAttributes, ...key}
 }
 
-export {matchSorter, rankings}
+export {matchSorter, rankings, defaultBaseSortFn}
+
+export type {
+  MatchSorterOptions,
+  KeyAttributesOptions,
+  KeyOption,
+  KeyAttributes,
+  RankingInfo,
+  ValueGetterKey,
+}
