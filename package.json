@@ -4,6 +4,7 @@
   "description": "Simple, expected, and deterministic best-match sorting of an array in JavaScript",
   "main": "dist/match-sorter.cjs.js",
   "module": "dist/match-sorter.esm.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "kcd-scripts build --bundle --environment BUILD_NAME:matchSorter",
     "lint": "kcd-scripts lint",
