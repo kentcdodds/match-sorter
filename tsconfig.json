@@ -1,12 +1,3 @@
 {
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"],
-  "compilerOptions": {
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "moduleResolution": "node",
-    "noEmit": true,
-    "strict": true,
-    "skipLibCheck": true
-  }
+  "extends": "./node_modules/kcd-scripts/shared-tsconfig.json"
 }

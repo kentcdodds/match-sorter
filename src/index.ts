@@ -5,39 +5,52 @@
  * @author Kent C. Dodds <me@kentcdodds.com> (https://kentcdodds.com)
  */
 import removeAccents from 'remove-accents'
-import type {Merge} from 'type-fest'
 
 type KeyAttributes = {
   threshold?: number
   maxRanking: number
   minRanking: number
 }
-type RankingInfo = {
+interface RankingInfo {
   rankedValue: string
   rank: number
   keyIndex: number
   keyThreshold: number | undefined
 }
 
-declare function valueGetterKey<ItemType>(item: ItemType): string
-declare function baseSortFn<ItemType>(
-  a: Merge<RankingInfo, {item: ItemType; index: number}>,
-  b: Merge<RankingInfo, {item: ItemType; index: number}>,
-): number
+interface ValueGetterKey<ItemType> {
+  (item: ItemType): string
+}
+interface IndexedItem<ItemType> {
+  item: ItemType
+  index: number
+}
+interface RankedItem<ItemType> extends RankingInfo, IndexedItem<ItemType> {}
 
-type KeyAttributesOptions = {
-  key?: string | typeof valueGetterKey
+interface BaseSorter<ItemType> {
+  (a: RankedItem<ItemType>, b: RankedItem<ItemType>): number
+}
+
+interface KeyAttributesOptions<ItemType> {
+  key?: string | ValueGetterKey<ItemType>
   threshold?: number
   maxRanking?: number
   minRanking?: number
 }
-type KeyOption = KeyAttributesOptions | typeof valueGetterKey | string
-type MatchSorterOptions = {
-  keys?: Array<KeyOption>
+
+type KeyOption<ItemType> =
+  | KeyAttributesOptions<ItemType>
+  | ValueGetterKey<ItemType>
+  | string
+
+// ItemType = unknown allowed me to make these changes without the need to change the current tests
+interface MatchSorterOptions<ItemType = unknown> {
+  keys?: Array<KeyOption<ItemType>>
   threshold?: number
-  baseSort?: typeof baseSortFn
+  baseSort?: BaseSorter<ItemType>
   keepDiacritics?: boolean
 }
+
 const rankings = {
   CASE_SENSITIVE_EQUAL: 7,
   EQUAL: 6,
@@ -51,7 +64,7 @@ const rankings = {
 
 matchSorter.rankings = rankings
 
-const defaultBaseSortFn: typeof baseSortFn = (a, b) =>
+const defaultBaseSortFn: BaseSorter<unknown> = (a, b) =>
   String(a.rankedValue).localeCompare(String(b.rankedValue))
 
 /**
@@ -61,27 +74,29 @@ const defaultBaseSortFn: typeof baseSortFn = (a, b) =>
  * @param {Object} options - Some options to configure the sorter
  * @return {Array} - the new sorted array
  */
-function matchSorter<ItemType>(
+function matchSorter<ItemType = string>(
   items: Array<ItemType>,
   value: string,
-  options: MatchSorterOptions = {},
+  options: MatchSorterOptions<ItemType> = {},
 ): Array<ItemType> {
   const {
     keys,
     threshold = rankings.MATCHES,
     baseSort = defaultBaseSortFn,
   } = options
-  type Matched = Merge<RankingInfo, {item: ItemType; index: number}>
-  const matchedItems = items.reduce<Array<Matched>>(reduceItemsToRanked, [])
+  const matchedItems = items.reduce<Array<RankedItem<ItemType>>>(
+    reduceItemsToRanked,
+    [],
+  )
   return matchedItems
     .sort((a, b) => sortRankedValues<ItemType>(a, b, baseSort))
     .map(({item}) => item)
 
   function reduceItemsToRanked(
-    matches: Array<Matched>,
+    matches: Array<RankedItem<ItemType>>,
     item: ItemType,
     index: number,
-  ): Array<Matched> {
+  ): Array<RankedItem<ItemType>> {
     const rankingInfo = getHighestRanking<ItemType>(item, keys, value, options)
     const {rank, keyThreshold = threshold} = rankingInfo
     if (rank >= keyThreshold) {
@@ -101,9 +116,9 @@ function matchSorter<ItemType>(
  */
 function getHighestRanking<ItemType>(
   item: ItemType,
-  keys: Array<KeyOption> | undefined,
+  keys: Array<KeyOption<ItemType>> | undefined,
   value: string,
-  options: MatchSorterOptions,
+  options: MatchSorterOptions<ItemType>,
 ): RankingInfo {
   if (!keys) {
     // if keys is not specified, then we assume the item given is ready to be matched
@@ -128,7 +143,7 @@ function getHighestRanking<ItemType>(
       {itemValue, attributes},
       i,
     ) => {
-      let newRank = getMatchRanking(itemValue, value, options)
+      let newRank = getMatchRanking<ItemType>(itemValue, value, options)
       let newRankedValue = rankedValue
       const {minRanking, maxRanking, threshold} = attributes
       if (newRank < minRanking && newRank >= rankings.MATCHES) {
@@ -160,14 +175,14 @@ function getHighestRanking<ItemType>(
  * @param {Object} options - options for the match (like keepDiacritics for comparison)
  * @returns {Number} the ranking for how well stringToRank matches testString
  */
-function getMatchRanking(
+function getMatchRanking<ItemType>(
   testString: string,
   stringToRank: string,
-  options: MatchSorterOptions,
+  options: MatchSorterOptions<ItemType>,
 ): number {
   /* eslint complexity:[2, 12] */
-  testString = prepareValueForComparison(testString, options)
-  stringToRank = prepareValueForComparison(stringToRank, options)
+  testString = prepareValueForComparison<ItemType>(testString, options)
+  stringToRank = prepareValueForComparison<ItemType>(stringToRank, options)
 
   // too long
   if (stringToRank.length > testString.length) {
@@ -294,9 +309,9 @@ function getClosenessRanking(testString: string, stringToRank: string): number {
  * @return {Number} -1 if a should come first, 1 if b should come first, 0 if equal
  */
 function sortRankedValues<ItemType>(
-  a: Merge<RankingInfo, {item: ItemType; index: number}>,
-  b: Merge<RankingInfo, {item: ItemType; index: number}>,
-  baseSort: typeof baseSortFn,
+  a: RankedItem<ItemType>,
+  b: RankedItem<ItemType>,
+  baseSort: BaseSorter<ItemType>,
 ): number {
   const aFirst = -1
   const bFirst = 1
@@ -306,7 +321,7 @@ function sortRankedValues<ItemType>(
   if (same) {
     if (aKeyIndex === bKeyIndex) {
       // use the base sort function as a tie-breaker
-      return baseSort<ItemType>(a, b)
+      return baseSort(a, b)
     } else {
       return aKeyIndex < bKeyIndex ? aFirst : bFirst
     }
@@ -321,9 +336,9 @@ function sortRankedValues<ItemType>(
  * @param {Object} options - {keepDiacritics: whether to remove diacritics}
  * @return {String} the prepared value
  */
-function prepareValueForComparison(
+function prepareValueForComparison<ItemType>(
   value: string,
-  {keepDiacritics}: MatchSorterOptions,
+  {keepDiacritics}: MatchSorterOptions<ItemType>,
 ): string {
   // value might not actually be a string at this point (we don't get to choose)
   // so part of preparing the value for comparison is ensure that it is a string
@@ -342,14 +357,14 @@ function prepareValueForComparison(
  */
 function getItemValues<ItemType>(
   item: ItemType,
-  key: KeyOption,
+  key: KeyOption<ItemType>,
 ): Array<string> | null {
   if (typeof key === 'object') {
     key = key.key as string
   }
   let value: string | Array<string> | null
   if (typeof key === 'function') {
-    value = key<ItemType>(item)
+    value = key(item)
     // eslint-disable-next-line no-negated-condition
   } else {
     value = getNestedValue<ItemType>(key, item)
@@ -387,7 +402,10 @@ function getNestedValue<ItemType>(
  * @param keys - the keys to use to retrieve the values
  * @return objects with {itemValue, attributes}
  */
-function getAllValuesToRank<ItemType>(item: ItemType, keys: Array<KeyOption>) {
+function getAllValuesToRank<ItemType>(
+  item: ItemType,
+  keys: Array<KeyOption<ItemType>>,
+) {
   return keys.reduce<Array<{itemValue: string; attributes: KeyAttributes}>>(
     (allVals, key) => {
       const values = getItemValues<ItemType>(item, key)
@@ -395,7 +413,7 @@ function getAllValuesToRank<ItemType>(item: ItemType, keys: Array<KeyOption>) {
         values.forEach(itemValue => {
           allVals.push({
             itemValue,
-            attributes: getKeyAttributes(key),
+            attributes: getKeyAttributes<ItemType>(key),
           })
         })
       }
@@ -414,21 +432,20 @@ const defaultKeyAttributes = {
  * @param key - the key from which the attributes will be retrieved
  * @return object containing the key's attributes
  */
-function getKeyAttributes(key: KeyOption): KeyAttributes {
+function getKeyAttributes<ItemType>(key: KeyOption<ItemType>): KeyAttributes {
   if (typeof key === 'string') {
     return defaultKeyAttributes
   }
   return {...defaultKeyAttributes, ...key}
 }
 
-export {
-  matchSorter,
-  rankings,
+export {matchSorter, rankings, defaultBaseSortFn}
+
+export type {
   MatchSorterOptions,
   KeyAttributesOptions,
   KeyOption,
   KeyAttributes,
   RankingInfo,
-  baseSortFn,
-  valueGetterKey,
+  ValueGetterKey,
 }
