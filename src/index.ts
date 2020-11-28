@@ -84,12 +84,9 @@ function matchSorter<ItemType = string>(
     threshold = rankings.MATCHES,
     baseSort = defaultBaseSortFn,
   } = options
-  const matchedItems = items.reduce<Array<RankedItem<ItemType>>>(
-    reduceItemsToRanked,
-    [],
-  )
+  const matchedItems = items.reduce(reduceItemsToRanked, [])
   return matchedItems
-    .sort((a, b) => sortRankedValues<ItemType>(a, b, baseSort))
+    .sort((a, b) => sortRankedValues(a, b, baseSort))
     .map(({item}) => item)
 
   function reduceItemsToRanked(
@@ -97,7 +94,7 @@ function matchSorter<ItemType = string>(
     item: ItemType,
     index: number,
   ): Array<RankedItem<ItemType>> {
-    const rankingInfo = getHighestRanking<ItemType>(item, keys, value, options)
+    const rankingInfo = getHighestRanking(item, keys, value, options)
     const {rank, keyThreshold = threshold} = rankingInfo
     if (rank >= keyThreshold) {
       matches.push({...rankingInfo, item, index})
@@ -131,19 +128,14 @@ function getHighestRanking<ItemType>(
       keyThreshold: options.threshold,
     }
   }
-  const valuesToRank = getAllValuesToRank<ItemType>(item, keys)
-  return valuesToRank.reduce<{
-    rankedValue: string
-    rank: number
-    keyIndex: number
-    keyThreshold: number | undefined
-  }>(
+  const valuesToRank = getAllValuesToRank(item, keys)
+  return valuesToRank.reduce(
     (
       {rank, rankedValue, keyIndex, keyThreshold},
       {itemValue, attributes},
       i,
     ) => {
-      let newRank = getMatchRanking<ItemType>(itemValue, value, options)
+      let newRank = getMatchRanking(itemValue, value, options)
       let newRankedValue = rankedValue
       const {minRanking, maxRanking, threshold} = attributes
       if (newRank < minRanking && newRank >= rankings.MATCHES) {
@@ -180,9 +172,8 @@ function getMatchRanking<ItemType>(
   stringToRank: string,
   options: MatchSorterOptions<ItemType>,
 ): number {
-  /* eslint complexity:[2, 12] */
-  testString = prepareValueForComparison<ItemType>(testString, options)
-  stringToRank = prepareValueForComparison<ItemType>(stringToRank, options)
+  testString = prepareValueForComparison(testString, options)
+  stringToRank = prepareValueForComparison(stringToRank, options)
 
   // too long
   if (stringToRank.length > testString.length) {
@@ -408,12 +399,12 @@ function getAllValuesToRank<ItemType>(
 ) {
   return keys.reduce<Array<{itemValue: string; attributes: KeyAttributes}>>(
     (allVals, key) => {
-      const values = getItemValues<ItemType>(item, key)
+      const values = getItemValues(item, key)
       if (values) {
         values.forEach(itemValue => {
           allVals.push({
             itemValue,
-            attributes: getKeyAttributes<ItemType>(key),
+            attributes: getKeyAttributes(key),
           })
         })
       }
