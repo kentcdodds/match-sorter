@@ -450,14 +450,13 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/marcosvega91"><img src="https://avatars2.githubusercontent.com/u/5365582?v=4" width="100px;" alt=""/><br /><sub><b>Marco Moretti</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=marcosvega91" title="Documentation">📖</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://ricardobusquet.com"><img src="https://avatars1.githubusercontent.com/u/7198302?v=4" width="100px;" alt=""/><br /><sub><b>Ricardo Busquet</b></sub></a><br /><a href="#ideas-rbusquet" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/kentcdodds/match-sorter/pulls?q=is%3Apr+reviewed-by%3Arbusquet" title="Reviewed Pull Requests">👀</a></td>
+    <td align="center"><a href="https://ricardobusquet.com"><img src="https://avatars1.githubusercontent.com/u/7198302?v=4" width="100px;" alt=""/><br /><sub><b>Ricardo Busquet</b></sub></a><br /><a href="#ideas-rbusquet" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/kentcdodds/match-sorter/pulls?q=is%3Apr+reviewed-by%3Arbusquet" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=rbusquet" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/weyert"><img src="https://avatars3.githubusercontent.com/u/7049?v=4" width="100px;" alt=""/><br /><sub><b>Weyert de Boer</b></sub></a><br /><a href="#ideas-weyert" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/kentcdodds/match-sorter/pulls?q=is%3Apr+reviewed-by%3Aweyert" title="Reviewed Pull Requests">👀</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
