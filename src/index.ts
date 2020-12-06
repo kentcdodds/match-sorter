@@ -19,7 +19,7 @@ interface RankingInfo {
 }
 
 interface ValueGetterKey<ItemType> {
-  (item: ItemType): string
+  (item: ItemType): string | Array<string>
 }
 interface IndexedItem<ItemType> {
   item: ItemType
