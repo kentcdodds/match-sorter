@@ -243,6 +243,15 @@
         "ideas",
         "review"
       ]
+    },
+    {
+      "login": "PhilGarb",
+      "name": "Philipp Garbowsky",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/38015558?v=4",
+      "profile": "https://github.com/PhilGarb",
+      "contributions": [
+        "code"
+      ]
     }
   ]
 }
