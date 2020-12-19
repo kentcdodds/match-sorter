@@ -435,17 +435,15 @@ function getAllValuesToRank<ItemType>(
   keys: Array<KeyOption<ItemType>>,
 ) {
   return keys.reduce<Array<{itemValue: string; attributes: KeyAttributes}>>(
-    (allVals, key) => {
-      const values = getItemValues(item, key)
-      if (values) {
-        values.forEach(itemValue => {
-          allVals.push({
-            itemValue,
-            attributes: getKeyAttributes(key),
-          })
+    (allValues, key) => {
+      const attributes = getKeyAttributes(key)
+      getItemValues(item, key).forEach(itemValue => {
+        allValues.push({
+          itemValue,
+          attributes,
         })
-      }
-      return allVals
+      })
+      return allValues
     },
     [],
   )
