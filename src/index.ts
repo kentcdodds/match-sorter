@@ -356,6 +356,11 @@ function getItemValues<ItemType>(
   let value: string | Array<string> | null
   if (typeof key === 'function') {
     value = key(item)
+  } else if (item == null) {
+    value = null
+  } else if (Object.hasOwnProperty.call(item, key)) {
+    // @ts-expect-error just like below...
+    value = item[key];
   } else {
     value = getNestedValue<ItemType>(key, item)
   }
