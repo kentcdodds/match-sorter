@@ -349,21 +349,25 @@ function prepareValueForComparison<ItemType>(
 function getItemValues<ItemType>(
   item: ItemType,
   key: KeyOption<ItemType>,
-): Array<string> | null {
+): Array<string> {
   if (typeof key === 'object') {
     key = key.key as string
   }
   let value: string | Array<string> | null
   if (typeof key === 'function') {
     value = key(item)
-    // eslint-disable-next-line no-negated-condition
   } else {
     value = getNestedValue<ItemType>(key, item)
   }
-  const values: Array<string> = []
-  // concat because `value` can be a string or an array
-  // eslint-disable-next-line
-  return value != null ? values.concat(value) : null
+
+  // because `value` can also be undefined
+  if (value == null) {
+    return []
+  }
+  if (Array.isArray(value)) {
+    return value
+  }
+  return [value]
 }
 
 /**
@@ -378,12 +382,45 @@ function getNestedValue<ItemType>(
   obj: ItemType,
 ): string | Array<string> | null {
   // @ts-expect-error really have no idea how to type this properly...
-  return key.split('.').reduce((itemObj: object | null, nestedKey: string):
+  return key.split('.').reduce((value: object | null, nestedKey: string):
     | object
     | string
     | null => {
-    // @ts-expect-error lost on this one as well...
-    return itemObj ? itemObj[nestedKey] : null
+    if (value == null) {
+      return null
+    }
+
+    if (Object.hasOwnProperty.call(value,nestedKey)) {
+      // @ts-expect-error lost on this one as well...
+      const nestedValue = value[nestedKey]
+      if (nestedValue != null) {
+        return nestedValue
+      }
+      return null
+    }
+
+    if (Array.isArray(value)) {
+      if (nestedKey === "*") {
+        // ignore explicit wildcards
+        return value
+      }
+
+      return value.reduce((values: Array<object | string>, arrayValue: object):
+        | object
+        | string
+        | null => {
+          if (arrayValue != null && Object.hasOwnProperty.call(arrayValue,nestedKey)) {
+            // @ts-expect-error and here again...
+            const nestedArrayValue = arrayValue[nestedKey]
+            if (nestedArrayValue != null) {
+              values.push(nestedArrayValue)
+            }
+          }
+          return values
+        }, [])
+    }
+
+    return null
   }, obj)
 }
 

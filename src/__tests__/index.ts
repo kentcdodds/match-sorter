@@ -114,7 +114,7 @@ const tests: Record<string, TestCase> = {
     ],
     output: [{name: 'A', age: 0}],
   },
-  'can handle objected with nested keys': {
+  'can handle object with nested keys': {
     input: [
       [
         {name: {first: 'baz'}},
@@ -128,6 +128,51 @@ const tests: Record<string, TestCase> = {
       {keys: ['name.first']},
     ],
     output: [{name: {first: 'bat'}}, {name: {first: 'baz'}}],
+  },
+  'can handle object with an array of values with nested keys with a specific index': {
+    input: [
+      [
+        {aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]},
+        {aliases: [{name: {first: 'foo'}},{name: {first: 'bat'}},null]},
+        {aliases: [{name: {first: 'foo'}},{name: {first: 'foo'}}]},
+        {aliases: null},
+        {},
+        null,
+      ],
+      'ba',
+      {keys: ['aliases.0.name.first']},
+    ],
+    output: [{aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]}],
+  },
+  'can handle object with an array of values with nested keys with an explicit wildcard': {
+    input: [
+      [
+        {aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]},
+        {aliases: [{name: {first: 'foo'}},{name: {first: 'bat'}},null]},
+        {aliases: [{name: {first: 'foo'}},{name: {first: 'foo'}}]},
+        {aliases: null},
+        {},
+        null,
+      ],
+      'ba',
+      {keys: ['aliases.*.name.first']},
+    ],
+    output: [{aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]}, {aliases: [{name: {first: 'foo'}},{name: {first: 'bat'}},null]}],
+  },
+  'can handle object with an array of values with nested keys with an implicit wildcard': {
+    input: [
+      [
+        {aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]},
+        {aliases: [{name: {first: 'foo'}},{name: {first: 'bat'}},null]},
+        {aliases: [{name: {first: 'foo'}},{name: {first: 'foo'}}]},
+        {aliases: null},
+        {},
+        null,
+      ],
+      'ba',
+      {keys: ['aliases.name.first']},
+    ],
+    output: [{aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]}, {aliases: [{name: {first: 'foo'}},{name: {first: 'bat'}},null]}],
   },
   'can handle property callback': {
     input: [
@@ -147,6 +192,21 @@ const tests: Record<string, TestCase> = {
       ],
       'cc',
       {keys: ['favoriteIceCream']},
+    ],
+    output: [
+      {favoriteIceCream: ['candy cane', 'brownie']},
+      {favoriteIceCream: ['mint', 'chocolate']},
+    ],
+  },
+  'can handle keys that are an array of values with an explicit wildcard': {
+    input: [
+      [
+        {favoriteIceCream: ['mint', 'chocolate']},
+        {favoriteIceCream: ['candy cane', 'brownie']},
+        {favoriteIceCream: ['birthday cake', 'rocky road', 'strawberry']},
+      ],
+      'cc',
+      {keys: ['favoriteIceCream.*']},
     ],
     output: [
       {favoriteIceCream: ['candy cane', 'brownie']},
