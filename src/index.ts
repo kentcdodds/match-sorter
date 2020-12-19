@@ -260,7 +260,7 @@ function getClosenessRanking(testString: string, stringToRank: string): number {
     string: string,
     index: number,
   ) {
-    for (let j = index; j < string.length; j++) {
+    for (let j = index, J = string.length; j < J; j++) {
       const stringChar = string[j]
       if (stringChar === matchChar) {
         matchingInOrderCharCount += 1
@@ -280,7 +280,7 @@ function getClosenessRanking(testString: string, stringToRank: string): number {
     return rankings.NO_MATCH
   }
   charNumber = firstIndex
-  for (let i = 1; i < stringToRank.length; i++) {
+  for (let i = 1, I = stringToRank.length; i < I; i++) {
     const matchChar = stringToRank[i]
     charNumber = findMatchingCharacter(matchChar, testString, charNumber)
     const found = charNumber > -1
