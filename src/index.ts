@@ -360,6 +360,7 @@ function getItemValues<ItemType>(
     value = null
   } else if (Object.hasOwnProperty.call(item, key)) {
     // @ts-expect-error just like below...
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     value = item[key];
   } else {
     value = getNestedValue<ItemType>(key, item)
@@ -397,6 +398,7 @@ function getNestedValue<ItemType>(
 
     if (Object.hasOwnProperty.call(value,nestedKey)) {
       // @ts-expect-error lost on this one as well...
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const nestedValue = value[nestedKey]
       if (nestedValue != null) {
         return nestedValue
@@ -410,12 +412,13 @@ function getNestedValue<ItemType>(
         return value
       }
 
-      return value.reduce((values: Array<object | string>, arrayValue: object):
+      return value.reduce((values: Array<object | string>, arrayValue: object | null):
         | object
         | string
         | null => {
           if (arrayValue != null && Object.hasOwnProperty.call(arrayValue,nestedKey)) {
             // @ts-expect-error and here again...
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             const nestedArrayValue = arrayValue[nestedKey]
             if (nestedArrayValue != null) {
               values.push(nestedArrayValue)
