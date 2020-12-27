@@ -378,58 +378,38 @@ function getItemValues<ItemType>(
 
 /**
  * Given key: "foo.bar.baz"
- * And obj: {foo: {bar: {baz: 'buzz'}}}
+ * And item: {foo: {bar: {baz: 'buzz'}}}
  *   -> 'buzz'
  * @param key a dot-separated set of keys
- * @param obj the object to get the value from
+ * @param item the item to get the value from
  */
 function getNestedValue<ItemType>(
   key: string,
-  obj: ItemType,
+  item: ItemType,
 ): string | Array<string> | null {
   // @ts-expect-error really have no idea how to type this properly...
-  return key.split('.').reduce((value: object | null, nestedKey: string):
-    | object
-    | string
-    | null => {
-    if (value == null) {
-      return null
-    }
-
-    if (Object.hasOwnProperty.call(value,nestedKey)) {
-      // @ts-expect-error lost on this one as well...
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const nestedValue = value[nestedKey]
-      if (nestedValue != null) {
-        return nestedValue
+  return key.split('.').reduce((nestedItems: Array<object | string | null>, nestedKey: string): Array<object | string> => {
+    return nestedItems.reduce((values: Array<object | string>, nestedItem: Array<object | string> | object | string | null): Array<object | string> => {
+      if (nestedItem == null) {
+        return values
       }
-      return null
-    }
 
-    if (Array.isArray(value)) {
       if (nestedKey === "*") {
-        // ignore explicit wildcards
-        return value
+        return values.concat(nestedItem)
       }
 
-      return value.reduce((values: Array<object | string>, arrayValue: object | null):
-        | object
-        | string
-        | null => {
-          if (arrayValue != null && Object.hasOwnProperty.call(arrayValue,nestedKey)) {
-            // @ts-expect-error and here again...
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            const nestedArrayValue = arrayValue[nestedKey]
-            if (nestedArrayValue != null) {
-              values.push(nestedArrayValue)
-            }
-          }
-          return values
-        }, [])
-    }
+      if (Object.hasOwnProperty.call(nestedItem,nestedKey)) {
+        // @ts-expect-error and here again...
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const nestedValue = nestedItem[nestedKey]
+        if (nestedValue != null) {
+          values.push(nestedValue)
+        }
+      }
 
-    return null
-  }, obj)
+      return values
+    }, [])
+  }, [item])
 }
 
 /**

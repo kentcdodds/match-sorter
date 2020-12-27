@@ -163,8 +163,7 @@ matchSorter(nestedObjList, 'j', {keys: ['name.0.first']})
 ```
 
 This even works with arrays of multiple nested objects: just specify the key
-using dot-notation like there is no array or, more explicitly, use the `*`
-wildcard instead of a numeric index.
+using dot-notation with the `*` wildcard instead of a numeric index.
 
 ```javascript
 const nestedObjList = [
@@ -172,8 +171,6 @@ const nestedObjList = [
   {aliases: [{name: {first: 'Fred'}},{name: {first: 'Frederic'}}]},
   {aliases: [{name: {first: 'George'}},{name: {first: 'Georgie'}}]},
 ]
-matchSorter(nestedObjList, 'jen', {keys: ['aliases.name.first']})
-// [{aliases: [{name: {first: 'Janice'}},{name: {first: 'Jen'}}]}]
 matchSorter(nestedObjList, 'jen', {keys: ['aliases.*.name.first']})
 // [{aliases: [{name: {first: 'Janice'}},{name: {first: 'Jen'}}]}]
 matchSorter(nestedObjList, 'jen', {keys: ['aliases.0.name.first']})

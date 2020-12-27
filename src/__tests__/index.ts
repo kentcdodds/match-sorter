@@ -144,7 +144,7 @@ const tests: Record<string, TestCase> = {
     ],
     output: [{aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]}],
   },
-  'can handle object with an array of values with nested keys with an explicit wildcard': {
+  'can handle object with an array of values with nested keys with a wildcard': {
     input: [
       [
         {aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]},
@@ -156,21 +156,6 @@ const tests: Record<string, TestCase> = {
       ],
       'ba',
       {keys: ['aliases.*.name.first']},
-    ],
-    output: [{aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]}, {aliases: [{name: {first: 'foo'}},{name: {first: 'bat'}},null]}],
-  },
-  'can handle object with an array of values with nested keys with an implicit wildcard': {
-    input: [
-      [
-        {aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]},
-        {aliases: [{name: {first: 'foo'}},{name: {first: 'bat'}},null]},
-        {aliases: [{name: {first: 'foo'}},{name: {first: 'foo'}}]},
-        {aliases: null},
-        {},
-        null,
-      ],
-      'ba',
-      {keys: ['aliases.name.first']},
     ],
     output: [{aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]}, {aliases: [{name: {first: 'foo'}},{name: {first: 'bat'}},null]}],
   },
@@ -198,7 +183,7 @@ const tests: Record<string, TestCase> = {
       {favoriteIceCream: ['mint', 'chocolate']},
     ],
   },
-  'can handle keys that are an array of values with an explicit wildcard': {
+  'can handle keys that are an array of values with a wildcard': {
     input: [
       [
         {favoriteIceCream: ['mint', 'chocolate']},
@@ -211,6 +196,21 @@ const tests: Record<string, TestCase> = {
     output: [
       {favoriteIceCream: ['candy cane', 'brownie']},
       {favoriteIceCream: ['mint', 'chocolate']},
+    ],
+  },
+  'can handle nested keys that are an array of values with a wildcard': {
+    input: [
+      [
+        {favorite: {iceCream: ['mint', 'chocolate']}},
+        {favorite: {iceCream: ['candy cane', 'brownie']}},
+        {favorite: {iceCream: ['birthday cake', 'rocky road', 'strawberry']}},
+      ],
+      'cc',
+      {keys: ['favorite.iceCream.*']},
+    ],
+    output: [
+      {favorite: {iceCream: ['candy cane', 'brownie']}},
+      {favorite: {iceCream: ['mint', 'chocolate']}},
     ],
   },
   'can handle keys with a maxRanking': {
