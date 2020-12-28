@@ -198,6 +198,21 @@ const tests: Record<string, TestCase> = {
       {favoriteIceCream: ['mint', 'chocolate']},
     ],
   },
+  'can handle nested keys that are an array of values': {
+    input: [
+      [
+        {favorite: {iceCream: ['mint', 'chocolate']}},
+        {favorite: {iceCream: ['candy cane', 'brownie']}},
+        {favorite: {iceCream: ['birthday cake', 'rocky road', 'strawberry']}},
+      ],
+      'cc',
+      {keys: ['favorite.iceCream']},
+    ],
+    output: [
+      {favorite: {iceCream: ['candy cane', 'brownie']}},
+      {favorite: {iceCream: ['mint', 'chocolate']}},
+    ],
+  },
   'can handle nested keys that are an array of values with a wildcard': {
     input: [
       [
@@ -211,6 +226,36 @@ const tests: Record<string, TestCase> = {
     output: [
       {favorite: {iceCream: ['candy cane', 'brownie']}},
       {favorite: {iceCream: ['mint', 'chocolate']}},
+    ],
+  },
+  'can handle nested keys that are an array of objects with a single wildcard': {
+    input: [
+      [
+        {favorite: {iceCream: [{tastes: ['vanilla', 'mint']}, {tastes: ['vanilla', 'chocolate']}]}},
+        {favorite: {iceCream: [{tastes: ['vanilla', 'candy cane']}, {tastes: ['vanilla', 'brownie']}]}},
+        {favorite: {iceCream: [{tastes: ['vanilla', 'birthday cake']}, {tastes: ['vanilla', 'rocky road']}, {tastes: ['strawberry']}]}},
+      ],
+      'cc',
+      {keys: ['favorite.iceCream.*.tastes']},
+    ],
+    output: [
+      {favorite: {iceCream: [{tastes:['vanilla', 'candy cane']}, {tastes:['vanilla', 'brownie']}]}},
+      {favorite: {iceCream: [{tastes:['vanilla', 'mint']}, {tastes:['vanilla', 'chocolate']}]}},
+    ],
+  },
+  'can handle nested keys that are an array of objects with two wildcards': {
+    input: [
+      [
+        {favorite: {iceCream: [{tastes: ['vanilla', 'mint']}, {tastes: ['vanilla', 'chocolate']}]}},
+        {favorite: {iceCream: [{tastes: ['vanilla', 'candy cane']}, {tastes: ['vanilla', 'brownie']}]}},
+        {favorite: {iceCream: [{tastes: ['vanilla', 'birthday cake']}, {tastes: ['vanilla', 'rocky road']}, {tastes: ['strawberry']}]}},
+      ],
+      'cc',
+      {keys: ['favorite.iceCream.*.tastes.*']},
+    ],
+    output: [
+      {favorite: {iceCream: [{tastes:['vanilla', 'candy cane']}, {tastes:['vanilla', 'brownie']}]}},
+      {favorite: {iceCream: [{tastes:['vanilla', 'mint']}, {tastes:['vanilla', 'chocolate']}]}},
     ],
   },
   'can handle keys with a maxRanking': {

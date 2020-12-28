@@ -362,8 +362,12 @@ function getItemValues<ItemType>(
     // @ts-expect-error just like below...
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     value = item[key];
-  } else {
-    value = getNestedValue<ItemType>(key, item)
+  } else if (key.includes(".")) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    return getNestedValue<ItemType>(key, item)
+  }
+  else {
+    value = null
   }
 
   // because `value` can also be undefined
@@ -377,25 +381,21 @@ function getItemValues<ItemType>(
 }
 
 /**
- * Given key: "foo.bar.baz"
+ * Given path: "foo.bar.baz"
  * And item: {foo: {bar: {baz: 'buzz'}}}
  *   -> 'buzz'
- * @param key a dot-separated set of keys
+ * @param path a dot-separated set of keys
  * @param item the item to get the value from
  */
 function getNestedValue<ItemType>(
-  key: string,
+  path: string,
   item: ItemType,
-): string | Array<string> | null {
+): Array<string> {
   // @ts-expect-error really have no idea how to type this properly...
-  return key.split('.').reduce((nestedItems: Array<object | string | null>, nestedKey: string): Array<object | string> => {
+  const result = path.split('.').reduce((nestedItems: Array<object | string | null>, nestedKey: string): Array<object | string> => {
     return nestedItems.reduce((values: Array<object | string>, nestedItem: Array<object | string> | object | string | null): Array<object | string> => {
       if (nestedItem == null) {
         return values
-      }
-
-      if (nestedKey === "*") {
-        return values.concat(nestedItem)
       }
 
       if (Object.hasOwnProperty.call(nestedItem,nestedKey)) {
@@ -406,10 +406,23 @@ function getNestedValue<ItemType>(
           values.push(nestedValue)
         }
       }
+      else if (nestedKey === "*") {
+        // ensure that values is an array
+        values = values.concat(nestedItem)
+      }
 
       return values
     }, [])
   }, [item])
+
+  if (Array.isArray(result[0])) {
+    // @ts-expect-error just like above because we need to flatten the result to
+    // keep allowing the implicit wildcard for an array of strings at the end of
+    // the path; don't use `.flat()` because that's not available in node.js v10
+    return [].concat(...result)
+  }
+  // @ts-expect-error because somehow this is not a string[]
+  return result
 }
 
 /**
