@@ -49,6 +49,7 @@ interface MatchSorterOptions<ItemType = unknown> {
   baseSort?: BaseSorter<ItemType>
   keepDiacritics?: boolean
 }
+type IndexableByString = Record<string, unknown>
 
 const rankings = {
   CASE_SENSITIVE_EQUAL: 7,
@@ -352,18 +353,16 @@ function getItemValues<ItemType>(
   if (typeof key === 'object') {
     key = key.key as string
   }
-  let value: string | Array<string> | null
+  let value: string | Array<string> | null | unknown
   if (typeof key === 'function') {
     value = key(item)
   } else if (item == null) {
     value = null
   } else if (Object.hasOwnProperty.call(item, key)) {
-    // @ts-expect-error just like below...
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    value = item[key]
+    value = (item as IndexableByString)[key]
   } else if (key.includes('.')) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    return getNestedValue<ItemType>(key, item)
+    return getNestedValues<ItemType>(key, item)
   } else {
     value = null
   }
@@ -375,7 +374,7 @@ function getItemValues<ItemType>(
   if (Array.isArray(value)) {
     return value
   }
-  return [value]
+  return [String(value)]
 }
 
 /**
@@ -385,39 +384,41 @@ function getItemValues<ItemType>(
  * @param path a dot-separated set of keys
  * @param item the item to get the value from
  */
-function getNestedValue<ItemType>(path: string, item: ItemType): Array<string> {
-  type ValueA = Array<ItemType | object | string>
-  let nestedItems: ValueA = [item]
+function getNestedValues<ItemType>(
+  path: string,
+  item: ItemType,
+): Array<string> {
+  type ValueA = Array<ItemType | IndexableByString | string>
+  let values: ValueA = [item]
   for (const nestedKey of path.split('.')) {
-    let values: ValueA = []
+    let nestedValues: ValueA = []
 
-    for (const nestedItem of nestedItems) {
+    for (const nestedItem of values) {
       if (nestedItem == null) continue
 
       if (Object.hasOwnProperty.call(nestedItem, nestedKey)) {
-        // @ts-expect-error and here again...
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const nestedValue = nestedItem[nestedKey]
+        const nestedValue = (nestedItem as IndexableByString)[nestedKey]
         if (nestedValue != null) {
-          values.push(nestedValue)
+          nestedValues.push(nestedValue as IndexableByString | string)
         }
       } else if (nestedKey === '*') {
         // ensure that values is an array
-        values = values.concat(nestedItem)
+        nestedValues = nestedValues.concat(nestedItem)
       }
     }
 
-    nestedItems = values
+    values = nestedValues
   }
 
-  if (Array.isArray(nestedItems[0])) {
-    // @ts-expect-error just like above because we need to flatten the result to
+  if (Array.isArray(values[0])) {
     // keep allowing the implicit wildcard for an array of strings at the end of
     // the path; don't use `.flat()` because that's not available in node.js v10
-    return [].concat(...nestedItems)
+    const result: Array<string> = []
+    return result.concat(...(values as Array<string>))
   }
-  // @ts-expect-error because somehow this is not a string[]
-  return nestedItems
+  // Based on our logic it should be an array of strings by now...
+  // assuming the user's path terminated in strings
+  return values as Array<string>
 }
 
 /**
@@ -433,12 +434,12 @@ function getAllValuesToRank<ItemType>(
   return keys.reduce<Array<{itemValue: string; attributes: KeyAttributes}>>(
     (allValues, key) => {
       const attributes = getKeyAttributes(key)
-      getItemValues(item, key).forEach(itemValue => {
+      for (const itemValue of getItemValues(item, key)) {
         allValues.push({
           itemValue,
           attributes,
         })
-      })
+      }
       return allValues
     },
     [],
