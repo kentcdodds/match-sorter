@@ -43,7 +43,6 @@ type KeyOption<ItemType> =
   | ValueGetterKey<ItemType>
   | string
 
-// ItemType = unknown allowed me to make these changes without the need to change the current tests
 interface MatchSorterOptions<ItemType = unknown> {
   keys?: Array<KeyOption<ItemType>>
   threshold?: number
@@ -361,12 +360,11 @@ function getItemValues<ItemType>(
   } else if (Object.hasOwnProperty.call(item, key)) {
     // @ts-expect-error just like below...
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    value = item[key];
-  } else if (key.includes(".")) {
+    value = item[key]
+  } else if (key.includes('.')) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     return getNestedValue<ItemType>(key, item)
-  }
-  else {
+  } else {
     value = null
   }
 
@@ -387,42 +385,39 @@ function getItemValues<ItemType>(
  * @param path a dot-separated set of keys
  * @param item the item to get the value from
  */
-function getNestedValue<ItemType>(
-  path: string,
-  item: ItemType,
-): Array<string> {
-  // @ts-expect-error really have no idea how to type this properly...
-  const result = path.split('.').reduce((nestedItems: Array<object | string | null>, nestedKey: string): Array<object | string> => {
-    return nestedItems.reduce((values: Array<object | string>, nestedItem: Array<object | string> | object | string | null): Array<object | string> => {
-      if (nestedItem == null) {
-        return values
-      }
+function getNestedValue<ItemType>(path: string, item: ItemType): Array<string> {
+  type ValueA = Array<ItemType | object | string>
+  let nestedItems: ValueA = [item]
+  for (const nestedKey of path.split('.')) {
+    let values: ValueA = []
 
-      if (Object.hasOwnProperty.call(nestedItem,nestedKey)) {
+    for (const nestedItem of nestedItems) {
+      if (nestedItem == null) continue
+
+      if (Object.hasOwnProperty.call(nestedItem, nestedKey)) {
         // @ts-expect-error and here again...
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const nestedValue = nestedItem[nestedKey]
         if (nestedValue != null) {
           values.push(nestedValue)
         }
-      }
-      else if (nestedKey === "*") {
+      } else if (nestedKey === '*') {
         // ensure that values is an array
         values = values.concat(nestedItem)
       }
+    }
 
-      return values
-    }, [])
-  }, [item])
+    nestedItems = values
+  }
 
-  if (Array.isArray(result[0])) {
+  if (Array.isArray(nestedItems[0])) {
     // @ts-expect-error just like above because we need to flatten the result to
     // keep allowing the implicit wildcard for an array of strings at the end of
     // the path; don't use `.flat()` because that's not available in node.js v10
-    return [].concat(...result)
+    return [].concat(...nestedItems)
   }
   // @ts-expect-error because somehow this is not a string[]
-  return result
+  return nestedItems
 }
 
 /**
@@ -476,3 +471,8 @@ export type {
   RankingInfo,
   ValueGetterKey,
 }
+
+/*
+eslint
+  no-continue: "off",
+*/
