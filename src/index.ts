@@ -388,12 +388,18 @@ function getNestedValues<ItemType>(
   path: string,
   item: ItemType,
 ): Array<string> {
+  const keys = path.split('.')
+
   type ValueA = Array<ItemType | IndexableByString | string>
   let values: ValueA = [item]
-  for (const nestedKey of path.split('.')) {
+
+  for (let i = 0, I = keys.length; i < I; i++) {
+    const nestedKey = keys[i]
     let nestedValues: ValueA = []
 
-    for (const nestedItem of values) {
+    for (let j = 0, J = values.length; j < J; j++) {
+      const nestedItem = values[j]
+
       if (nestedItem == null) continue
 
       if (Object.hasOwnProperty.call(nestedItem, nestedKey)) {
@@ -431,19 +437,19 @@ function getAllValuesToRank<ItemType>(
   item: ItemType,
   keys: Array<KeyOption<ItemType>>,
 ) {
-  return keys.reduce<Array<{itemValue: string; attributes: KeyAttributes}>>(
-    (allValues, key) => {
-      const attributes = getKeyAttributes(key)
-      for (const itemValue of getItemValues(item, key)) {
-        allValues.push({
-          itemValue,
-          attributes,
-        })
-      }
-      return allValues
-    },
-    [],
-  )
+  const allValues: Array<{itemValue: string, attributes: KeyAttributes}> = []
+  for (let j = 0, J = keys.length; j < J; j++) {
+    const key = keys[j]
+    const attributes = getKeyAttributes(key)
+    const itemValues = getItemValues(item, key)
+    for (let i = 0, I = itemValues.length; i < I; i++) {
+      allValues.push({
+        itemValue: itemValues[i],
+        attributes,
+      })
+    }
+  }
+  return allValues
 }
 
 const defaultKeyAttributes = {
