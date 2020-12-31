@@ -252,6 +252,17 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "mart-jansink",
+      "name": "Mart",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/4381258?v=4",
+      "profile": "https://github.com/mart-jansink",
+      "contributions": [
+        "code",
+        "test",
+        "doc"
+      ]
     }
   ]
 }
