@@ -43,13 +43,13 @@ type KeyOption<ItemType> =
   | ValueGetterKey<ItemType>
   | string
 
-// ItemType = unknown allowed me to make these changes without the need to change the current tests
 interface MatchSorterOptions<ItemType = unknown> {
   keys?: Array<KeyOption<ItemType>>
   threshold?: number
   baseSort?: BaseSorter<ItemType>
   keepDiacritics?: boolean
 }
+type IndexableByString = Record<string, unknown>
 
 const rankings = {
   CASE_SENSITIVE_EQUAL: 7,
@@ -260,7 +260,7 @@ function getClosenessRanking(testString: string, stringToRank: string): number {
     string: string,
     index: number,
   ) {
-    for (let j = index; j < string.length; j++) {
+    for (let j = index, J = string.length; j < J; j++) {
       const stringChar = string[j]
       if (stringChar === matchChar) {
         matchingInOrderCharCount += 1
@@ -280,7 +280,7 @@ function getClosenessRanking(testString: string, stringToRank: string): number {
     return rankings.NO_MATCH
   }
   charNumber = firstIndex
-  for (let i = 1; i < stringToRank.length; i++) {
+  for (let i = 1, I = stringToRank.length; i < I; i++) {
     const matchChar = stringToRank[i]
     charNumber = findMatchingCharacter(matchChar, testString, charNumber)
     const found = charNumber > -1
@@ -349,42 +349,82 @@ function prepareValueForComparison<ItemType>(
 function getItemValues<ItemType>(
   item: ItemType,
   key: KeyOption<ItemType>,
-): Array<string> | null {
+): Array<string> {
   if (typeof key === 'object') {
     key = key.key as string
   }
-  let value: string | Array<string> | null
+  let value: string | Array<string> | null | unknown
   if (typeof key === 'function') {
     value = key(item)
-    // eslint-disable-next-line no-negated-condition
+  } else if (item == null) {
+    value = null
+  } else if (Object.hasOwnProperty.call(item, key)) {
+    value = (item as IndexableByString)[key]
+  } else if (key.includes('.')) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    return getNestedValues<ItemType>(key, item)
   } else {
-    value = getNestedValue<ItemType>(key, item)
+    value = null
   }
-  const values: Array<string> = []
-  // concat because `value` can be a string or an array
-  // eslint-disable-next-line
-  return value != null ? values.concat(value) : null
+
+  // because `value` can also be undefined
+  if (value == null) {
+    return []
+  }
+  if (Array.isArray(value)) {
+    return value
+  }
+  return [String(value)]
 }
 
 /**
- * Given key: "foo.bar.baz"
- * And obj: {foo: {bar: {baz: 'buzz'}}}
+ * Given path: "foo.bar.baz"
+ * And item: {foo: {bar: {baz: 'buzz'}}}
  *   -> 'buzz'
- * @param key a dot-separated set of keys
- * @param obj the object to get the value from
+ * @param path a dot-separated set of keys
+ * @param item the item to get the value from
  */
-function getNestedValue<ItemType>(
-  key: string,
-  obj: ItemType,
-): string | Array<string> | null {
-  // @ts-expect-error really have no idea how to type this properly...
-  return key.split('.').reduce((itemObj: object | null, nestedKey: string):
-    | object
-    | string
-    | null => {
-    // @ts-expect-error lost on this one as well...
-    return itemObj ? itemObj[nestedKey] : null
-  }, obj)
+function getNestedValues<ItemType>(
+  path: string,
+  item: ItemType,
+): Array<string> {
+  const keys = path.split('.')
+
+  type ValueA = Array<ItemType | IndexableByString | string>
+  let values: ValueA = [item]
+
+  for (let i = 0, I = keys.length; i < I; i++) {
+    const nestedKey = keys[i]
+    let nestedValues: ValueA = []
+
+    for (let j = 0, J = values.length; j < J; j++) {
+      const nestedItem = values[j]
+
+      if (nestedItem == null) continue
+
+      if (Object.hasOwnProperty.call(nestedItem, nestedKey)) {
+        const nestedValue = (nestedItem as IndexableByString)[nestedKey]
+        if (nestedValue != null) {
+          nestedValues.push(nestedValue as IndexableByString | string)
+        }
+      } else if (nestedKey === '*') {
+        // ensure that values is an array
+        nestedValues = nestedValues.concat(nestedItem)
+      }
+    }
+
+    values = nestedValues
+  }
+
+  if (Array.isArray(values[0])) {
+    // keep allowing the implicit wildcard for an array of strings at the end of
+    // the path; don't use `.flat()` because that's not available in node.js v10
+    const result: Array<string> = []
+    return result.concat(...(values as Array<string>))
+  }
+  // Based on our logic it should be an array of strings by now...
+  // assuming the user's path terminated in strings
+  return values as Array<string>
 }
 
 /**
@@ -397,21 +437,19 @@ function getAllValuesToRank<ItemType>(
   item: ItemType,
   keys: Array<KeyOption<ItemType>>,
 ) {
-  return keys.reduce<Array<{itemValue: string; attributes: KeyAttributes}>>(
-    (allVals, key) => {
-      const values = getItemValues(item, key)
-      if (values) {
-        values.forEach(itemValue => {
-          allVals.push({
-            itemValue,
-            attributes: getKeyAttributes(key),
-          })
-        })
-      }
-      return allVals
-    },
-    [],
-  )
+  const allValues: Array<{itemValue: string, attributes: KeyAttributes}> = []
+  for (let j = 0, J = keys.length; j < J; j++) {
+    const key = keys[j]
+    const attributes = getKeyAttributes(key)
+    const itemValues = getItemValues(item, key)
+    for (let i = 0, I = itemValues.length; i < I; i++) {
+      allValues.push({
+        itemValue: itemValues[i],
+        attributes,
+      })
+    }
+  }
+  return allValues
 }
 
 const defaultKeyAttributes = {
@@ -440,3 +478,8 @@ export type {
   RankingInfo,
   ValueGetterKey,
 }
+
+/*
+eslint
+  no-continue: "off",
+*/

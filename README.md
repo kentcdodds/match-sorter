@@ -158,7 +158,23 @@ const nestedObjList = [
 ]
 matchSorter(nestedObjList, 'j', {keys: ['name.0.first']})
 // [{name: {first: 'Janice'}}, {name: {first: 'Jen'}}]
+
 // matchSorter(nestedObjList, 'j', {keys: ['name[0].first']}) does not work
+```
+
+This even works with arrays of multiple nested objects: just specify the key
+using dot-notation with the `*` wildcard instead of a numeric index.
+
+```javascript
+const nestedObjList = [
+  {aliases: [{name: {first: 'Janice'}},{name: {first: 'Jen'}}]},
+  {aliases: [{name: {first: 'Fred'}},{name: {first: 'Frederic'}}]},
+  {aliases: [{name: {first: 'George'}},{name: {first: 'Georgie'}}]},
+]
+matchSorter(nestedObjList, 'jen', {keys: ['aliases.*.name.first']})
+// [{aliases: [{name: {first: 'Janice'}},{name: {first: 'Jen'}}]}]
+matchSorter(nestedObjList, 'jen', {keys: ['aliases.0.name.first']})
+// []
 ```
 
 **Property Callbacks**: Alternatively, you may also pass in a callback function
