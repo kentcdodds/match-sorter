@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - '+([0-9])?(.{+([0-9]),x}).x'
-      - 'master'
+      - 'main'
       - 'next'
       - 'next-major'
       - 'beta'
@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     if:
       ${{ github.repository == 'kentcdodds/match-sorter' &&
-      contains('refs/heads/master,refs/heads/beta,refs/heads/next,refs/heads/alpha',
+      contains('refs/heads/main,refs/heads/beta,refs/heads/next,refs/heads/alpha',
       github.ref) && github.event_name == 'push' }}
     steps:
       - name: 🛑 Cancel Previous Runs
@@ -83,7 +83,7 @@ jobs:
           branches: |
             [
               '+([0-9])?(.{+([0-9]),x}).x',
-              'master',
+              'main',
               'next',
               'next-major',
               {name: 'beta', prerelease: true},
