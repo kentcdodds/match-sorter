@@ -7,15 +7,15 @@
 import removeAccents from 'remove-accents'
 
 type KeyAttributes = {
-  threshold?: number
-  maxRanking: number
-  minRanking: number
+  threshold?: Ranking
+  maxRanking: Ranking
+  minRanking: Ranking
 }
 interface RankingInfo {
   rankedValue: string
-  rank: number
+  rank: Ranking
   keyIndex: number
-  keyThreshold: number | undefined
+  keyThreshold: Ranking | undefined
 }
 
 interface ValueGetterKey<ItemType> {
@@ -33,9 +33,9 @@ interface BaseSorter<ItemType> {
 
 interface KeyAttributesOptions<ItemType> {
   key?: string | ValueGetterKey<ItemType>
-  threshold?: number
-  maxRanking?: number
-  minRanking?: number
+  threshold?: Ranking
+  maxRanking?: Ranking
+  minRanking?: Ranking
 }
 
 type KeyOption<ItemType> =
@@ -45,7 +45,7 @@ type KeyOption<ItemType> =
 
 interface MatchSorterOptions<ItemType = unknown> {
   keys?: Array<KeyOption<ItemType>>
-  threshold?: number
+  threshold?: Ranking
   baseSort?: BaseSorter<ItemType>
   keepDiacritics?: boolean
 }
@@ -60,7 +60,9 @@ const rankings = {
   ACRONYM: 2,
   MATCHES: 1,
   NO_MATCH: 0,
-}
+} as const
+
+type Ranking = typeof rankings[keyof typeof rankings]
 
 matchSorter.rankings = rankings
 
@@ -153,7 +155,7 @@ function getHighestRanking<ItemType>(
     },
     {
       rankedValue: (item as unknown) as string,
-      rank: rankings.NO_MATCH,
+      rank: rankings.NO_MATCH as Ranking,
       keyIndex: -1,
       keyThreshold: options.threshold,
     },
@@ -171,7 +173,7 @@ function getMatchRanking<ItemType>(
   testString: string,
   stringToRank: string,
   options: MatchSorterOptions<ItemType>,
-): number {
+): Ranking {
   testString = prepareValueForComparison(testString, options)
   stringToRank = prepareValueForComparison(stringToRank, options)
 
@@ -252,7 +254,10 @@ function getAcronym(string: string): string {
  * @returns {Number} the number between rankings.MATCHES and
  * rankings.MATCHES + 1 for how well stringToRank matches testString
  */
-function getClosenessRanking(testString: string, stringToRank: string): number {
+function getClosenessRanking(
+  testString: string,
+  stringToRank: string,
+): Ranking {
   let matchingInOrderCharCount = 0
   let charNumber = 0
   function findMatchingCharacter(
@@ -273,7 +278,7 @@ function getClosenessRanking(testString: string, stringToRank: string): number {
     const spreadPercentage = 1 / spread
     const inOrderPercentage = matchingInOrderCharCount / stringToRank.length
     const ranking = rankings.MATCHES + inOrderPercentage * spreadPercentage
-    return ranking
+    return ranking as Ranking
   }
   const firstIndex = findMatchingCharacter(stringToRank[0], testString, 0)
   if (firstIndex < 0) {
@@ -437,7 +442,7 @@ function getAllValuesToRank<ItemType>(
   item: ItemType,
   keys: Array<KeyOption<ItemType>>,
 ) {
-  const allValues: Array<{itemValue: string, attributes: KeyAttributes}> = []
+  const allValues: Array<{itemValue: string; attributes: KeyAttributes}> = []
   for (let j = 0, J = keys.length; j < J; j++) {
     const key = keys[j]
     const attributes = getKeyAttributes(key)
@@ -453,8 +458,8 @@ function getAllValuesToRank<ItemType>(
 }
 
 const defaultKeyAttributes = {
-  maxRanking: Infinity,
-  minRanking: -Infinity,
+  maxRanking: Infinity as Ranking,
+  minRanking: -Infinity as Ranking,
 }
 /**
  * Gets all the attributes for the given key
