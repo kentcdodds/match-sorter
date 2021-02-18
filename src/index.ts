@@ -31,6 +31,10 @@ interface BaseSorter<ItemType> {
   (a: RankedItem<ItemType>, b: RankedItem<ItemType>): number
 }
 
+interface Sorter<ItemType> {
+  (matchItems: Array<RankedItem<ItemType>>): Array<RankedItem<ItemType>>
+}
+
 interface KeyAttributesOptions<ItemType> {
   key?: string | ValueGetterKey<ItemType>
   threshold?: Ranking
@@ -48,6 +52,7 @@ interface MatchSorterOptions<ItemType = unknown> {
   threshold?: Ranking
   baseSort?: BaseSorter<ItemType>
   keepDiacritics?: boolean
+  sorter?: Sorter<ItemType>
 }
 type IndexableByString = Record<string, unknown>
 
@@ -85,11 +90,11 @@ function matchSorter<ItemType = string>(
     keys,
     threshold = rankings.MATCHES,
     baseSort = defaultBaseSortFn,
+    sorter = matchedItems =>
+      matchedItems.sort((a, b) => sortRankedValues(a, b, baseSort)),
   } = options
   const matchedItems = items.reduce(reduceItemsToRanked, [])
-  return matchedItems
-    .sort((a, b) => sortRankedValues(a, b, baseSort))
-    .map(({item}) => item)
+  return sorter(matchedItems).map(({item}) => item)
 
   function reduceItemsToRanked(
     matches: Array<RankedItem<ItemType>>,

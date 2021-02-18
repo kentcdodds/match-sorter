@@ -495,6 +495,18 @@ const tests: Record<string, TestCase> = {
     ],
     output: [{name: 'Jen_Smith'}, {name: 'Janice_Kurtis'}],
   },
+  'support a custom sortRankedValues function to overriding all sorting functionality': {
+    input: [
+      ['appl', 'C apple', 'B apple', 'A apple', 'app', 'applebutter'],
+      '',
+      {
+        sorter: rankedItems => {
+          return [...rankedItems].reverse()
+        },
+      },
+    ],
+    output: ['applebutter', 'app', 'A apple', 'B apple', 'C apple', 'appl'],
+  },
 }
 
 for (const [
