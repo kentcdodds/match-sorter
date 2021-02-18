@@ -68,6 +68,7 @@ Feedback welcome!
   - [threshold: `number`](#threshold-number)
   - [keepDiacritics: `boolean`](#keepdiacritics-boolean)
   - [baseSort: `function(itemA, itemB): -1 | 0 | 1`](#basesort-functionitema-itemb--1--0--1)
+  - [sorter: `function(rankedItems): rankedItems`](#sorter-functionrankeditems-rankeditems)
 - [Recipes](#recipes)
   - [Match PascalCase, camelCase, snake_case, or kebab-case as words](#match-pascalcase-camelcase-snake_case-or-kebab-case-as-words)
   - [Match many words across multiple fields (table filtering)](#match-many-words-across-multiple-fields-table-filtering)
@@ -342,6 +343,31 @@ const list = ['C apple', 'B apple', 'A apple']
 // This baseSort function will use the original index of items as the tie breaker
 matchSorter(list, 'apple', {baseSort: (a, b) => (a.index < b.index ? -1 : 1)})
 // ['C apple', 'B apple', 'A apple']
+```
+
+### sorter: `function(rankedItems): rankedItems`
+
+_Default:
+`matchedItems => matchedItems.sort((a, b) => sortRankedValues(a, b, baseSort))`_
+
+By default, match-sorter uses an internal `sortRankedValues` function to sort
+items after matching them.
+
+_You can customize the core sorting behavior by specifying a custom `sorter`
+function:_
+
+Disable sorting entirely:
+```javascript
+const list = ['appl', 'C apple', 'B apple', 'A apple', 'app', 'applebutter']
+matchSorter(list, 'apple', {sorter: rankedItems => rankedItems})
+// ['C apple', 'B apple', 'A apple', 'applebutter']
+```
+
+Return the unsorted rankedItems, but in reverse order:
+```javascript
+const list = ['appl', 'C apple', 'B apple', 'A apple', 'app', 'applebutter']
+matchSorter(list, 'apple', {sorter: rankedItems => [...rankedItems].reverse()})
+// ['applebutter', 'A apple', 'B apple', 'C apple']
 ```
 
 ## Recipes
