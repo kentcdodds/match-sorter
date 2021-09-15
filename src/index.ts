@@ -48,7 +48,7 @@ type KeyOption<ItemType> =
   | string
 
 interface MatchSorterOptions<ItemType = unknown> {
-  keys?: Array<KeyOption<ItemType>>
+  keys?: ReadonlyArray<KeyOption<ItemType>>
   threshold?: Ranking
   baseSort?: BaseSorter<ItemType>
   keepDiacritics?: boolean
@@ -82,7 +82,7 @@ const defaultBaseSortFn: BaseSorter<unknown> = (a, b) =>
  * @return {Array} - the new sorted array
  */
 function matchSorter<ItemType = string>(
-  items: Array<ItemType>,
+  items: ReadonlyArray<ItemType>,
   value: string,
   options: MatchSorterOptions<ItemType> = {},
 ): Array<ItemType> {
@@ -120,7 +120,7 @@ function matchSorter<ItemType = string>(
  */
 function getHighestRanking<ItemType>(
   item: ItemType,
-  keys: Array<KeyOption<ItemType>> | undefined,
+  keys: ReadonlyArray<KeyOption<ItemType>> | undefined,
   value: string,
   options: MatchSorterOptions<ItemType>,
 ): RankingInfo {
@@ -445,7 +445,7 @@ function getNestedValues<ItemType>(
  */
 function getAllValuesToRank<ItemType>(
   item: ItemType,
-  keys: Array<KeyOption<ItemType>>,
+  keys: ReadonlyArray<KeyOption<ItemType>>,
 ) {
   const allValues: Array<{itemValue: string; attributes: KeyAttributes}> = []
   for (let j = 0, J = keys.length; j < J; j++) {
