@@ -82,7 +82,7 @@ const defaultBaseSortFn: BaseSorter<unknown> = (a, b) =>
  * @return {Array} - the new sorted array
  */
 function matchSorter<ItemType = string>(
-  items: Array<ItemType>,
+  items: ReadonlyArray<ItemType>,
   value: string,
   options: MatchSorterOptions<ItemType> = {},
 ): Array<ItemType> {
