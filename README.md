@@ -497,6 +497,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/PhilGarb"><img src="https://avatars3.githubusercontent.com/u/38015558?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Philipp Garbowsky</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=PhilGarb" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/mart-jansink"><img src="https://avatars3.githubusercontent.com/u/4381258?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mart</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=mart-jansink" title="Code">💻</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=mart-jansink" title="Tests">⚠️</a> <a href="https://github.com/kentcdodds/match-sorter/commits?author=mart-jansink" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/levenleven"><img src="https://avatars.githubusercontent.com/u/6463364?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Aleksey Levenstein</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=levenleven" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/diesieben07"><img src="https://avatars.githubusercontent.com/u/1915984?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Take Weiland</b></sub></a><br /><a href="https://github.com/kentcdodds/match-sorter/commits?author=diesieben07" title="Code">💻</a></td>
   </tr>
 </table>
 
