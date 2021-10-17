@@ -403,7 +403,7 @@ matches it will also return matches out of order (column = "wordstwo" will match
 just as well as column="twowords", the latter getting a higher score).
 
 ```javascript
-function fuzzySearchMutipleWords(
+function fuzzySearchMultipleWords(
   rows, // array of data [{a: "a", b: "b"}, {a: "c", b: "d"}]
   keys, // keys to search ["a", "b"]
   filterValue: string, // potentially multi-word search string "two words"
