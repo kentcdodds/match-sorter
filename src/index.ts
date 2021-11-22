@@ -19,7 +19,7 @@ interface RankingInfo {
 }
 
 interface ValueGetterKey<ItemType> {
-  (item: ItemType): string | Array<string>
+  (item: ItemType): Array<string> | string
 }
 interface IndexedItem<ItemType> {
   item: ItemType
@@ -36,7 +36,7 @@ interface Sorter<ItemType> {
 }
 
 interface KeyAttributesOptions<ItemType> {
-  key?: string | ValueGetterKey<ItemType>
+  key?: ValueGetterKey<ItemType> | string
   threshold?: Ranking
   maxRanking?: Ranking
   minRanking?: Ranking
@@ -66,6 +66,21 @@ const rankings = {
   MATCHES: 1,
   NO_MATCH: 0,
 } as const
+
+/**
+ * When string matching against a potential path to find a nested value,
+ * this constant is used to denote that we have a complex array accessor
+ * like `foo[bar]` instead of simple dot notation like `foo.bar`.
+ */
+const COMPLEX_ARRAY_PLACEHOLDER = '$COMPLEX_ARRAY_PLACEHOLDER'
+
+/**
+ * When used in a `matchAll` or `replaceAll`, creates capture groups out of
+ * complex array notation within a string path representation, allowing us
+ * to capture `[bar]` out of `foo[bar].baz` & assisting in simplifying the
+ * expression.
+ */
+const COMPLEX_ARRAY_MATCHER = /\[([^\]]+)\]/g
 
 type Ranking = typeof rankings[keyof typeof rankings]
 
@@ -363,7 +378,7 @@ function getItemValues<ItemType>(
   if (typeof key === 'object') {
     key = key.key as string
   }
-  let value: string | Array<string> | null | unknown
+  let value: Array<string> | string | unknown | null
   if (typeof key === 'function') {
     value = key(item)
   } else if (item == null) {
@@ -388,7 +403,7 @@ function getItemValues<ItemType>(
 }
 
 /**
- * Given path: "foo.bar.baz"
+ * Given path: "foo.bar.baz" or "foo[bar].baz" or "foo[bar][baz]"
  * And item: {foo: {bar: {baz: 'buzz'}}}
  *   -> 'buzz'
  * @param path a dot-separated set of keys
@@ -398,13 +413,27 @@ function getNestedValues<ItemType>(
   path: string,
   item: ItemType,
 ): Array<string> {
-  const keys = path.split('.')
+  const complexKeys: Iterator<RegExpMatchArray, Array<string>> = path.matchAll(
+    COMPLEX_ARRAY_MATCHER,
+  )
+  // Removes the "[" and "]" off the next value from the iterator
+  const nextComplexKey = () => {
+    const rawValue = complexKeys.next().value[0]
+    return rawValue.slice(1, -1)
+  }
 
-  type ValueA = Array<ItemType | IndexableByString | string>
+  const simplifiedPath = path.replace(
+    COMPLEX_ARRAY_MATCHER,
+    `.${COMPLEX_ARRAY_PLACEHOLDER}`,
+  )
+  const keys = simplifiedPath.split('.')
+
+  type ValueA = Array<IndexableByString | ItemType | string>
   let values: ValueA = [item]
 
   for (let i = 0, I = keys.length; i < I; i++) {
-    const nestedKey = keys[i]
+    const nestedKey =
+      keys[i] === COMPLEX_ARRAY_PLACEHOLDER ? nextComplexKey() : keys[i]
     let nestedValues: ValueA = []
 
     for (let j = 0, J = values.length; j < J; j++) {
@@ -479,7 +508,6 @@ function getKeyAttributes<ItemType>(key: KeyOption<ItemType>): KeyAttributes {
 }
 
 export {matchSorter, rankings, defaultBaseSortFn}
-
 export type {
   MatchSorterOptions,
   KeyAttributesOptions,

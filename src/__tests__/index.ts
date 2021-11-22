@@ -1,4 +1,4 @@
-import {matchSorter, rankings, MatchSorterOptions} from '../'
+import {matchSorter, MatchSorterOptions, rankings} from '../'
 
 type TestCase = {
   input: [Array<unknown>, string, MatchSorterOptions?]
@@ -132,9 +132,15 @@ const tests: Record<string, TestCase> = {
   'can handle object with an array of values with nested keys with a specific index': {
     input: [
       [
-        {aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]},
-        {aliases: [{name: {first: 'foo'}},{name: {first: 'bat'}},null]},
-        {aliases: [{name: {first: 'foo'}},{name: {first: 'foo'}}]},
+        {
+          aliases: [
+            {name: {first: 'baz'}},
+            {name: {first: 'foo'}},
+            {name: null},
+          ],
+        },
+        {aliases: [{name: {first: 'foo'}}, {name: {first: 'bat'}}, null]},
+        {aliases: [{name: {first: 'foo'}}, {name: {first: 'foo'}}]},
         {aliases: null},
         {},
         null,
@@ -142,14 +148,22 @@ const tests: Record<string, TestCase> = {
       'ba',
       {keys: ['aliases.0.name.first']},
     ],
-    output: [{aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]}],
+    output: [
+      {aliases: [{name: {first: 'baz'}}, {name: {first: 'foo'}}, {name: null}]},
+    ],
   },
   'can handle object with an array of values with nested keys with a wildcard': {
     input: [
       [
-        {aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]},
-        {aliases: [{name: {first: 'foo'}},{name: {first: 'bat'}},null]},
-        {aliases: [{name: {first: 'foo'}},{name: {first: 'foo'}}]},
+        {
+          aliases: [
+            {name: {first: 'baz'}},
+            {name: {first: 'foo'}},
+            {name: null},
+          ],
+        },
+        {aliases: [{name: {first: 'foo'}}, {name: {first: 'bat'}}, null]},
+        {aliases: [{name: {first: 'foo'}}, {name: {first: 'foo'}}]},
         {aliases: null},
         {},
         null,
@@ -157,7 +171,89 @@ const tests: Record<string, TestCase> = {
       'ba',
       {keys: ['aliases.*.name.first']},
     ],
-    output: [{aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]}, {aliases: [{name: {first: 'foo'}},{name: {first: 'bat'}},null]}],
+    output: [
+      {aliases: [{name: {first: 'baz'}}, {name: {first: 'foo'}}, {name: null}]},
+      {aliases: [{name: {first: 'foo'}}, {name: {first: 'bat'}}, null]},
+    ],
+  },
+  'can handle object with an array of values with nested keys with a wildcard with complex array notation': {
+    input: [
+      [
+        {
+          aliases: [
+            {name: {'first$complex.key': 'baz'}},
+            {name: {'first$complex.key': 'foo'}},
+            {name: null},
+          ],
+        },
+        {
+          aliases: [
+            {name: {'first$complex.key': 'foo'}},
+            {name: {'first$complex.key': 'bat'}},
+            null,
+          ],
+        },
+        {
+          aliases: [
+            {name: {'first$complex.key': 'foo'}},
+            {name: {'first$complex.key': 'foo'}},
+          ],
+        },
+        {aliases: null},
+        {},
+        null,
+      ],
+      'ba',
+      {keys: ['aliases.*.name[first$complex.key]']},
+    ],
+    output: [
+      {
+        aliases: [
+          {name: {'first$complex.key': 'baz'}},
+          {name: {'first$complex.key': 'foo'}},
+          {name: null},
+        ],
+      },
+      {
+        aliases: [
+          {name: {'first$complex.key': 'foo'}},
+          {name: {'first$complex.key': 'bat'}},
+          null,
+        ],
+      },
+    ],
+  },
+  'can handle object with an array of values with array notation': {
+    input: [
+      [
+        {
+          aliases: [
+            {name: {first: 'baz'}},
+            {name: {first: 'foo'}},
+            {name: null},
+          ],
+        },
+        {
+          aliases: [{name: {first: 'foo'}}, {name: {first: 'bat'}}, null],
+        },
+        {
+          aliases: [{name: {first: 'foo'}}, {name: {first: 'foo'}}],
+        },
+        {aliases: null},
+        {},
+        null,
+      ],
+      'ba',
+      {keys: ['aliases.*[name][first]']},
+    ],
+    output: [
+      {
+        aliases: [{name: {first: 'baz'}}, {name: {first: 'foo'}}, {name: null}],
+      },
+      {
+        aliases: [{name: {first: 'foo'}}, {name: {first: 'bat'}}, null],
+      },
+    ],
   },
   'can handle property callback': {
     input: [
@@ -231,31 +327,103 @@ const tests: Record<string, TestCase> = {
   'can handle nested keys that are an array of objects with a single wildcard': {
     input: [
       [
-        {favorite: {iceCream: [{tastes: ['vanilla', 'mint']}, {tastes: ['vanilla', 'chocolate']}]}},
-        {favorite: {iceCream: [{tastes: ['vanilla', 'candy cane']}, {tastes: ['vanilla', 'brownie']}]}},
-        {favorite: {iceCream: [{tastes: ['vanilla', 'birthday cake']}, {tastes: ['vanilla', 'rocky road']}, {tastes: ['strawberry']}]}},
+        {
+          favorite: {
+            iceCream: [
+              {tastes: ['vanilla', 'mint']},
+              {tastes: ['vanilla', 'chocolate']},
+            ],
+          },
+        },
+        {
+          favorite: {
+            iceCream: [
+              {tastes: ['vanilla', 'candy cane']},
+              {tastes: ['vanilla', 'brownie']},
+            ],
+          },
+        },
+        {
+          favorite: {
+            iceCream: [
+              {tastes: ['vanilla', 'birthday cake']},
+              {tastes: ['vanilla', 'rocky road']},
+              {tastes: ['strawberry']},
+            ],
+          },
+        },
       ],
       'cc',
       {keys: ['favorite.iceCream.*.tastes']},
     ],
     output: [
-      {favorite: {iceCream: [{tastes:['vanilla', 'candy cane']}, {tastes:['vanilla', 'brownie']}]}},
-      {favorite: {iceCream: [{tastes:['vanilla', 'mint']}, {tastes:['vanilla', 'chocolate']}]}},
+      {
+        favorite: {
+          iceCream: [
+            {tastes: ['vanilla', 'candy cane']},
+            {tastes: ['vanilla', 'brownie']},
+          ],
+        },
+      },
+      {
+        favorite: {
+          iceCream: [
+            {tastes: ['vanilla', 'mint']},
+            {tastes: ['vanilla', 'chocolate']},
+          ],
+        },
+      },
     ],
   },
   'can handle nested keys that are an array of objects with two wildcards': {
     input: [
       [
-        {favorite: {iceCream: [{tastes: ['vanilla', 'mint']}, {tastes: ['vanilla', 'chocolate']}]}},
-        {favorite: {iceCream: [{tastes: ['vanilla', 'candy cane']}, {tastes: ['vanilla', 'brownie']}]}},
-        {favorite: {iceCream: [{tastes: ['vanilla', 'birthday cake']}, {tastes: ['vanilla', 'rocky road']}, {tastes: ['strawberry']}]}},
+        {
+          favorite: {
+            iceCream: [
+              {tastes: ['vanilla', 'mint']},
+              {tastes: ['vanilla', 'chocolate']},
+            ],
+          },
+        },
+        {
+          favorite: {
+            iceCream: [
+              {tastes: ['vanilla', 'candy cane']},
+              {tastes: ['vanilla', 'brownie']},
+            ],
+          },
+        },
+        {
+          favorite: {
+            iceCream: [
+              {tastes: ['vanilla', 'birthday cake']},
+              {tastes: ['vanilla', 'rocky road']},
+              {tastes: ['strawberry']},
+            ],
+          },
+        },
       ],
       'cc',
       {keys: ['favorite.iceCream.*.tastes.*']},
     ],
     output: [
-      {favorite: {iceCream: [{tastes:['vanilla', 'candy cane']}, {tastes:['vanilla', 'brownie']}]}},
-      {favorite: {iceCream: [{tastes:['vanilla', 'mint']}, {tastes:['vanilla', 'chocolate']}]}},
+      {
+        favorite: {
+          iceCream: [
+            {tastes: ['vanilla', 'candy cane']},
+            {tastes: ['vanilla', 'brownie']},
+          ],
+        },
+      },
+      {
+        favorite: {
+          iceCream: [
+            {tastes: ['vanilla', 'mint']},
+            {tastes: ['vanilla', 'chocolate']},
+          ],
+        },
+      },
     ],
   },
   'can handle keys with a maxRanking': {

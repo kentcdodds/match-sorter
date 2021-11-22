@@ -159,8 +159,6 @@ const nestedObjList = [
 ]
 matchSorter(nestedObjList, 'j', {keys: ['name.0.first']})
 // [{name: {first: 'Janice'}}, {name: {first: 'Jen'}}]
-
-// matchSorter(nestedObjList, 'j', {keys: ['name[0].first']}) does not work
 ```
 
 This even works with arrays of multiple nested objects: just specify the key
@@ -168,13 +166,48 @@ using dot-notation with the `*` wildcard instead of a numeric index.
 
 ```javascript
 const nestedObjList = [
-  {aliases: [{name: {first: 'Janice'}},{name: {first: 'Jen'}}]},
-  {aliases: [{name: {first: 'Fred'}},{name: {first: 'Frederic'}}]},
-  {aliases: [{name: {first: 'George'}},{name: {first: 'Georgie'}}]},
+  {aliases: [{name: {first: 'Janice'}}, {name: {first: 'Jen'}}]},
+  {aliases: [{name: {first: 'Fred'}}, {name: {first: 'Frederic'}}]},
+  {aliases: [{name: {first: 'George'}}, {name: {first: 'Georgie'}}]},
 ]
 matchSorter(nestedObjList, 'jen', {keys: ['aliases.*.name.first']})
 // [{aliases: [{name: {first: 'Janice'}},{name: {first: 'Jen'}}]}]
 matchSorter(nestedObjList, 'jen', {keys: ['aliases.0.name.first']})
+// []
+```
+
+You can also specify nested keys using array notation instead of/along with
+dot-notation, especially helpful when your keys aren't simple strings. This is
+_not_ possible for the wildcard character `*`, which must always be specified
+using dot-notation.
+
+```javascript
+const nestedObjList = [
+  {name: {'first.complex$key': 'Janice'}},
+  {name: {'first.complex$key': 'Fred'}},
+  {name: {'first.complex$key': 'George'}},
+  {name: {'first.complex$key': 'Jen'}},
+]
+matchSorter(nestedObjList, 'j', {keys: ['name[first.complex$key]']})
+// [{name: {'first.complex$key': 'Janice'}}, {name: {'first.complex$key': 'Jen'}}]
+
+const nestedObjList = [
+  {name: [{first: 'Janice'}]},
+  {name: [{first: 'Fred'}]},
+  {name: [{first: 'George'}]},
+  {name: [{first: 'Jen'}]},
+]
+matchSorter(nestedObjList, 'j', {keys: ['name[0].first']})
+// [{name: {first: 'Janice'}}, {name: {first: 'Jen'}}]
+
+const nestedObjList = [
+  {aliases: [{name: {first: 'Janice'}}, {name: {first: 'Jen'}}]},
+  {aliases: [{name: {first: 'Fred'}}, {name: {first: 'Frederic'}}]},
+  {aliases: [{name: {first: 'George'}}, {name: {first: 'Georgie'}}]},
+]
+matchSorter(nestedObjList, 'jen', {keys: ['aliases.*[name][first]']})
+// [{aliases: [{name: {first: 'Janice'}},{name: {first: 'Jen'}}]}]
+matchSorter(nestedObjList, 'jen', {keys: ['aliases.0.[name][first]']})
 // []
 ```
 
@@ -357,6 +390,7 @@ _You can customize the core sorting behavior by specifying a custom `sorter`
 function:_
 
 Disable sorting entirely:
+
 ```javascript
 const list = ['appl', 'C apple', 'B apple', 'A apple', 'app', 'applebutter']
 matchSorter(list, 'apple', {sorter: rankedItems => rankedItems})
@@ -364,6 +398,7 @@ matchSorter(list, 'apple', {sorter: rankedItems => rankedItems})
 ```
 
 Return the unsorted rankedItems, but in reverse order:
+
 ```javascript
 const list = ['appl', 'C apple', 'B apple', 'A apple', 'app', 'applebutter']
 matchSorter(list, 'apple', {sorter: rankedItems => [...rankedItems].reverse()})
