@@ -69,8 +69,6 @@ const rankings = {
 
 type Ranking = typeof rankings[keyof typeof rankings]
 
-matchSorter.rankings = rankings
-
 const defaultBaseSortFn: BaseSorter<unknown> = (a, b) =>
   String(a.rankedValue).localeCompare(String(b.rankedValue))
 
@@ -109,6 +107,8 @@ function matchSorter<ItemType = string>(
     return matches
   }
 }
+
+matchSorter.rankings = rankings
 
 /**
  * Gets the highest ranking for value for the given item based on its values for the given keys
