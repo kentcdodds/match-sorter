@@ -1,3 +1,6 @@
 {
-  "extends": "./node_modules/kcd-scripts/shared-tsconfig.json"
+  "extends": "./node_modules/kcd-scripts/shared-tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ESNext"]
+  }
 }

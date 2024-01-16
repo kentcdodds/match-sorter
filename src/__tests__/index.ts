@@ -526,6 +526,7 @@ for (const [
 
 /*
 eslint
+  jest/prefer-each: "off",
   jest/valid-title: "off",
   jest/no-disabled-tests: "off",
   jest/no-focused-tests: "off",

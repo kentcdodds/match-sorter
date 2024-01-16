@@ -69,8 +69,6 @@ const rankings = {
 
 type Ranking = typeof rankings[keyof typeof rankings]
 
-matchSorter.rankings = rankings
-
 const defaultBaseSortFn: BaseSorter<unknown> = (a, b) =>
   String(a.rankedValue).localeCompare(String(b.rankedValue))
 
@@ -109,6 +107,8 @@ function matchSorter<ItemType = string>(
     return matches
   }
 }
+
+matchSorter.rankings = rankings
 
 /**
  * Gets the highest ranking for value for the given item based on its values for the given keys
@@ -368,7 +368,7 @@ function getItemValues<ItemType>(
     value = key(item)
   } else if (item == null) {
     value = null
-  } else if (Object.hasOwnProperty.call(item, key)) {
+  } else if (Object.hasOwn(item, key)) {
     value = (item as IndexableByString)[key]
   } else if (key.includes('.')) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -412,7 +412,7 @@ function getNestedValues<ItemType>(
 
       if (nestedItem == null) continue
 
-      if (Object.hasOwnProperty.call(nestedItem, nestedKey)) {
+      if (Object.hasOwn(nestedItem as object, nestedKey)) {
         const nestedValue = (nestedItem as IndexableByString)[nestedKey]
         if (nestedValue != null) {
           nestedValues.push(nestedValue as IndexableByString | string)
