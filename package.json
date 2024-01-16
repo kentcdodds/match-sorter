@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.15",
-    "kcd-scripts": "^14",
+    "kcd-scripts": "^15",
     "typescript": "^5.3"
   },
   "eslintConfig": {
