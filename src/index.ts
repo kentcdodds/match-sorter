@@ -368,7 +368,7 @@ function getItemValues<ItemType>(
     value = key(item)
   } else if (item == null) {
     value = null
-  } else if (Object.hasOwn(item, key)) {
+  } else if (Object.hasOwnProperty.call(item, key)) {
     value = (item as IndexableByString)[key]
   } else if (key.includes('.')) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -412,7 +412,7 @@ function getNestedValues<ItemType>(
 
       if (nestedItem == null) continue
 
-      if (Object.hasOwn(nestedItem as object, nestedKey)) {
+      if (Object.hasOwnProperty.call(nestedItem, nestedKey)) {
         const nestedValue = (nestedItem as IndexableByString)[nestedKey]
         if (nestedValue != null) {
           nestedValues.push(nestedValue as IndexableByString | string)
