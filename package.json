@@ -38,7 +38,10 @@
   "eslintConfig": {
     "extends": [
       "./node_modules/kcd-scripts/eslint.js"
-    ]
+    ],
+    "rules": {
+      "prefer-object-has-own": "off"
+    }
   },
   "eslintIgnore": [
     "node_modules",
