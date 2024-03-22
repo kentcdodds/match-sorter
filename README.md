@@ -67,6 +67,7 @@ Feedback welcome!
   - [keys: `[string]`](#keys-string)
   - [threshold: `number`](#threshold-number)
   - [keepDiacritics: `boolean`](#keepdiacritics-boolean)
+  - [returnRankingInfo: `boolean`](#returnRankingInfo-boolean)
   - [baseSort: `function(itemA, itemB): -1 | 0 | 1`](#basesort-functionitema-itemb--1--0--1)
   - [sorter: `function(rankedItems): rankedItems`](#sorter-functionrankeditems-rankeditems)
 - [Recipes](#recipes)
@@ -319,6 +320,57 @@ matchSorter(thingsWithDiacritics, 'aa', {keepDiacritics: true})
 
 matchSorter(thingsWithDiacritics, 'à', {keepDiacritics: true})
 // ['à la carte', 'à la mode']
+```
+
+### returnRankingInfo: `boolean`
+
+_Default: `false`_
+
+By default, match-sorter will return matched and sorted items but not the
+ranking info.
+
+You can choose to have ranking info included by specifying
+`returnRankingInfo: true`
+
+```javascript
+const list = [
+  {country: 'Italy', counter: 3, value: 1},
+  {country: 'Italy', counter: 2, value: 2},
+  {country: 'Italy', counter: 1, value: 3},
+]
+matchSorter(list, '3', {keys: ['country', 'counter', 'value']})
+// [{country: 'Italy', counter: 3, value: 1}, {country: 'Italy', counter: 1, value: 3}]
+
+matchSorter(list, '3', {
+  keys: ['country', 'counter', 'value'],
+  returnRankingInfo: true,
+})
+// [
+//   {
+//     index: 0,
+//     item: {
+//       counter: 3,
+//       country: 'Italy',
+//       value: 1,
+//     },
+//     keyIndex: 1, // 'counter'
+//     keyThreshold: undefined,
+//     rank: 7,
+//     rankedValue: '3',
+//   },
+//   {
+//     index: 2,
+//     item: {
+//       counter: 1,
+//       country: 'Italy',
+//       value: 3,
+//     },
+//     keyIndex: 2, // 'value'
+//     keyThreshold: undefined,
+//     rank: 7,
+//     rankedValue: '3',
+//   },
+// ]
 ```
 
 ### baseSort: `function(itemA, itemB): -1 | 0 | 1`

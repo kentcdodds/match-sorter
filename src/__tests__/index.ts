@@ -507,6 +507,46 @@ const tests: Record<string, TestCase> = {
     ],
     output: ['applebutter', 'app', 'A apple', 'B apple', 'C apple', 'appl'],
   },
+  'returns ranking info when returnRankingInfo specified as true': {
+    input: [
+      [
+        {country: 'Italy', counter: 3, value: 1},
+        {country: 'Italy', counter: 2, value: 2},
+        {country: 'Italy', counter: 1, value: 3},
+      ],
+      '3',
+      {
+        keys: ['country', 'counter', 'value'],
+        returnRankingInfo: true,
+      },
+    ],
+    output: [
+      {
+        index: 0,
+        item: {
+          counter: 3,
+          country: 'Italy',
+          value: 1,
+        },
+        keyIndex: 1,
+        keyThreshold: undefined,
+        rank: 7,
+        rankedValue: '3',
+      },
+      {
+        index: 2,
+        item: {
+          counter: 1,
+          country: 'Italy',
+          value: 3,
+        },
+        keyIndex: 2,
+        keyThreshold: undefined,
+        rank: 7,
+        rankedValue: '3',
+      },
+    ],
+  },
 }
 
 for (const [
