@@ -264,7 +264,6 @@ function getClosenessRanking(
   stringToRank: string,
 ): Ranking {
   let matchingInOrderCharCount = 0
-  let charNumber = 0
   function findMatchingCharacter(
     matchChar: string,
     string: string,
@@ -279,23 +278,31 @@ function getClosenessRanking(
     }
     return -1
   }
+  let skipped = 0
   function getRanking(spread: number) {
     const spreadPercentage = 1 / spread
     const inOrderPercentage = matchingInOrderCharCount / stringToRank.length
-    const ranking = rankings.MATCHES + inOrderPercentage * spreadPercentage
+    const matchPercentage = (stringToRank.length - skipped) / stringToRank.length
+    const ranking = rankings.MATCHES + inOrderPercentage * spreadPercentage * matchPercentage
     return ranking as Ranking
   }
-  const firstIndex = findMatchingCharacter(stringToRank[0], testString, 0)
-  if (firstIndex < 0) {
-    return rankings.NO_MATCH
-  }
-  charNumber = firstIndex
-  for (let i = 1, I = stringToRank.length; i < I; i++) {
+  let firstIndex = 0
+  let charNumber = 0
+  let nextCharNumber = 0
+  for (let i = 0, I = stringToRank.length; i < I; i++) {
     const matchChar = stringToRank[i]
-    charNumber = findMatchingCharacter(matchChar, testString, charNumber)
-    const found = charNumber > -1
-    if (!found) {
+    nextCharNumber = findMatchingCharacter(matchChar, testString, charNumber)
+    const found = nextCharNumber > -1
+    if (found) {
+      charNumber = nextCharNumber
+      if (i === 0) {
+        firstIndex = charNumber
+      }
+    } else if (skipped > 0 || stringToRank.length <= 3) {
+      // if search term is short, require finding all characters
       return rankings.NO_MATCH
+    } else {
+      skipped += 1
     }
   }
 
