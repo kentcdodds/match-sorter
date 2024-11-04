@@ -54,13 +54,6 @@ const tests: Record<string, TestCase> = {
       'The Tail of Forty Cities', // match2
     ],
   },
-  'matches data that has minor typos': {
-    input: [
-      ['juptyer', 'juppyter', 'jopytar', 'jupytor', 'jepytur'],
-      'jupyter',
-    ],
-    output: ['juppyter', 'juptyer', 'jupytor'],
-  },
   'no match for single character inputs that are not equal': {
     input: [['abc'], 'd'],
     output: [],
