@@ -515,7 +515,7 @@ MIT
 <!-- prettier-ignore-start -->
 [npm]: https://www.npmjs.com
 [node]: https://nodejs.org
-[build-badge]: https://img.shields.io/github/workflow/status/kentcdodds/match-sorter/validate?logo=github&style=flat-square
+[build-badge]: https://img.shields.io/github/actions/workflow/status/kentcdodds/match-sorter/validate.yml?logo=github&style=flat-square&branch=main
 [build]: https://github.com/kentcdodds/match-sorter/actions?query=workflow%3Avalidate
 [coverage-badge]: https://img.shields.io/codecov/c/github/kentcdodds/match-sorter.svg?style=flat-square
 [coverage]: https://codecov.io/github/kentcdodds/match-sorter
