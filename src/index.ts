@@ -67,7 +67,7 @@ const rankings = {
   NO_MATCH: 0,
 } as const
 
-type Ranking = typeof rankings[keyof typeof rankings]
+type Ranking = (typeof rankings)[keyof typeof rankings]
 
 const defaultBaseSortFn: BaseSorter<unknown> = (a, b) =>
   String(a.rankedValue).localeCompare(String(b.rankedValue))
@@ -126,7 +126,7 @@ function getHighestRanking<ItemType>(
 ): RankingInfo {
   if (!keys) {
     // if keys is not specified, then we assume the item given is ready to be matched
-    const stringItem = (item as unknown) as string
+    const stringItem = item as unknown as string
     return {
       // ends up being duplicate of 'item' in matches but consistent
       rankedValue: stringItem,
@@ -159,12 +159,20 @@ function getHighestRanking<ItemType>(
       return {rankedValue: newRankedValue, rank, keyIndex, keyThreshold}
     },
     {
-      rankedValue: (item as unknown) as string,
+      rankedValue: item as unknown as string,
       rank: rankings.NO_MATCH as Ranking,
       keyIndex: -1,
       keyThreshold: options.threshold,
     },
   )
+}
+
+function* indexesOf(testString: string, stringToRank: string) {
+  let index = -1
+  while ((index = testString.indexOf(stringToRank, index + 1)) > -1) {
+    yield index
+  }
+  return -1
 }
 
 /**
@@ -197,10 +205,17 @@ function getMatchRanking<ItemType>(
   stringToRank = stringToRank.toLowerCase()
 
   // Use indexOf to check for equality/includes
-  const indexOfStringToRankInTestString = testString.indexOf(stringToRank)
+  const indexesOfStringToRankInTestString = indexesOf(testString, stringToRank)
+  const firstIndexOfStringToRankInTestStringResult =
+    indexesOfStringToRankInTestString.next()
+  const indexOfStringToRankInTestString =
+    firstIndexOfStringToRankInTestStringResult.value
 
   // case insensitive equals
-  if (testString.length === stringToRank.length && indexOfStringToRankInTestString === 0) {
+  if (
+    testString.length === stringToRank.length &&
+    indexOfStringToRankInTestString === 0
+  ) {
     return rankings.EQUAL
   }
 
@@ -210,8 +225,18 @@ function getMatchRanking<ItemType>(
   }
 
   // word starts with
-  if (indexOfStringToRankInTestString > 0 && testString[indexOfStringToRankInTestString-1] === ' ') {
-    return rankings.WORD_STARTS_WITH
+  let indexOfStringToRankInTestStringResult =
+    firstIndexOfStringToRankInTestStringResult
+  while (!indexOfStringToRankInTestStringResult.done) {
+    if (
+      indexOfStringToRankInTestStringResult.value > 0 &&
+      testString[indexOfStringToRankInTestStringResult.value - 1] === ' '
+    ) {
+      return rankings.WORD_STARTS_WITH
+    }
+
+    indexOfStringToRankInTestStringResult =
+      indexesOfStringToRankInTestString.next()
   }
 
   // contains

@@ -83,24 +83,25 @@ const tests: Record<string, TestCase> = {
       {name: 'baz', reverse: 'zab'},
     ],
   },
-  'with multiple keys specified, all other things being equal, it prioritizes key index over alphabetizing': {
-    input: [
-      [
+  'with multiple keys specified, all other things being equal, it prioritizes key index over alphabetizing':
+    {
+      input: [
+        [
+          {first: 'not', second: 'not', third: 'match'},
+          {first: 'not', second: 'not', third: 'not', fourth: 'match'},
+          {first: 'not', second: 'match'},
+          {first: 'match', second: 'not'},
+        ],
+        'match',
+        {keys: ['first', 'second', 'third', 'fourth']},
+      ],
+      output: [
+        {first: 'match', second: 'not'},
+        {first: 'not', second: 'match'},
         {first: 'not', second: 'not', third: 'match'},
         {first: 'not', second: 'not', third: 'not', fourth: 'match'},
-        {first: 'not', second: 'match'},
-        {first: 'match', second: 'not'},
       ],
-      'match',
-      {keys: ['first', 'second', 'third', 'fourth']},
-    ],
-    output: [
-      {first: 'match', second: 'not'},
-      {first: 'not', second: 'match'},
-      {first: 'not', second: 'not', third: 'match'},
-      {first: 'not', second: 'not', third: 'not', fourth: 'match'},
-    ],
-  },
+    },
   'can handle the number 0 as a property value': {
     input: [
       [
@@ -129,36 +130,67 @@ const tests: Record<string, TestCase> = {
     ],
     output: [{name: {first: 'bat'}}, {name: {first: 'baz'}}],
   },
-  'can handle object with an array of values with nested keys with a specific index': {
-    input: [
-      [
-        {aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]},
-        {aliases: [{name: {first: 'foo'}},{name: {first: 'bat'}},null]},
-        {aliases: [{name: {first: 'foo'}},{name: {first: 'foo'}}]},
-        {aliases: null},
-        {},
-        null,
+  'can handle object with an array of values with nested keys with a specific index':
+    {
+      input: [
+        [
+          {
+            aliases: [
+              {name: {first: 'baz'}},
+              {name: {first: 'foo'}},
+              {name: null},
+            ],
+          },
+          {aliases: [{name: {first: 'foo'}}, {name: {first: 'bat'}}, null]},
+          {aliases: [{name: {first: 'foo'}}, {name: {first: 'foo'}}]},
+          {aliases: null},
+          {},
+          null,
+        ],
+        'ba',
+        {keys: ['aliases.0.name.first']},
       ],
-      'ba',
-      {keys: ['aliases.0.name.first']},
-    ],
-    output: [{aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]}],
-  },
-  'can handle object with an array of values with nested keys with a wildcard': {
-    input: [
-      [
-        {aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]},
-        {aliases: [{name: {first: 'foo'}},{name: {first: 'bat'}},null]},
-        {aliases: [{name: {first: 'foo'}},{name: {first: 'foo'}}]},
-        {aliases: null},
-        {},
-        null,
+      output: [
+        {
+          aliases: [
+            {name: {first: 'baz'}},
+            {name: {first: 'foo'}},
+            {name: null},
+          ],
+        },
       ],
-      'ba',
-      {keys: ['aliases.*.name.first']},
-    ],
-    output: [{aliases: [{name: {first: 'baz'}},{name: {first: 'foo'}},{name: null}]}, {aliases: [{name: {first: 'foo'}},{name: {first: 'bat'}},null]}],
-  },
+    },
+  'can handle object with an array of values with nested keys with a wildcard':
+    {
+      input: [
+        [
+          {
+            aliases: [
+              {name: {first: 'baz'}},
+              {name: {first: 'foo'}},
+              {name: null},
+            ],
+          },
+          {aliases: [{name: {first: 'foo'}}, {name: {first: 'bat'}}, null]},
+          {aliases: [{name: {first: 'foo'}}, {name: {first: 'foo'}}]},
+          {aliases: null},
+          {},
+          null,
+        ],
+        'ba',
+        {keys: ['aliases.*.name.first']},
+      ],
+      output: [
+        {
+          aliases: [
+            {name: {first: 'baz'}},
+            {name: {first: 'foo'}},
+            {name: null},
+          ],
+        },
+        {aliases: [{name: {first: 'foo'}}, {name: {first: 'bat'}}, null]},
+      ],
+    },
   'can handle property callback': {
     input: [
       [{name: {first: 'baz'}}, {name: {first: 'bat'}}, {name: {first: 'foo'}}],
@@ -228,34 +260,107 @@ const tests: Record<string, TestCase> = {
       {favorite: {iceCream: ['mint', 'chocolate']}},
     ],
   },
-  'can handle nested keys that are an array of objects with a single wildcard': {
-    input: [
-      [
-        {favorite: {iceCream: [{tastes: ['vanilla', 'mint']}, {tastes: ['vanilla', 'chocolate']}]}},
-        {favorite: {iceCream: [{tastes: ['vanilla', 'candy cane']}, {tastes: ['vanilla', 'brownie']}]}},
-        {favorite: {iceCream: [{tastes: ['vanilla', 'birthday cake']}, {tastes: ['vanilla', 'rocky road']}, {tastes: ['strawberry']}]}},
+  'can handle nested keys that are an array of objects with a single wildcard':
+    {
+      input: [
+        [
+          {
+            favorite: {
+              iceCream: [
+                {tastes: ['vanilla', 'mint']},
+                {tastes: ['vanilla', 'chocolate']},
+              ],
+            },
+          },
+          {
+            favorite: {
+              iceCream: [
+                {tastes: ['vanilla', 'candy cane']},
+                {tastes: ['vanilla', 'brownie']},
+              ],
+            },
+          },
+          {
+            favorite: {
+              iceCream: [
+                {tastes: ['vanilla', 'birthday cake']},
+                {tastes: ['vanilla', 'rocky road']},
+                {tastes: ['strawberry']},
+              ],
+            },
+          },
+        ],
+        'cc',
+        {keys: ['favorite.iceCream.*.tastes']},
       ],
-      'cc',
-      {keys: ['favorite.iceCream.*.tastes']},
-    ],
-    output: [
-      {favorite: {iceCream: [{tastes:['vanilla', 'candy cane']}, {tastes:['vanilla', 'brownie']}]}},
-      {favorite: {iceCream: [{tastes:['vanilla', 'mint']}, {tastes:['vanilla', 'chocolate']}]}},
-    ],
-  },
+      output: [
+        {
+          favorite: {
+            iceCream: [
+              {tastes: ['vanilla', 'candy cane']},
+              {tastes: ['vanilla', 'brownie']},
+            ],
+          },
+        },
+        {
+          favorite: {
+            iceCream: [
+              {tastes: ['vanilla', 'mint']},
+              {tastes: ['vanilla', 'chocolate']},
+            ],
+          },
+        },
+      ],
+    },
   'can handle nested keys that are an array of objects with two wildcards': {
     input: [
       [
-        {favorite: {iceCream: [{tastes: ['vanilla', 'mint']}, {tastes: ['vanilla', 'chocolate']}]}},
-        {favorite: {iceCream: [{tastes: ['vanilla', 'candy cane']}, {tastes: ['vanilla', 'brownie']}]}},
-        {favorite: {iceCream: [{tastes: ['vanilla', 'birthday cake']}, {tastes: ['vanilla', 'rocky road']}, {tastes: ['strawberry']}]}},
+        {
+          favorite: {
+            iceCream: [
+              {tastes: ['vanilla', 'mint']},
+              {tastes: ['vanilla', 'chocolate']},
+            ],
+          },
+        },
+        {
+          favorite: {
+            iceCream: [
+              {tastes: ['vanilla', 'candy cane']},
+              {tastes: ['vanilla', 'brownie']},
+            ],
+          },
+        },
+        {
+          favorite: {
+            iceCream: [
+              {tastes: ['vanilla', 'birthday cake']},
+              {tastes: ['vanilla', 'rocky road']},
+              {tastes: ['strawberry']},
+            ],
+          },
+        },
       ],
       'cc',
       {keys: ['favorite.iceCream.*.tastes.*']},
     ],
     output: [
-      {favorite: {iceCream: [{tastes:['vanilla', 'candy cane']}, {tastes:['vanilla', 'brownie']}]}},
-      {favorite: {iceCream: [{tastes:['vanilla', 'mint']}, {tastes:['vanilla', 'chocolate']}]}},
+      {
+        favorite: {
+          iceCream: [
+            {tastes: ['vanilla', 'candy cane']},
+            {tastes: ['vanilla', 'brownie']},
+          ],
+        },
+      },
+      {
+        favorite: {
+          iceCream: [
+            {tastes: ['vanilla', 'mint']},
+            {tastes: ['vanilla', 'chocolate']},
+          ],
+        },
+      },
     ],
   },
   'can handle keys with a maxRanking': {
@@ -296,20 +401,21 @@ const tests: Record<string, TestCase> = {
       {tea: 'Oolong', alias: 'B'},
     ],
   },
-  'when using arrays of values, when things are equal, the one with the higher key index wins': {
-    input: [
-      [
-        {favoriteIceCream: ['mint', 'chocolate']},
-        {favoriteIceCream: ['chocolate', 'brownie']},
+  'when using arrays of values, when things are equal, the one with the higher key index wins':
+    {
+      input: [
+        [
+          {favoriteIceCream: ['mint', 'chocolate']},
+          {favoriteIceCream: ['chocolate', 'brownie']},
+        ],
+        'chocolate',
+        {keys: ['favoriteIceCream']},
       ],
-      'chocolate',
-      {keys: ['favoriteIceCream']},
-    ],
-    output: [
-      {favoriteIceCream: ['chocolate', 'brownie']},
-      {favoriteIceCream: ['mint', 'chocolate']},
-    ],
-  },
+      output: [
+        {favoriteIceCream: ['chocolate', 'brownie']},
+        {favoriteIceCream: ['mint', 'chocolate']},
+      ],
+    },
   'when providing a rank threshold of NO_MATCH, it returns all of the items': {
     input: [
       ['orange', 'apple', 'grape', 'banana'],
@@ -318,38 +424,59 @@ const tests: Record<string, TestCase> = {
     ],
     output: ['apple', 'grape', 'banana', 'orange'],
   },
-  'when providing a rank threshold of EQUAL, it returns only the items that are equal': {
-    input: [
-      ['google', 'airbnb', 'apple', 'apply', 'app'],
-      'app',
-      {threshold: rankings.EQUAL},
-    ],
-    output: ['app'],
-  },
-  'when providing a rank threshold of CASE_SENSITIVE_EQUAL, it returns only case-sensitive equal matches': {
-    input: [
-      ['google', 'airbnb', 'apple', 'apply', 'app', 'aPp', 'App'],
-      'app',
-      {threshold: rankings.CASE_SENSITIVE_EQUAL},
-    ],
-    output: ['app'],
-  },
-  'when providing a rank threshold of WORD_STARTS_WITH, it returns only the items that are equal': {
-    input: [
-      ['fiji apple', 'google', 'app', 'crabapple', 'apple', 'apply'],
-      'app',
-      {threshold: rankings.WORD_STARTS_WITH},
-    ],
-    output: ['app', 'apple', 'apply', 'fiji apple'],
-  },
-  'when providing a rank threshold of ACRONYM, it returns only the items that meet the rank': {
-    input: [
-      ['apple', 'atop', 'alpaca', 'vamped'],
-      'ap',
-      {threshold: rankings.ACRONYM},
-    ],
-    output: ['apple'],
-  },
+  'when providing a rank threshold of EQUAL, it returns only the items that are equal':
+    {
+      input: [
+        ['google', 'airbnb', 'apple', 'apply', 'app'],
+        'app',
+        {threshold: rankings.EQUAL},
+      ],
+      output: ['app'],
+    },
+  'when providing a rank threshold of CASE_SENSITIVE_EQUAL, it returns only case-sensitive equal matches':
+    {
+      input: [
+        ['google', 'airbnb', 'apple', 'apply', 'app', 'aPp', 'App'],
+        'app',
+        {threshold: rankings.CASE_SENSITIVE_EQUAL},
+      ],
+      output: ['app'],
+    },
+  'when providing a rank threshold of WORD_STARTS_WITH, it returns only the items that are equal':
+    {
+      input: [
+        ['fiji apple', 'google', 'app', 'crabapple', 'apple', 'apply'],
+        'app',
+        {threshold: rankings.WORD_STARTS_WITH},
+      ],
+      output: ['app', 'apple', 'apply', 'fiji apple'],
+    },
+  'when providing a rank threshold of WORD_STARTS_WITH, correctly return items that have a word after a suffix':
+    {
+      input: [
+        [
+          'fiji apple',
+          'google',
+          'app',
+          'crabapple',
+          'apple',
+          'apply',
+          'snappy apple',
+        ],
+        'app',
+        {threshold: rankings.WORD_STARTS_WITH},
+      ],
+      output: ['app', 'apple', 'apply', 'fiji apple', 'snappy apple'],
+    },
+  'when providing a rank threshold of ACRONYM, it returns only the items that meet the rank':
+    {
+      input: [
+        ['apple', 'atop', 'alpaca', 'vamped'],
+        'ap',
+        {threshold: rankings.ACRONYM},
+      ],
+      output: ['apple'],
+    },
   'defaults to ignore diacritics': {
     input: [
       ['jalapeño', 'à la carte', 'café', 'papier-mâché', 'à la mode'],
@@ -427,32 +554,33 @@ const tests: Record<string, TestCase> = {
     input: [['Привет', 'Лед'], 'л'],
     output: ['Лед'],
   },
-  'should sort same ranked items alphabetically while when mixed with diacritics': {
-    input: [
-      [
-        'jalapeño',
-        'anothernodiacritics',
-        'à la carte',
-        'nodiacritics',
-        'café',
-        'papier-mâché',
-        'à la mode',
+  'should sort same ranked items alphabetically while when mixed with diacritics':
+    {
+      input: [
+        [
+          'jalapeño',
+          'anothernodiacritics',
+          'à la carte',
+          'nodiacritics',
+          'café',
+          'papier-mâché',
+          'à la mode',
+        ],
+        'z',
+        {
+          threshold: rankings.NO_MATCH,
+        },
       ],
-      'z',
-      {
-        threshold: rankings.NO_MATCH,
-      },
-    ],
-    output: [
-      'à la carte',
-      'à la mode',
-      'anothernodiacritics',
-      'café',
-      'jalapeño',
-      'nodiacritics',
-      'papier-mâché',
-    ],
-  },
+      output: [
+        'à la carte',
+        'à la mode',
+        'anothernodiacritics',
+        'café',
+        'jalapeño',
+        'nodiacritics',
+        'papier-mâché',
+      ],
+    },
   'returns objects in their original order': {
     input: [
       [
@@ -495,18 +623,19 @@ const tests: Record<string, TestCase> = {
     ],
     output: [{name: 'Jen_Smith'}, {name: 'Janice_Kurtis'}],
   },
-  'support a custom sortRankedValues function to overriding all sorting functionality': {
-    input: [
-      ['appl', 'C apple', 'B apple', 'A apple', 'app', 'applebutter'],
-      '',
-      {
-        sorter: rankedItems => {
-          return [...rankedItems].reverse()
+  'support a custom sortRankedValues function to overriding all sorting functionality':
+    {
+      input: [
+        ['appl', 'C apple', 'B apple', 'A apple', 'app', 'applebutter'],
+        '',
+        {
+          sorter: rankedItems => {
+            return [...rankedItems].reverse()
+          },
         },
-      },
-    ],
-    output: ['applebutter', 'app', 'A apple', 'B apple', 'C apple', 'appl'],
-  },
+      ],
+      output: ['applebutter', 'app', 'A apple', 'B apple', 'C apple', 'appl'],
+    },
 }
 
 for (const [
