@@ -262,18 +262,32 @@ function getMatchRanking<ItemType>(
 /**
  * Generates an acronym for a string.
  *
+ * Segment starts ︱ at the beginning of the phrase, after a **space**, or after a **hyphen**.
+ * We capture the first non-delimiter character of every segment and skip runs of delimiters.
+ *
+ * @example
+ *   getAcronym('The Tail-spin Test')  // → "TTsT"
+ *   getAcronym('edge-case')           // → "ec"
+ *   getAcronym('multiple  spaces')    // → "ms"
+ *
  * @param {String} string the string for which to produce the acronym
  * @returns {String} the acronym
  */
 function getAcronym(string: string): string {
   let acronym = ''
-  const wordsInString = string.split(' ')
-  wordsInString.forEach(wordInString => {
-    const splitByHyphenWords = wordInString.split('-')
-    splitByHyphenWords.forEach(splitByHyphenWord => {
-      acronym += splitByHyphenWord.substr(0, 1)
-    })
-  })
+  let prev = ' ' // virtual delimiter so the very first char qualifies
+
+  for (let i = 0; i < string.length; i++) {
+    const ch = string.charAt(i)
+    const prevWasDelimiter = prev === ' ' || prev === '-'
+    const currIsDelimiter = ch === ' ' || ch === '-'
+
+    if (prevWasDelimiter && !currIsDelimiter) {
+      acronym += ch
+    }
+    prev = ch
+  }
+
   return acronym
 }
 
