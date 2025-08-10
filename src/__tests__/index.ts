@@ -195,8 +195,13 @@ const tests: Record<string, TestCase> = {
     input: [
       [{name: {first: 'baz'}}, {name: {first: 'bat'}}, {name: {first: 'foo'}}],
       'ba',
-      // @ts-expect-error I don't know how to make this typed properly
-      {keys: [item => item.name.first]},
+      {
+        keys: [
+          ((item: {name: {first: string}}) => item.name.first) as (
+            item: unknown,
+          ) => string,
+        ],
+      },
     ],
     output: [{name: {first: 'bat'}}, {name: {first: 'baz'}}],
   },
@@ -618,8 +623,13 @@ const tests: Record<string, TestCase> = {
         {name: 'Jen_Smith'},
       ],
       'js',
-      // @ts-expect-error I don't know how to make this typed properly
-      {keys: [item => item.name.replace(/_/g, ' ')]},
+      {
+        keys: [
+          ((item: {name: string}) => item.name.replace(/_/g, ' ')) as (
+            item: unknown,
+          ) => string,
+        ],
+      },
     ],
     output: [{name: 'Jen_Smith'}, {name: 'Janice_Kurtis'}],
   },
