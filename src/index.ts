@@ -520,7 +520,7 @@ function getKeyAttributes<ItemType>(key: KeyOption<ItemType>): KeyAttributes {
   return {...defaultKeyAttributes, ...key}
 }
 
-export {matchSorter, rankings, defaultBaseSortFn}
+export {matchSorter, rankings, defaultBaseSortFn, getItemValues}
 
 export type {
   MatchSorterOptions,
