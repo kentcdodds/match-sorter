@@ -103,6 +103,26 @@ matchSorter(list, 'y') // ['yo', 'hey']
 matchSorter(list, 'z') // []
 ```
 
+If you need the ranking metadata that `match-sorter` computes internally, use
+`matchSorterWithRankInfo`:
+
+```javascript
+import {matchSorterWithRankInfo} from 'match-sorter'
+
+const rankedResults = matchSorterWithRankInfo(list, 'h')
+// [
+//   {
+//     item: 'hello',
+//     rankedValue: 'hello',
+//     rank: 5,
+//     keyIndex: -1,
+//     keyThreshold: undefined,
+//     index: 2,
+//   },
+//   // ...
+// ]
+```
+
 ## Advanced options
 
 ### keys: `[string]`
@@ -168,9 +188,9 @@ using dot-notation with the `*` wildcard instead of a numeric index.
 
 ```javascript
 const nestedObjList = [
-  {aliases: [{name: {first: 'Janice'}},{name: {first: 'Jen'}}]},
-  {aliases: [{name: {first: 'Fred'}},{name: {first: 'Frederic'}}]},
-  {aliases: [{name: {first: 'George'}},{name: {first: 'Georgie'}}]},
+  {aliases: [{name: {first: 'Janice'}}, {name: {first: 'Jen'}}]},
+  {aliases: [{name: {first: 'Fred'}}, {name: {first: 'Frederic'}}]},
+  {aliases: [{name: {first: 'George'}}, {name: {first: 'Georgie'}}]},
 ]
 matchSorter(nestedObjList, 'jen', {keys: ['aliases.*.name.first']})
 // [{aliases: [{name: {first: 'Janice'}},{name: {first: 'Jen'}}]}]
@@ -355,6 +375,7 @@ _You can customize the core sorting behavior by specifying a custom `sorter`
 function:_
 
 Disable sorting entirely:
+
 ```javascript
 const list = ['appl', 'C apple', 'B apple', 'A apple', 'app', 'applebutter']
 matchSorter(list, 'apple', {sorter: rankedItems => rankedItems})
@@ -362,6 +383,7 @@ matchSorter(list, 'apple', {sorter: rankedItems => rankedItems})
 ```
 
 Return the unsorted rankedItems, but in reverse order:
+
 ```javascript
 const list = ['appl', 'C apple', 'B apple', 'A apple', 'app', 'applebutter']
 matchSorter(list, 'apple', {sorter: rankedItems => [...rankedItems].reverse()})

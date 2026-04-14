@@ -84,6 +84,29 @@ function matchSorter<ItemType = string>(
   value: string,
   options: MatchSorterOptions<ItemType> = {},
 ): Array<ItemType> {
+  return getRankedItems(items, value, options).map(({item}) => item)
+}
+
+/**
+ * Takes an array of items and a value and returns ranked items with metadata attached
+ * @param {Array} items - the items to sort
+ * @param {String} value - the value to use for ranking
+ * @param {Object} options - Some options to configure the sorter
+ * @return {Array} - the new ranked array
+ */
+function matchSorterWithRankInfo<ItemType = string>(
+  items: ReadonlyArray<ItemType>,
+  value: string,
+  options: MatchSorterOptions<ItemType> = {},
+): Array<RankedItem<ItemType>> {
+  return getRankedItems(items, value, options)
+}
+
+function getRankedItems<ItemType = string>(
+  items: ReadonlyArray<ItemType>,
+  value: string,
+  options: MatchSorterOptions<ItemType>,
+): Array<RankedItem<ItemType>> {
   const {
     keys,
     threshold = rankings.MATCHES,
@@ -92,7 +115,7 @@ function matchSorter<ItemType = string>(
       matchedItems.sort((a, b) => sortRankedValues(a, b, baseSort)),
   } = options
   const matchedItems = items.reduce(reduceItemsToRanked, [])
-  return sorter(matchedItems).map(({item}) => item)
+  return sorter(matchedItems)
 
   function reduceItemsToRanked(
     matches: Array<RankedItem<ItemType>>,
@@ -109,6 +132,7 @@ function matchSorter<ItemType = string>(
 }
 
 matchSorter.rankings = rankings
+matchSorterWithRankInfo.rankings = rankings
 
 /**
  * Gets the highest ranking for value for the given item based on its values for the given keys
@@ -520,7 +544,13 @@ function getKeyAttributes<ItemType>(key: KeyOption<ItemType>): KeyAttributes {
   return {...defaultKeyAttributes, ...key}
 }
 
-export {matchSorter, rankings, defaultBaseSortFn, getItemValues}
+export {
+  matchSorter,
+  matchSorterWithRankInfo,
+  rankings,
+  defaultBaseSortFn,
+  getItemValues,
+}
 
 export type {
   MatchSorterOptions,
@@ -528,6 +558,7 @@ export type {
   KeyOption,
   KeyAttributes,
   RankingInfo,
+  RankedItem,
   ValueGetterKey,
 }
 
