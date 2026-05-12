@@ -24,25 +24,25 @@ jobs:
         node: [lts/-1, lts/*, latest]
     runs-on: ubuntu-latest
     steps:
-      - name: â¬ï¸ Checkout repo
+      - name: ⬇️ Checkout repo
         uses: actions/checkout@v5
 
-      - name: â Setup node
+      - name: ⎔ Setup node
         uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
 
-      - name: ð¥ Download deps
+      - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
         with:
           useLockFile: false
         env:
           HUSKY_SKIP_INSTALL: true
 
-      - name: â¶ï¸ Run validate script
+      - name: ▶️ Run validate script
         run: npm run validate
 
-      - name: â¬ï¸ Upload coverage report
+      - name: ⬆️ Upload coverage report
         uses: codecov/codecov-action@v3
 
   build-release-artifact:
@@ -58,7 +58,7 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
 
-      - name: ⎔ Setup node
+      - name: ⎄ Setup node
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: lts/*
@@ -96,7 +96,7 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
 
-      - name: ⎔ Setup node
+      - name: ⎄ Setup node
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: 24
