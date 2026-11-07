@@ -43,9 +43,7 @@ interface KeyAttributesOptions<ItemType> {
 }
 
 type KeyOption<ItemType> =
-  | KeyAttributesOptions<ItemType>
-  | ValueGetterKey<ItemType>
-  | string
+  KeyAttributesOptions<ItemType> | ValueGetterKey<ItemType> | string
 
 interface MatchSorterOptions<ItemType = unknown> {
   keys?: ReadonlyArray<KeyOption<ItemType>>
@@ -71,6 +69,9 @@ type Ranking = (typeof rankings)[keyof typeof rankings]
 
 const defaultBaseSortFn: BaseSorter<unknown> = (a, b) =>
   String(a.rankedValue).localeCompare(String(b.rankedValue))
+
+// position of the matched value within its key's values, used as a tie-breaker
+const keyValueIndexes = new WeakMap<object, number>()
 
 /**
  * Takes an array of items and a value and returns a new array with the items that match the given value
@@ -122,10 +123,17 @@ function getRankedItems<ItemType = string>(
     item: ItemType,
     index: number,
   ): Array<RankedItem<ItemType>> {
-    const rankingInfo = getHighestRanking(item, keys, value, options)
+    const {keyValueIndex, ...rankingInfo} = getHighestRanking(
+      item,
+      keys,
+      value,
+      options,
+    )
     const {rank, keyThreshold = threshold} = rankingInfo
     if (rank >= keyThreshold) {
-      matches.push({...rankingInfo, item, index})
+      const rankedItem = {...rankingInfo, item, index}
+      keyValueIndexes.set(rankedItem, keyValueIndex)
+      matches.push(rankedItem)
     }
     return matches
   }
@@ -147,7 +155,7 @@ function getHighestRanking<ItemType>(
   keys: ReadonlyArray<KeyOption<ItemType>> | undefined,
   value: string,
   options: MatchSorterOptions<ItemType>,
-): RankingInfo {
+): RankingInfo & {keyValueIndex: number} {
   if (!keys) {
     // if keys is not specified, then we assume the item given is ready to be matched
     const stringItem = item as unknown as string
@@ -156,15 +164,20 @@ function getHighestRanking<ItemType>(
       rankedValue: stringItem,
       rank: getMatchRanking(stringItem, value, options),
       keyIndex: -1,
+      keyValueIndex: 0,
       keyThreshold: options.threshold,
     }
   }
   const valuesToRank = getAllValuesToRank(item, keys)
   return valuesToRank.reduce(
     (
-      {rank, rankedValue, keyIndex, keyThreshold},
-      {itemValue, attributes},
-      i,
+      {rank, rankedValue, keyIndex, keyValueIndex, keyThreshold},
+      {
+        itemValue,
+        attributes,
+        keyIndex: valueKeyIndex,
+        keyValueIndex: valueIndex,
+      },
     ) => {
       let newRank = getMatchRanking(itemValue, value, options)
       let newRankedValue = rankedValue
@@ -176,16 +189,24 @@ function getHighestRanking<ItemType>(
       }
       if (newRank > rank) {
         rank = newRank
-        keyIndex = i
+        keyIndex = valueKeyIndex
+        keyValueIndex = valueIndex
         keyThreshold = threshold
         newRankedValue = itemValue
       }
-      return {rankedValue: newRankedValue, rank, keyIndex, keyThreshold}
+      return {
+        rankedValue: newRankedValue,
+        rank,
+        keyIndex,
+        keyValueIndex,
+        keyThreshold,
+      }
     },
     {
       rankedValue: item as unknown as string,
       rank: rankings.NO_MATCH as Ranking,
       keyIndex: -1,
+      keyValueIndex: -1,
       keyThreshold: options.threshold,
     },
   )
@@ -387,6 +408,11 @@ function sortRankedValues<ItemType>(
   const same = aRank === bRank
   if (same) {
     if (aKeyIndex === bKeyIndex) {
+      const aKeyValueIndex = keyValueIndexes.get(a) as number
+      const bKeyValueIndex = keyValueIndexes.get(b) as number
+      if (aKeyValueIndex !== bKeyValueIndex) {
+        return aKeyValueIndex < bKeyValueIndex ? aFirst : bFirst
+      }
       // use the base sort function as a tie-breaker
       return baseSort(a, b)
     } else {
@@ -507,13 +533,18 @@ function getNestedValues<ItemType>(
  * Gets all the values for the given keys in the given item and returns an array of those values
  * @param item - the item from which the values will be retrieved
  * @param keys - the keys to use to retrieve the values
- * @return objects with {itemValue, attributes}
+ * @return objects with {itemValue, attributes, keyIndex, keyValueIndex}
  */
 function getAllValuesToRank<ItemType>(
   item: ItemType,
   keys: ReadonlyArray<KeyOption<ItemType>>,
 ) {
-  const allValues: Array<{itemValue: string; attributes: KeyAttributes}> = []
+  const allValues: Array<{
+    itemValue: string
+    attributes: KeyAttributes
+    keyIndex: number
+    keyValueIndex: number
+  }> = []
   for (let j = 0, J = keys.length; j < J; j++) {
     const key = keys[j]
     const attributes = getKeyAttributes(key)
@@ -522,6 +553,8 @@ function getAllValuesToRank<ItemType>(
       allValues.push({
         itemValue: itemValues[i],
         attributes,
+        keyIndex: j,
+        keyValueIndex: i,
       })
     }
   }

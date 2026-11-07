@@ -10,7 +10,7 @@
     "lint": "kcd-scripts lint",
     "setup": "npm install && npm run validate -s",
     "test": "kcd-scripts test",
-    "typecheck": "kcd-scripts typecheck",
+    "typecheck": "tsc --build",
     "test:update": "npm test -- --updateSnapshot --coverage",
     "validate": "kcd-scripts validate"
   },

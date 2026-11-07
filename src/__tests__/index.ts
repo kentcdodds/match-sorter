@@ -2,7 +2,9 @@ import {
   matchSorter,
   matchSorterWithRankInfo,
   rankings,
+  defaultBaseSortFn,
   MatchSorterOptions,
+  type KeyOption,
   type RankedItem,
 } from '../'
 
@@ -730,6 +732,136 @@ test('can return ranked items without passing options', () => {
       index: 1,
     },
   ])
+})
+
+describe('key order tie-breaking with array values', () => {
+  type Fruit = {name: string; tags: Array<string>}
+  const fruits: Array<Fruit> = [
+    {name: 'Apple', tags: ['fruit']},
+    {name: 'Pear', tags: ['fruit', 'green', 'apple-like']},
+  ]
+  const tagKeys: Array<[string, KeyOption<Fruit>]> = [
+    ['string key', 'tags'],
+    ['object key', {key: 'tags'}],
+    ['object key with minRanking', {key: 'tags', minRanking: rankings.MATCHES}],
+    ['function key', item => item.tags],
+  ]
+
+  test.each(tagKeys)(
+    'a match on an earlier array-valued key wins same-rank ties (%s)',
+    (_label, tagsKey) => {
+      const ranked = matchSorterWithRankInfo(fruits, 'app', {
+        keys: [tagsKey, 'name'],
+      })
+      expect(
+        ranked.map(({item, rank, keyIndex}) => [item.name, rank, keyIndex]),
+      ).toEqual([
+        ['Pear', rankings.STARTS_WITH, 0],
+        ['Apple', rankings.STARTS_WITH, 1],
+      ])
+      expect(
+        matchSorter(fruits, 'app', {keys: [tagsKey, 'name']}).map(
+          ({name}) => name,
+        ),
+      ).toEqual(['Pear', 'Apple'])
+    },
+  )
+
+  test('a match on an earlier nested wildcard key wins same-rank ties', () => {
+    const items = [
+      {name: 'Apple', aliases: [{label: 'fruit'}]},
+      {
+        name: 'Pear',
+        aliases: [{label: 'fruit'}, {label: 'green'}, {label: 'apple-like'}],
+      },
+    ]
+    const ranked = matchSorterWithRankInfo(items, 'app', {
+      keys: ['aliases.*.label', 'name'],
+    })
+    expect(ranked.map(({item, keyIndex}) => [item.name, keyIndex])).toEqual([
+      ['Pear', 0],
+      ['Apple', 1],
+    ])
+  })
+
+  test('maxRanking on an earlier array-valued key still applies', () => {
+    const ranked = matchSorterWithRankInfo(fruits, 'app', {
+      keys: [{key: 'tags', maxRanking: rankings.CONTAINS}, 'name'],
+    })
+    expect(
+      ranked.map(({item, rank, keyIndex}) => [item.name, rank, keyIndex]),
+    ).toEqual([
+      ['Apple', rankings.STARTS_WITH, 1],
+      ['Pear', rankings.CONTAINS, 0],
+    ])
+  })
+
+  test('element position within an array still breaks ties before baseSort', () => {
+    const items = [
+      {name: 'first', tags: ['zz', 'apple']},
+      {name: 'second', tags: ['apricot', 'zz']},
+    ]
+    const baseSort = jest.fn(defaultBaseSortFn)
+    // baseSort alone would put "apple" (first) ahead of "apricot" (second)
+    expect(
+      matchSorter(items, 'ap', {keys: ['tags'], baseSort}).map(
+        ({name}) => name,
+      ),
+    ).toEqual(['second', 'first'])
+    expect(baseSort).not.toHaveBeenCalled()
+    // the earlier key still wins over an earlier array position
+    expect(
+      matchSorter(items, 'ap', {keys: ['name', 'tags']}).map(({name}) => name),
+    ).toEqual(['second', 'first'])
+  })
+
+  test('element position ties are not affected by the length of earlier keys', () => {
+    const items = [
+      {name: 'first', aliases: ['x', 'y', 'z'], tags: ['apple']},
+      {name: 'second', aliases: [], tags: ['zz', 'apricot']},
+    ]
+    expect(
+      matchSorterWithRankInfo(items, 'ap', {keys: ['aliases', 'tags']}).map(
+        ({item, keyIndex}) => [item.name, keyIndex],
+      ),
+    ).toEqual([
+      ['first', 1],
+      ['second', 1],
+    ])
+  })
+
+  test('baseSort breaks ties when key and element position are equal', () => {
+    const items = [
+      {name: 'first', tags: ['apple']},
+      {name: 'second', tags: ['apricot']},
+    ]
+    expect(
+      matchSorter(items, 'ap', {
+        keys: ['tags'],
+        baseSort: (a, b) => b.index - a.index,
+      }).map(({name}) => name),
+    ).toEqual(['second', 'first'])
+  })
+
+  test('custom sorters receive keyIndex as the position in keys', () => {
+    const sorter = jest.fn((rankedItems: Array<RankedItem<Fruit>>) =>
+      [...rankedItems].sort((a, b) => b.keyIndex - a.keyIndex),
+    )
+    expect(
+      matchSorter(fruits, 'app', {keys: ['tags', 'name'], sorter}).map(
+        ({name}) => name,
+      ),
+    ).toEqual(['Apple', 'Pear'])
+    expect(
+      sorter.mock.calls[0]?.[0].map(({item, keyIndex}) => [
+        item.name,
+        keyIndex,
+      ]),
+    ).toEqual([
+      ['Apple', 1],
+      ['Pear', 0],
+    ])
+  })
 })
 
 /*
