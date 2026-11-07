@@ -123,6 +123,10 @@ const rankedResults = matchSorterWithRankInfo(list, 'h')
 // ]
 ```
 
+`keyIndex` is the position in `keys` of the key that produced the best match
+(`-1` when no `keys` are given or when no key matched, such as with
+`threshold: rankings.NO_MATCH`).
+
 ## Advanced options
 
 ### keys: `[string]`
