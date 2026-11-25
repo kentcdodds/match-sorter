@@ -505,6 +505,18 @@ const tests: Record<string, TestCase> = {
     ],
     output: ['jalapeño', 'à la carte'],
   },
+  'matches decomposed (NFD) Hangul with a composed (NFC) query': {
+    // '홍길동' as macOS writes it in file names: one jamo per code point
+    input: [
+      ['\u1112\u1169\u11BC\u1100\u1175\u11AF\u1103\u1169\u11BC', '김철수'],
+      '홍길',
+    ],
+    output: ['\u1112\u1169\u11BC\u1100\u1175\u11AF\u1103\u1169\u11BC'],
+  },
+  'matches a decomposed (NFD) query against composed (NFC) items': {
+    input: [['café', 'cafeteria'], 'cafe\u0301', {keepDiacritics: true}],
+    output: ['café'],
+  },
   'sorts items based on how closely they match': {
     input: [
       ['Antigua and Barbuda', 'India', 'Bosnia and Herzegovina', 'Indonesia'],
